@@ -1,6 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import { useState, useEffect } from "react"
-import supabase from "./supabaseClient"
 
 import PostJob from "./pages/PostJob"
 import ContractorProfile from "./pages/ContractorProfile"
@@ -13,12 +12,13 @@ import WorkerProfile from "./pages/WorkerProfile"
 import WorkerDashboard from "./pages/WorkerDashboard"
 import ContractorDashboard from "./pages/ContractorDashboard"
 import Chat from "./pages/Chat"
-import Messages from "./pages/Messages"
 import WorkerMessages from "./pages/WorkerMessages"
 import ContractorMessages from "./pages/ContractorMessages"
 import SavedJobs from "./pages/SavedJobs"
 import ProfileSetup from "./pages/ProfileSetup"
 import JobDetails from "./pages/JobDetails"
+import ProtectedRoute from "./components/ProtectedRoute"
+import ContractorPublicProfile from "./pages/ContractorPublicProfile"
 
 import "./theme.css"
 
@@ -26,165 +26,184 @@ function App(){
 
   const [darkMode, setDarkMode] = useState(true)
 
-  // ✅ NEW AUTH STATE (SUPABASE ONLY)
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  /* THEME MODE */
+  /* ✅ LOAD THEME (LOCAL STORAGE OR SYSTEM) */
   useEffect(() => {
-    if(darkMode){
+    const savedTheme = localStorage.getItem("theme")
+
+    if (savedTheme === "light") {
+      setDarkMode(false)
+    } else if (savedTheme === "dark") {
+      setDarkMode(true)
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+      setDarkMode(prefersDark)
+    }
+  }, [])
+
+  /* ✅ APPLY + SAVE THEME */
+  useEffect(() => {
+    if (darkMode) {
       document.body.classList.remove("light-mode")
-    }else{
+      localStorage.setItem("theme", "dark")
+    } else {
       document.body.classList.add("light-mode")
+      localStorage.setItem("theme", "light")
     }
   }, [darkMode])
 
-  /* ✅ GET SESSION + LISTEN TO AUTH CHANGES */
-  useEffect(() => {
-
-    const getSession = async () => {
-      const { data } = await supabase.auth.getSession()
-      setUser(data.session?.user || null)
-      setLoading(false)
-    }
-
-    getSession()
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null)
-      }
-    )
-
-    return () => {
-      listener.subscription.unsubscribe()
-    }
-
-  }, [])
-
-  /* ✅ UPDATE USER OFFLINE (USING SUPABASE USER) */
-  useEffect(() => {
-
-    if (!user) return
-
-    const updateOffline = async () => {
-      await supabase
-      .from("users")
-      .update({
-        is_online:false,
-        last_seen:new Date()
-      })
-      .eq("id", user.id)
-    }
-
-    window.addEventListener("beforeunload", updateOffline)
-
-    return () => {
-      window.removeEventListener("beforeunload", updateOffline)
-    }
-
-  }, [user])
-
-  // ✅ PREVENT EARLY RENDER (IMPORTANT)
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
   return(
 
-  <Routes>
+    <Routes>
 
-    {/* AUTH */}
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
+      {/* AUTH (PUBLIC) */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-    {/* GENERAL */}
-    <Route path="/jobs" element={<Jobs />} />
-    <Route path="/post-job" element={<PostJob />} />
+      {/* PUBLIC */}
+      <Route path="/jobs" element={<Jobs />} />
+      <Route path="/job/:id" element={<JobDetails />} />
 
-    {/* OLD ROUTES */}
-    <Route path="/applications" element={<WorkerApplications />} />
-    <Route path="/contractor-applications" element={<ContractorApplications />} />
-    <Route
-  path="/worker-profile"
-  element={
-    user ? (
-      <WorkerProfile />
-    ) : (
-      <Navigate to="/login" replace />
-    )
-  }
+      {/* WORKER ROUTES */}
+      <Route
+        path="/worker-dashboard"
+        element={
+          <ProtectedRoute role="worker">
+            <WorkerDashboard darkMode={darkMode} setDarkMode={setDarkMode}/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/applications"
+        element={
+          <ProtectedRoute role="worker">
+            <WorkerApplications />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/saved-jobs"
+        element={
+          <ProtectedRoute role="worker">
+            <SavedJobs />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/worker-profile"
+        element={
+          <ProtectedRoute role="worker">
+            <WorkerProfile />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/worker-messages"
+        element={
+          <ProtectedRoute role="worker">
+            <WorkerMessages darkMode={darkMode} setDarkMode={setDarkMode}/>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* CONTRACTOR ROUTES */}
+      <Route
+        path="/contractor-dashboard"
+        element={
+          <ProtectedRoute role="contractor">
+            <ContractorDashboard darkMode={darkMode} setDarkMode={setDarkMode}/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/contractor-applications"
+        element={
+          <ProtectedRoute role="contractor">
+            <ContractorApplications />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/post-job"
+        element={
+          <ProtectedRoute role="contractor">
+            <PostJob />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/contractor-profile"
+        element={
+          <ProtectedRoute role="contractor">
+            <ContractorProfile />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/contractor-messages"
+        element={
+          <ProtectedRoute role="contractor">
+            <ContractorMessages darkMode={darkMode} setDarkMode={setDarkMode}/>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* CHAT (BOTH USERS) */}
+      <Route
+        path="/chat/:workerId"
+        element={
+          <ProtectedRoute>
+            <Chat darkMode={darkMode} setDarkMode={setDarkMode}/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/worker/chat/:id"
+        element={
+          <ProtectedRoute>
+            <Chat darkMode={darkMode} setDarkMode={setDarkMode}/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/contractor/chat/:id"
+        element={
+          <ProtectedRoute>
+            <Chat darkMode={darkMode} setDarkMode={setDarkMode}/>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* PROFILE SETUP */}
+      <Route
+        path="/profile-setup"
+        element={
+          <ProtectedRoute>
+            <ProfileSetup />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* DEFAULT */}
+      <Route path="*" element={<Jobs />} />
+
+      <Route
+  path="/contractor/:id"
+  element={<ContractorPublicProfile />}
 />
-    <Route path="/messages" element={<Messages darkMode={darkMode} setDarkMode={setDarkMode}/>} />
-    <Route path="/worker-messages" element={<WorkerMessages darkMode={darkMode} setDarkMode={setDarkMode}/>} />
 
-    {/* ✅ PROTECTED DASHBOARDS (REAL FIX) */}
-    <Route
-      path="/worker-dashboard"
-      element={
-        user ? (
-          <WorkerDashboard darkMode={darkMode} setDarkMode={setDarkMode} />
-        ) : (
-          <Navigate to="/login" replace />
-        )
-      }
-    />
-
-    <Route
-      path="/contractor-dashboard"
-      element={
-        user ? (
-          <ContractorDashboard darkMode={darkMode} setDarkMode={setDarkMode} />
-        ) : (
-          <Navigate to="/login" replace />
-        )
-      }
-    />
-
-    {/* PROFILES */}
-    <Route path="/contractor-profile" element={<ContractorProfile />} />
-
-    {/* CHAT */}
-    <Route
-      path="/chat/:workerId"
-      element={<Chat darkMode={darkMode} setDarkMode={setDarkMode} />}
-    />
-
-    <Route
-      path="/worker/chat/:id"
-      element={<Chat darkMode={darkMode} setDarkMode={setDarkMode} />}
-    />
-
-    <Route
-      path="/contractor/chat/:id"
-      element={<Chat darkMode={darkMode} setDarkMode={setDarkMode} />}
-    />
-
-    {/* MESSAGES */}
-    <Route
-      path="/contractor/messages"
-      element={<ContractorMessages darkMode={darkMode} setDarkMode={setDarkMode} />}
-    />
-
-    <Route
-      path="/contractor-messages"
-      element={<ContractorMessages darkMode={darkMode} setDarkMode={setDarkMode} />}
-    />
-
-    {/* SAVED JOBS */}
-    <Route path="/saved-jobs" element={<SavedJobs />} />
-
-    {/* DEFAULT */}
-    <Route path="*" element={<Jobs />} />
-
-    <Route path="/profile-setup" element={<ProfileSetup />} />
-
-    <Route path="/job/:id" element={<JobDetails />} />
-
-  </Routes>
+    </Routes>
 
   )
-
 }
 
 export default App

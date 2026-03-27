@@ -1,28 +1,33 @@
-import { SavedProvider } from "./context/SavedContext"
 import React from "react"
 import ReactDOM from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import { Toaster } from "react-hot-toast"
 
 import App from "./App"
+import { SavedProvider } from "./context/SavedContext"
+import { AuthProvider } from "./context/AuthContext" // ✅ IMPORT HERE
 
 import "./index.css"
 import "./theme.css"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 
-<React.StrictMode>
+  <React.StrictMode>
 
-<BrowserRouter>
+    <BrowserRouter>
 
-  <SavedProvider>
-  <App />
-</SavedProvider>
+      <AuthProvider> {/* ✅ GLOBAL AUTH */}
+        <SavedProvider> {/* ✅ SAVED JOBS */}
+          
+          <App />
 
-  <Toaster position="top-right" />
+        </SavedProvider>
+      </AuthProvider>
 
-</BrowserRouter>
+      <Toaster position="top-right" />
 
-</React.StrictMode>
+    </BrowserRouter>
+
+  </React.StrictMode>
 
 )

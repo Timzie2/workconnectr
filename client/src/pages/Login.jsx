@@ -15,7 +15,7 @@ function Login() {
     setLoading(true)
 
     try {
-      // ✅ LOGIN WITH SUPABASE AUTH
+      // ✅ LOGIN WITH SUPABASE
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -25,30 +25,30 @@ function Login() {
 
       const user = data.user
 
-      // ✅ GET USER PROFILE FROM USERS TABLE
+      // ✅ FETCH USER PROFILE
       const { data: profile, error: profileError } = await supabase
         .from("users")
         .select("*")
         .eq("id", user.id)
         .single()
 
-      // 🚨 IF USER NOT IN USERS TABLE → GO TO PROFILE SETUP
+      // 🚨 IF USER NOT IN TABLE
       if (profileError || !profile) {
-        navigate("/profile-setup")
+        navigate("/profile-setup", { replace: true })
         return
       }
 
       // 🚨 IF PROFILE NOT COMPLETE
       if (!profile.role) {
-        navigate("/profile-setup")
+        navigate("/profile-setup", { replace: true })
         return
       }
 
-      // ✅ ROLE-BASED REDIRECT
+      // ✅ ROLE-BASED REDIRECT (CLEAN)
       if (profile.role === "worker") {
-        navigate("/worker-dashboard")
+        navigate("/worker-dashboard", { replace: true })
       } else {
-        navigate("/contractor-dashboard")
+        navigate("/contractor-dashboard", { replace: true })
       }
 
     } catch (err) {

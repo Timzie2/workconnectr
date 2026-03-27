@@ -1,14 +1,17 @@
-body {
-  margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
-  background-color: #0f172a;
-  color: white;
-}
-
+/* 🌍 GLOBAL RESET */
 * {
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  transition: 0.25s ease;
+}
+
+/* 📝 HEADINGS */
 h1 {
   font-size: 32px;
 }
@@ -16,15 +19,15 @@ h1 {
 h2 {
   font-size: 24px;
 }
-/* NAVBAR */
 
+/* 🧭 NAVBAR */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #0f172a;
+  background: var(--bg-navbar);
   padding: 16px 40px;
-  border-bottom: 1px solid #1f2937;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .nav-right {
@@ -34,13 +37,14 @@ h2 {
 }
 
 .nav-right a {
-  color: white;
+  color: var(--text-main);
   text-decoration: none;
   font-weight: 500;
 }
 
+/* 🔴 LOGOUT */
 .logout-btn {
-  background: #ef4444;
+  background: var(--danger);
   border: none;
   padding: 8px 16px;
   color: white;
@@ -48,8 +52,7 @@ h2 {
   cursor: pointer;
 }
 
-/* DASHBOARD */
-
+/* 📊 DASHBOARD */
 .dashboard-container {
   padding: 40px;
   max-width: 1100px;
@@ -62,160 +65,182 @@ h2 {
   margin-top: 20px;
 }
 
-.stat-card {
-  background: #1e293b;
+/* 📦 CARDS */
+.stat-card,
+.job-card {
+  background: var(--bg-card);
   padding: 20px;
-  border-radius: 10px;
-  flex: 1;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  transition: 0.2s ease;
 }
 
-/* JOB CARD */
+.stat-card:hover,
+.job-card:hover {
+  transform: translateY(-4px);
+}
 
+/* 💼 JOB CARD */
 .job-card {
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 10px;
   margin-top: 20px;
 }
 
+/* 💰 SALARY */
+.job-card b {
+  color: var(--primary);
+}
+
+/* 🎯 BUTTON */
 .apply-btn {
   margin-top: 10px;
-  background: #3b82f6;
+  background: var(--primary);
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
   color: white;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-body {
-  background: #020617;
+.apply-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* 🔐 LOGIN PAGE */
+.login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-main);
+}
+
+.login-card {
+  width: 380px;
+  background: var(--bg-card);
+  padding: 45px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.app-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.app-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.login-card h3 {
+  margin-bottom: 20px;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-main);
+}
+
+.login-card input::placeholder {
+  color: var(--text-secondary);
+}
+
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
   color: white;
-  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-/* LOGIN PAGE */
-
-.login-page{
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#eef2f7;
+.login-card button:hover {
+  background: var(--primary-dark);
 }
 
-.login-card{
-  width:380px;
-  background:white;
-  padding:45px;
-  border-radius:14px;
-  box-shadow:0 15px 35px rgba(0,0,0,0.08);
-  text-align:center;
+/* ➖ DIVIDER */
+.divider {
+  margin: 18px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 
-.app-title{
-  margin:0;
-  font-size:28px;
-  font-weight:700;
-  color:#111;
+/* 🔘 GOOGLE BUTTON */
+.google-btn {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
 }
 
-.app-subtitle{
-  font-size:14px;
-  color:#777;
-  margin-bottom:20px;
+.google-btn:hover {
+  background: rgba(255,255,255,0.05);
 }
 
-.login-card h3{
-  margin-bottom:20px;
-  color:#333;
+/* 🔗 FOOTER */
+.login-footer {
+  margin-top: 18px;
+  font-size: 14px;
 }
 
-.login-card input{
-  width:100%;
-  padding:12px;
-  margin-bottom:14px;
-  border-radius:8px;
-  border:1px solid #ddd;
-  font-size:14px;
+/* 📝 POST JOB */
+.post-job-container {
+  max-width: 600px;
+  margin: 60px auto;
+  background: var(--bg-card);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
 }
 
-.login-card button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#16a34a;
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-  transition:0.2s;
+.post-job-container h1 {
+  margin-bottom: 20px;
 }
 
-.login-card button:hover{
-  background:#15803d;
-}
-
-.divider{
-  margin:18px 0;
-  color:#888;
-  font-size:14px;
-}
-
-.google-btn{
-  background:white;
-  color:#333;
-  border:1px solid #ddd;
-}
-
-.google-btn:hover{
-  background:#f5f5f5;
-}
-
-.login-footer{
-  margin-top:18px;
-  font-size:14px;
-}
-
-.post-job-container{
-  max-width:600px;
-  margin:60px auto;
-  background:#1e293b;
-  padding:40px;
-  border-radius:10px;
-}
-
-.post-job-container h1{
-  margin-bottom:20px;
-}
-
-.post-job-form{
-  display:flex;
-  flex-direction:column;
-  gap:15px;
+.post-job-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .post-job-form input,
-.post-job-form textarea{
-  padding:12px;
-  border-radius:6px;
-  border:none;
+.post-job-form textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-main);
 }
 
-.post-job-form textarea{
-  height:120px;
+.post-job-form textarea {
+  height: 120px;
 }
 
-.post-job-form button{
-  padding:12px;
-  background:#22c55e;
-  border:none;
-  border-radius:6px;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
+.post-job-form button {
+  padding: 12px;
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.post-job-form button:hover{
-  background:#16a34a;
+.post-job-form button:hover {
+  background: var(--primary-dark);
 }

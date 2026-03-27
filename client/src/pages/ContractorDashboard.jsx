@@ -23,31 +23,27 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-      console.log("❌ No user found")
+      window.location.replace("/login")
       return
     }
-
-    console.log("✅ Logged in user ID:", user.id)
 
     setUser(user)
 
-    // 🚨 TEMP: REMOVE FILTER TO DEBUG
+    // ✅ FETCH ONLY THIS CONTRACTOR'S JOBS (FIXED)
     const { data: jobsData, error } = await supabase
       .from("jobs")
       .select("*")
-      // .eq("contractor_id", user.id)  ❌ TEMP REMOVED
+      .eq("contractor_id", user.id)
       .order("created_at", { ascending: false })
 
     if (error) {
-      console.log("❌ Jobs error:", error.message)
+      console.log("Jobs error:", error.message)
       return
     }
 
-    console.log("📦 Jobs fetched:", jobsData)
-
     setJobs(jobsData || [])
 
-    // 🔥 FETCH APPLICATIONS
+    // ✅ FETCH APPLICATIONS
     fetchApplications(jobsData || [])
   }
 
@@ -66,11 +62,31 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
       .in("job_id", jobIds)
 
     if (error) {
-      console.log("❌ Applications error:", error.message)
+      console.log("Applications error:", error.message)
       return
     }
 
     setApplicationsCount(data.length)
+  }
+
+  // ✅ DELETE JOB (NEW 🔥)
+  const deleteJob = async (id) => {
+
+    const confirmDelete = window.confirm("Delete this job?")
+    if (!confirmDelete) return
+
+    const { error } = await supabase
+      .from("jobs")
+      .delete()
+      .eq("id", id)
+
+    if (error) {
+      alert("Failed to delete job")
+      return
+    }
+
+    // 🔥 UPDATE UI INSTANTLY
+    setJobs(prev => prev.filter(job => job.id !== id))
   }
 
   return (
@@ -139,7 +155,7 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
 
                 <div className="job-info">
                   <span>📍 {job.location}</span>
-                  <span>💰 ₦{job.salary}/day</span>
+                  <span>💰 ₦{job.salary || job.daily_pay || "N/A"}</span>
                 </div>
 
                 <div className="job-tags">
@@ -155,7 +171,10 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
                     Edit
                   </button>
 
-                  <button className="delete-btn">
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteJob(job.id)}
+                  >
                     Delete
                   </button>
 

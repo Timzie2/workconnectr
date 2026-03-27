@@ -1,73 +1,138 @@
-/* DARK MODE (default) */
-
+/* 🔥 MODERN DARK MODE (DEFAULT) */
 :root{
---bg-main:#020617;
---bg-card:#1e293b;
---bg-navbar:#0f172a;
+  --primary:#22c55e;
+  --primary-dark:#16a34a;
 
---text-main:#f1f5f9;
---text-secondary:#94a3b8;
+  --bg-main:#020617;
+  --bg-card:#1e293b;
+  --bg-navbar:#0f172a;
 
---border-color:rgba(255,255,255,0.05);
+  --text-main:#f1f5f9;
+  --text-secondary:#94a3b8;
 
---button-primary:#3b82f6;
---button-success:#22c55e;
+  --border-color:rgba(255,255,255,0.06);
+
+  --button-primary:#3b82f6;
+  --button-success:#22c55e;
+
+  --danger:#ef4444;
+
+  --shadow:0 8px 25px rgba(0,0,0,0.25);
 }
 
 
-/* LIGHT MODE */
-
+/* ☀️ LIGHT MODE */
 body.light-mode{
 
---bg-main:#f8fafc;
---bg-card:#ffffff;
---bg-navbar:#ffffff;
+  --bg-main:#f8fafc;
+  --bg-card:#ffffff;
+  --bg-navbar:#ffffff;
 
---text-main:#0f172a;
---text-secondary:#475569;
+  --text-main:#0f172a;
+  --text-secondary:#475569;
 
---border-color:#e2e8f0;
+  --border-color:#e2e8f0;
 
---button-primary:#2563eb;
---button-success:#16a34a;
+  --button-primary:#2563eb;
+  --button-success:#16a34a;
 
+  --danger:#dc2626;
+
+  --shadow:0 8px 20px rgba(0,0,0,0.08);
 }
 
 
-/* GLOBAL */
-
+/* 🌍 GLOBAL */
 body{
-background:var(--bg-main);
-color:var(--text-main);
-transition:background 0.25s ease,color 0.25s ease;
+  margin:0;
+  font-family:"Inter", sans-serif;
+  background:var(--bg-main);
+  color:var(--text-main);
+  transition:background 0.25s ease,color 0.25s ease;
 }
 
 
-/* NAVBAR */
-
+/* 🧭 NAVBAR */
 .navbar{
-background:var(--bg-navbar);
-border-bottom:1px solid var(--border-color);
+  background:var(--bg-navbar);
+  border-bottom:1px solid var(--border-color);
+  backdrop-filter:blur(10px);
 }
 
 
-/* CARDS */
-
+/* 🧱 CARDS (UPGRADED) */
 .card,
 .stat-card,
 .job-card{
-background:var(--bg-card);
-color:var(--text-main);
-border:1px solid var(--border-color);
+  background:var(--bg-card);
+  color:var(--text-main);
+  border:1px solid var(--border-color);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  transition:0.25s ease;
+}
+
+.card:hover,
+.job-card:hover{
+  transform:translateY(-4px);
 }
 
 
-/* TEXT */
+/* ✨ BUTTON SYSTEM */
+.primary-btn{
+  background:var(--primary);
+  color:white;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:500;
+  transition:0.2s;
+}
 
+.primary-btn:hover{
+  background:var(--primary-dark);
+}
+
+.secondary-btn{
+  background:transparent;
+  border:1px solid var(--border-color);
+  color:var(--text-main);
+  padding:10px 18px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.danger-btn{
+  background:var(--danger);
+  color:white;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+
+/* 📝 TEXT */
 h1,h2,h3,h4{
-color:var(--text-main);
+  color:var(--text-main);
+  margin:0;
 }
 
 p{
-color:var(--text-secondary);
+  color:var(--text-secondary);
+}
+
+
+/* 📦 GRID (FOR JOBS) */
+.jobs-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+  gap:20px;
+}
+
+
+/* 📊 DASHBOARD */
+.dashboard-container{
+  padding:30px;
 }

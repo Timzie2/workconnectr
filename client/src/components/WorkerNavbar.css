@@ -4,11 +4,13 @@
   justify-content:space-between;
   align-items:center;
   padding:14px 40px;
-  background:#0f172a;
-  color:white;
 
-  position: relative;   /* ✅ FIX */
-  z-index: 1000;        /* ✅ FIX */
+  background:var(--bg-navbar);
+  color:var(--text-main);
+  border-bottom:1px solid var(--border-color);
+
+  position:relative;
+  z-index:1000;
 }
 
 /* LEFT */
@@ -21,6 +23,7 @@
 .worker-logo{
   font-size:22px;
   font-weight:bold;
+  color:var(--text-main);
 }
 
 /* LINKS */
@@ -29,13 +32,13 @@
   align-items:center;
   gap:6px;
   text-decoration:none;
-  color:#cbd5e1;
+  color:var(--text-secondary);
   font-weight:500;
   transition:0.2s;
 }
 
 .worker-nav-link:hover{
-  color:white;
+  color:var(--text-main);
 }
 
 /* RIGHT */
@@ -49,19 +52,29 @@
 /* ICON BUTTON */
 .worker-icon-btn{
   cursor:pointer;
+  color:var(--text-secondary);
+}
+
+.worker-icon-btn:hover{
+  color:var(--text-main);
 }
 
 /* NOTIFICATIONS */
 .worker-notification{
   position:relative;
   cursor:pointer;
+  color:var(--text-secondary);
+}
+
+.worker-notification:hover{
+  color:var(--text-main);
 }
 
 .worker-notification-count{
   position:absolute;
   top:-6px;
   right:-8px;
-  background:red;
+  background:#ef4444;
   color:white;
   font-size:11px;
   padding:2px 5px;
@@ -73,21 +86,33 @@
   position:absolute;
   right:0;
   top:45px;
-  background:#1c2736;
+
+  background:var(--bg-card);
+  color:var(--text-main);
+
   width:260px;
   border-radius:10px;
   padding:15px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.3);
 
-  z-index: 2000; /* ✅ FIX */
+  border:1px solid var(--border-color);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+
+  z-index:2000;
   max-height:250px;
   overflow-y:auto;
 }
 
+/* NOTIFICATION ITEM */
 .worker-notif-item{
   padding:8px 10px;
-  border-bottom:1px solid #2a3546;
+  border-bottom:1px solid var(--border-color);
   font-size:14px;
+  transition:0.2s;
+}
+
+.worker-notif-item:hover{
+  background:rgba(0,0,0,0.05);
+  border-radius:6px;
 }
 
 /* SCROLLBAR */
@@ -102,10 +127,11 @@
 
 /* PROFILE ICON */
 .worker-profile-icon{
-  background:#22c55e;
+  background:var(--button-success);
   padding:8px;
   border-radius:50%;
   cursor:pointer;
+  color:white;
 }
 
 /* DROPDOWN */
@@ -113,12 +139,18 @@
   position:absolute;
   top:45px;
   right:0;
-  background:#1c2736;
-  border-radius:8px;
-  width:170px;
+
+  background:var(--bg-card);
+  color:var(--text-main);
+
+  border-radius:10px;
+  width:180px;
   padding:10px 0;
 
-  z-index: 2000; /* ✅ FIX */
+  border:1px solid var(--border-color);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+
+  z-index:2000;
 }
 
 /* DROPDOWN ITEMS */
@@ -127,15 +159,17 @@
   align-items:center;
   gap:8px;
   padding:10px 15px;
-  color:#cbd5e1;
+  color:var(--text-main);
   text-decoration:none;
   cursor:pointer;
+  transition:0.2s;
 }
 
 .worker-dropdown-item:hover{
-  background:#2a3546;
+  background:rgba(0,0,0,0.05);
 }
 
+/* LOGOUT */
 .worker-dropdown-item.logout{
   color:#ef4444;
 }

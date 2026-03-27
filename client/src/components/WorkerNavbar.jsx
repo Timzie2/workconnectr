@@ -10,18 +10,19 @@ import {
   LogOut,
   MessageSquare,
   Star,
-  Bell
+  Bell,
+  Sun,
+  Moon
 } from "lucide-react"
 
 import "./WorkerNavbar.css"
 
-function WorkerNavbar(){
+function WorkerNavbar({ darkMode, setDarkMode }){
 
   const navigate = useNavigate()
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
-
   const [notifications, setNotifications] = useState([])
   const [userId, setUserId] = useState(null)
 
@@ -35,10 +36,12 @@ function WorkerNavbar(){
 
       if (!user) {
         localStorage.clear()
-        window.location.replace("/login")
-      } else {
-        setUserId(user.id)
+        sessionStorage.clear()
+        navigate("/login", { replace: true })
+        return
       }
+
+      setUserId(user.id)
     }
 
     checkUser()
@@ -49,13 +52,11 @@ function WorkerNavbar(){
 
     const handleClickOutside = (event) => {
 
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setMenuOpen(false)
-      }
+      if (profileRef.current?.contains(event.target)) return
+      if (notifRef.current?.contains(event.target)) return
 
-      if (notifRef.current && !notifRef.current.contains(event.target)) {
-        setNotifOpen(false)
-      }
+      setMenuOpen(false)
+      setNotifOpen(false)
     }
 
     document.addEventListener("click", handleClickOutside)
@@ -73,7 +74,6 @@ function WorkerNavbar(){
 
     fetchNotifications()
 
-    // 🔥 REALTIME (FILTERED FOR USER)
     const channel = supabase
       .channel("notifications-realtime")
       .on(
@@ -85,12 +85,10 @@ function WorkerNavbar(){
         },
         (payload) => {
 
-          // ✅ ONLY ADD FOR THIS USER
           if (payload.new.user_id === userId) {
 
             setNotifications(prev => {
 
-              // 🚫 PREVENT DUPLICATES
               const exists = prev.some(n => n.id === payload.new.id)
               if (exists) return prev
 
@@ -122,19 +120,18 @@ function WorkerNavbar(){
     }
   }
 
-  /* 🔔 UNREAD COUNT (OPTIMIZED) */
+  /* 🔔 UNREAD COUNT */
   const unreadCount = notifications.reduce(
     (count, n) => count + (!n.is_read ? 1 : 0),
     0
   )
 
-  /* ✅ OPEN + MARK READ */
+  /* ✅ OPEN NOTIFICATIONS */
   const openNotifications = async () => {
 
     const willOpen = !notifOpen
     setNotifOpen(willOpen)
 
-    // ✅ ONLY MARK WHEN OPENING
     if (willOpen && unreadCount > 0) {
 
       await supabase
@@ -142,7 +139,6 @@ function WorkerNavbar(){
         .update({ is_read: true })
         .eq("user_id", userId)
 
-      // 🔥 INSTANT UI UPDATE
       setNotifications(prev =>
         prev.map(n => ({ ...n, is_read: true }))
       )
@@ -154,14 +150,15 @@ function WorkerNavbar(){
 
     try {
       await supabase.auth.signOut()
+
+      localStorage.clear()
+      sessionStorage.clear()
+
+      navigate("/login", { replace: true })
+
     } catch (err) {
       console.error(err)
     }
-
-    localStorage.clear()
-    sessionStorage.clear()
-
-    window.location.replace("/login")
   }
 
   return(
@@ -194,6 +191,15 @@ function WorkerNavbar(){
       {/* RIGHT */}
       <div className="worker-navbar-right">
 
+        {/* 🌗 THEME TOGGLE (NEW 🔥) */}
+        <div
+          className="worker-icon-btn"
+          onClick={() => setDarkMode(prev => !prev)}
+          title="Toggle Theme"
+        >
+          {darkMode ? <Sun size={18}/> : <Moon size={18}/>}
+        </div>
+
         {/* 💬 MESSAGES */}
         <div
           className="worker-icon-btn"
@@ -206,18 +212,15 @@ function WorkerNavbar(){
         <div
           className="worker-notification"
           ref={notifRef}
-          onClick={openNotifications}
         >
-          <Bell size={20}/>
+          <Bell size={20} onClick={openNotifications}/>
 
-          {/* 🔴 BADGE */}
           {unreadCount > 0 && (
             <span className="worker-notification-count">
               {unreadCount}
             </span>
           )}
 
-          {/* 📩 DROPDOWN */}
           {notifOpen && (
             <div className="worker-notification-panel">
 
@@ -248,7 +251,7 @@ function WorkerNavbar(){
         <div
           className="worker-profile-icon"
           ref={profileRef}
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => setMenuOpen(prev => !prev)}
         >
           <User size={18}/>
         </div>
@@ -260,12 +263,15 @@ function WorkerNavbar(){
               <User size={16}/> Profile
             </Link>
 
-            <div
+            <button
               className="worker-dropdown-item logout"
-              onClick={logout}
+              onClick={(e) => {
+                e.stopPropagation()
+                logout()
+              }}
             >
               <LogOut size={16}/> Logout
-            </div>
+            </button>
 
           </div>
         )}
