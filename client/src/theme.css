@@ -1,0 +1,73 @@
+/* DARK MODE (default) */
+
+:root{
+--bg-main:#020617;
+--bg-card:#1e293b;
+--bg-navbar:#0f172a;
+
+--text-main:#f1f5f9;
+--text-secondary:#94a3b8;
+
+--border-color:rgba(255,255,255,0.05);
+
+--button-primary:#3b82f6;
+--button-success:#22c55e;
+}
+
+
+/* LIGHT MODE */
+
+body.light-mode{
+
+--bg-main:#f8fafc;
+--bg-card:#ffffff;
+--bg-navbar:#ffffff;
+
+--text-main:#0f172a;
+--text-secondary:#475569;
+
+--border-color:#e2e8f0;
+
+--button-primary:#2563eb;
+--button-success:#16a34a;
+
+}
+
+
+/* GLOBAL */
+
+body{
+background:var(--bg-main);
+color:var(--text-main);
+transition:background 0.25s ease,color 0.25s ease;
+}
+
+
+/* NAVBAR */
+
+.navbar{
+background:var(--bg-navbar);
+border-bottom:1px solid var(--border-color);
+}
+
+
+/* CARDS */
+
+.card,
+.stat-card,
+.job-card{
+background:var(--bg-card);
+color:var(--text-main);
+border:1px solid var(--border-color);
+}
+
+
+/* TEXT */
+
+h1,h2,h3,h4{
+color:var(--text-main);
+}
+
+p{
+color:var(--text-secondary);
+}

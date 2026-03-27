@@ -1,0 +1,141 @@
+/* NAVBAR */
+.worker-navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 40px;
+  background:#0f172a;
+  color:white;
+
+  position: relative;   /* ✅ FIX */
+  z-index: 1000;        /* ✅ FIX */
+}
+
+/* LEFT */
+.worker-navbar-left{
+  display:flex;
+  align-items:center;
+  gap:25px;
+}
+
+.worker-logo{
+  font-size:22px;
+  font-weight:bold;
+}
+
+/* LINKS */
+.worker-nav-link{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  text-decoration:none;
+  color:#cbd5e1;
+  font-weight:500;
+  transition:0.2s;
+}
+
+.worker-nav-link:hover{
+  color:white;
+}
+
+/* RIGHT */
+.worker-navbar-right{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  position:relative;
+}
+
+/* ICON BUTTON */
+.worker-icon-btn{
+  cursor:pointer;
+}
+
+/* NOTIFICATIONS */
+.worker-notification{
+  position:relative;
+  cursor:pointer;
+}
+
+.worker-notification-count{
+  position:absolute;
+  top:-6px;
+  right:-8px;
+  background:red;
+  color:white;
+  font-size:11px;
+  padding:2px 5px;
+  border-radius:50%;
+}
+
+/* NOTIFICATION PANEL */
+.worker-notification-panel{
+  position:absolute;
+  right:0;
+  top:45px;
+  background:#1c2736;
+  width:260px;
+  border-radius:10px;
+  padding:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+
+  z-index: 2000; /* ✅ FIX */
+  max-height:250px;
+  overflow-y:auto;
+}
+
+.worker-notif-item{
+  padding:8px 10px;
+  border-bottom:1px solid #2a3546;
+  font-size:14px;
+}
+
+/* SCROLLBAR */
+.worker-notification-panel::-webkit-scrollbar{
+  width:6px;
+}
+
+.worker-notification-panel::-webkit-scrollbar-thumb{
+  background:#888;
+  border-radius:6px;
+}
+
+/* PROFILE ICON */
+.worker-profile-icon{
+  background:#22c55e;
+  padding:8px;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+/* DROPDOWN */
+.worker-profile-dropdown{
+  position:absolute;
+  top:45px;
+  right:0;
+  background:#1c2736;
+  border-radius:8px;
+  width:170px;
+  padding:10px 0;
+
+  z-index: 2000; /* ✅ FIX */
+}
+
+/* DROPDOWN ITEMS */
+.worker-dropdown-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 15px;
+  color:#cbd5e1;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.worker-dropdown-item:hover{
+  background:#2a3546;
+}
+
+.worker-dropdown-item.logout{
+  color:#ef4444;
+}
