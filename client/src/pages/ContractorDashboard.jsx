@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 
 import ContractorNavbar from "../components/ContractorNavbar"
+import PayButton from "../components/PaystackButton"
 import "./Dashboard.css"
 
 function ContractorDashboard({ darkMode, setDarkMode }) {
@@ -13,13 +14,15 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
   const [applicationsCount, setApplicationsCount] = useState(0)
   const [user, setUser] = useState(null)
 
+  // ✅ GLOBAL LOADING STATE (VERY IMPORTANT 🔥)
+  const [loadingJobId, setLoadingJobId] = useState(null)
+
   useEffect(() => {
     getUserAndJobs()
   }, [])
 
   const getUserAndJobs = async () => {
 
-    // ✅ GET LOGGED-IN USER
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
@@ -29,7 +32,6 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
 
     setUser(user)
 
-    // ✅ FETCH ONLY THIS CONTRACTOR'S JOBS (FIXED)
     const { data: jobsData, error } = await supabase
       .from("jobs")
       .select("*")
@@ -42,8 +44,6 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
     }
 
     setJobs(jobsData || [])
-
-    // ✅ FETCH APPLICATIONS
     fetchApplications(jobsData || [])
   }
 
@@ -61,15 +61,12 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
       .select("*")
       .in("job_id", jobIds)
 
-    if (error) {
-      console.log("Applications error:", error.message)
-      return
+    if (!error) {
+      setApplicationsCount(data.length)
     }
-
-    setApplicationsCount(data.length)
   }
 
-  // ✅ DELETE JOB (NEW 🔥)
+  // ✅ DELETE JOB
   const deleteJob = async (id) => {
 
     const confirmDelete = window.confirm("Delete this job?")
@@ -85,7 +82,6 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
       return
     }
 
-    // 🔥 UPDATE UI INSTANTLY
     setJobs(prev => prev.filter(job => job.id !== id))
   }
 
@@ -98,8 +94,9 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
 
       <div className="dashboard-container">
 
-        <h1>Contractor Dashboard</h1>
+        <h1 className="dashboard-title">Contractor Dashboard</h1>
 
+        {/* ACTIONS */}
         <div className="dashboard-actions">
 
           <button
@@ -118,6 +115,7 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
 
         </div>
 
+        {/* STATS */}
         <div className="stats-container">
 
           <div className="stat-card">
@@ -126,18 +124,20 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
           </div>
 
           <div className="stat-card">
-            <p className="stat-title">Active Jobs</p>
-            <h2 className="stat-number">{jobs.length}</h2>
-          </div>
-
-          <div className="stat-card">
             <p className="stat-title">Applications</p>
             <h2 className="stat-number">{applicationsCount}</h2>
           </div>
 
+          <div className="stat-card">
+            <p className="stat-title">Featured Jobs</p>
+            <h2 className="stat-number">
+              {jobs.filter(j => j.is_featured).length}
+            </h2>
+          </div>
+
         </div>
 
-        <h2>Your Job Posts</h2>
+        <h2 className="jobs-title">Your Job Posts</h2>
 
         {jobs.length === 0 ? (
           <p style={{ opacity: 0.7 }}>No jobs posted yet</p>
@@ -148,6 +148,11 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
             {jobs.map((job) => (
 
               <div key={job.id} className="job-card">
+
+                {/* 💎 FEATURED */}
+                {job.is_featured && (
+                  <span className="featured-tag">💎 Featured</span>
+                )}
 
                 <h3 className="job-title">{job.title}</h3>
 
@@ -162,28 +167,67 @@ function ContractorDashboard({ darkMode, setDarkMode }) {
                   <span className="tag">{job.category || "General"}</span>
                 </div>
 
+                {/* ACTIONS */}
                 <div className="job-actions">
 
-                  <button
-                    className="edit-btn"
-                    onClick={() => navigate(`/edit-job/${job.id}`)}
-                  >
-                    Edit
-                  </button>
+                  {/* LEFT */}
+                  <div className="job-actions-left">
 
-                  <button
-                    className="delete-btn"
-                    onClick={() => deleteJob(job.id)}
-                  >
-                    Delete
-                  </button>
+                    <button
+                      className="edit-btn"
+                      onClick={() => navigate(`/edit-job/${job.id}`)}
+                    >
+                      Edit
+                    </button>
 
-                  <button
-                    className="applicants-btn"
-                    onClick={() => navigate("/contractor-applications")}
-                  >
-                    Applicants
-                  </button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteJob(job.id)}
+                    >
+                      Delete
+                    </button>
+
+                    <button
+                      className="applicants-btn"
+                      onClick={() => navigate("/contractor-applications")}
+                    >
+                      Applicants
+                    </button>
+
+                  </div>
+
+                  {/* RIGHT → PAYSTACK */}
+                  <div className="job-actions-right">
+
+                    {!job.is_featured ? (
+                      <PayButton
+                        jobId={job.id}
+                        email={user?.email}
+                        userId={user?.id}
+
+                        // ✅ CONTROL LOADING FROM PARENT
+                        loading={loadingJobId === job.id}
+                        startLoading={() => setLoadingJobId(job.id)}
+                        stopLoading={() => setLoadingJobId(null)}
+
+                        onSuccess={() => {
+                          setJobs(prev =>
+                            prev.map(j =>
+                              j.id === job.id
+                                ? { ...j, is_featured: true }
+                                : j
+                            )
+                          )
+                          setLoadingJobId(null) // 🔥 RESET
+                        }}
+                      />
+                    ) : (
+                      <button className="boosted-btn">
+                        🚀 Boosted
+                      </button>
+                    )}
+
+                  </div>
 
                 </div>
 

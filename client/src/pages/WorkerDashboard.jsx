@@ -4,6 +4,7 @@ import supabase from "../supabaseClient"
 import WorkerNavbar from "../components/WorkerNavbar"
 import { useSaved } from "../context/SavedContext"
 import RatingModal from "../components/RatingModal"
+import StarRating from "../components/StarRating"
 import "./WorkerDashboard.css"
 
 function WorkerDashboard({ darkMode, setDarkMode }) {
@@ -14,7 +15,7 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
   const [jobs, setJobs] = useState([])
   const [applications, setApplications] = useState([])
   const [notifications, setNotifications] = useState([])
-  const [completedJobs, setCompletedJobs] = useState([]) // ✅ NEW
+  const [completedJobs, setCompletedJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -47,12 +48,12 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
       fetchJobs(),
       fetchApplications(),
       fetchNotifications(),
-      fetchCompletedJobs() // ✅ NEW
+      fetchCompletedJobs()
     ])
     setLoading(false)
   }
 
-  // ✅ FETCH COMPLETED JOBS
+  // ✅ COMPLETED JOBS
   async function fetchCompletedJobs() {
     const { data } = await supabase
       .from("applications")
@@ -60,8 +61,7 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
       .eq("worker_id", currentUser.id)
       .eq("status", "completed")
 
-    const ids = data?.map(a => a.job_id) || []
-    setCompletedJobs(ids)
+    setCompletedJobs(data?.map(a => a.job_id) || [])
   }
 
   // ✅ FETCH JOBS + RATINGS
@@ -124,8 +124,9 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
 
   const unreadCount = notifications.filter(n => !n.is_read).length
 
-  const featuredJobs = jobs.slice(0, 3)
-  const otherJobs = jobs.slice(3)
+  // ✅ REAL FEATURED LOGIC 🔥
+  const featuredJobs = jobs.filter(job => job.is_featured)
+  const otherJobs = jobs.filter(job => !job.is_featured)
 
   if (loading) {
     return (
@@ -164,40 +165,59 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
           </div>
         )}
 
-        {/* 💎 FEATURED */}
+        {/* 💎 FEATURED JOBS */}
         <h2>💎 Featured Jobs</h2>
 
         <div className="featured-jobs">
+
+          {featuredJobs.length === 0 && (
+            <p>No featured jobs yet</p>
+          )}
+
           {featuredJobs.map((job) => {
 
             const isSaved = savedJobs.includes(job.id)
-            const canRate = completedJobs.includes(job.id) // ✅ KEY
+            const canRate = completedJobs.includes(job.id)
 
             return (
               <div className="featured-job-card" key={job.id}>
 
-                <span className="featured-tag">FEATURED</span>
+                <span className="featured-tag">💎 Featured</span>
 
                 <div className="job-title-row">
-                  <h3 onClick={() => navigate(`/contractor/${job.contractor_id}`)}>
-  {job.title}
-</h3>
+                  <h3
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate(`/contractor/${job.contractor_id}`)}
+                  >
+                    {job.title}
+                  </h3>
+
                   {job.verified && (
                     <span className="verified-badge">✔ Verified</span>
                   )}
                 </div>
 
+                {/* ⭐ RATING */}
                 <div className="job-rating">
-                  {job.rating === "New"
-                    ? "No ratings yet"
-                    : `⭐ ${job.rating} (${job.reviews})`}
+                  {job.rating === "New" ? (
+                    <span style={{ color: "#94a3b8", fontSize: "13px" }}>
+                      No ratings yet
+                    </span>
+                  ) : (
+                    <>
+                      <StarRating rating={parseFloat(job.rating)} />
+                      <span style={{ fontSize: "13px", color: "#94a3b8" }}>
+                        ({job.reviews})
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 <p>{job.description?.slice(0, 100)}...</p>
 
                 <div className="job-meta">
-                  <span>📍 {job.location}</span>
-                  <span>₦{job.salary || job.daily_pay}</span>
+                  <span>📍 {job.location || "Remote"}</span>
+                  <span>₦{job.salary || job.daily_pay || "N/A"}</span>
                 </div>
 
                 <div className="worker-job-actions">
@@ -210,7 +230,6 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
                     {isSaved ? "Saved" : "Save"}
                   </button>
 
-                  {/* ⭐ ONLY IF COMPLETED */}
                   {canRate && (
                     <button onClick={() => setSelectedJob(job)}>
                       ⭐ Rate
@@ -224,10 +243,11 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
           })}
         </div>
 
-        {/* 🔥 NEW JOBS */}
+        {/* 🔥 OTHER JOBS */}
         <h2>🔥 New Jobs</h2>
 
         <div className="worker-jobs-grid">
+
           {otherJobs.map((job) => {
 
             const isSaved = savedJobs.includes(job.id)
@@ -236,12 +256,24 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
             return (
               <div className="worker-job-card" key={job.id}>
 
-                <h3>{job.title}</h3>
+                <h3
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/contractor/${job.contractor_id}`)}
+                >
+                  {job.title}
+                </h3>
 
                 <div className="job-rating">
-                  {job.rating === "New"
-                    ? "No ratings yet"
-                    : `⭐ ${job.rating} (${job.reviews})`}
+                  {job.rating === "New" ? (
+                    "No ratings yet"
+                  ) : (
+                    <>
+                      <StarRating rating={parseFloat(job.rating)} />
+                      <span style={{ fontSize: "12px" }}>
+                        ({job.reviews})
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 <p>{job.description?.slice(0, 100)}...</p>
@@ -267,6 +299,7 @@ function WorkerDashboard({ darkMode, setDarkMode }) {
               </div>
             )
           })}
+
         </div>
 
       </div>
