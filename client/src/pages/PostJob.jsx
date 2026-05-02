@@ -7,7 +7,7 @@ import ContractorNavbar from "../components/ContractorNavbar"
 import toast from "react-hot-toast" // ✅ ADD THIS
 import "../styles/layout.css"
 import "../styles/components.css"
-import "../styles/postjob.css"
+import "../styles/Postjob.css"
 
 function PostJob() {
 
