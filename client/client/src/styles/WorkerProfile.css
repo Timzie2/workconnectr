@@ -1,0 +1,99 @@
+/* PROFILE LAYOUT */
+.profile-layout{
+  display:flex;
+  gap:30px;
+  margin-top:30px;
+  flex-wrap:wrap;
+}
+
+/* LEFT SIDE (AVATAR) */
+.profile-avatar{
+  flex:1;
+  text-align:center;
+  background:#1c2736;
+  padding:20px;
+  border-radius:12px;
+  height:fit-content;
+}
+
+/* AVATAR IMAGE */
+.avatar-img{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  margin-bottom:10px;
+}
+
+/* DEFAULT AVATAR */
+.avatar-circle{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:#3b82f6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  font-weight:bold;
+  margin:auto;
+  margin-bottom:10px;
+}
+
+/* UPLOAD BUTTON */
+.upload-btn{
+  display:inline-block;
+  margin:10px 0;
+  background:#3b82f6;
+  padding:8px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* RIGHT SIDE FORM */
+.profile-card{
+  flex:2;
+  background:#1c2736;
+  padding:25px;
+  border-radius:12px;
+}
+
+/* FORM ROW */
+.form-row{
+  display:flex;
+  gap:20px;
+  margin-bottom:15px;
+}
+
+.form-row div{
+  flex:1;
+}
+
+/* INPUTS */
+.profile-card input,
+.profile-card textarea{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:8px;
+  border:none;
+  background:#111827;
+  color:white;
+}
+
+/* RATING SYSTEM */
+.rating-box textarea{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+  background:#111827;
+  color:white;
+}
+
+.stars{
+  display:flex;
+  gap:5px;
+  margin:10px 0;
+}
