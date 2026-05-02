@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import WorkerNavbar from "../components/WorkerNavbar"
-import "./WorkerProfile.css"
+import "../styles/WorkerProfile.css"
 
 function WorkerProfile(){
+
+  const navigate = useNavigate()
 
   const [user,setUser] = useState(null)
 
@@ -22,30 +25,34 @@ function WorkerProfile(){
 
   const [loading,setLoading] = useState(true)
 
+  // ✅ FIXED AUTH (NO LOGOUT 🔥)
   useEffect(()=>{
-    getUser()
+    getSession()
   },[])
 
-  async function getUser(){
-    const { data: { user } } = await supabase.auth.getUser()
+  async function getSession(){
 
-    if(!user){
-      window.location.replace("/login")
+    const { data } = await supabase.auth.getSession()
+
+    if(!data?.session){
+      navigate("/login") // ✅ FIXED
       return
     }
 
-    setUser(user)
+    const currentUser = data.session.user
 
-    await fetchProfile(user.id)
-    await fetchRating(user.id)
+    setUser(currentUser)
+
+    await fetchProfile(currentUser.id)
+    await fetchRating(currentUser.id)
 
     setLoading(false)
   }
 
-  // ✅ FETCH PROFILE (SAFE)
+  // ✅ FETCH PROFILE
   async function fetchProfile(userId){
 
-    const {data, error} = await supabase
+    const {data} = await supabase
       .from("profiles")
       .select("*")
       .eq("id", userId)
@@ -54,7 +61,7 @@ function WorkerProfile(){
     if(data){
       setProfile(data)
     } else {
-      // 🔥 AUTO CREATE PROFILE IF NOT EXISTS
+
       const newProfile = {
         id:userId,
         full_name:"",
@@ -182,7 +189,6 @@ function WorkerProfile(){
 
         <div className="profile-layout">
 
-          {/* LEFT */}
           <div className="profile-avatar">
 
             {profile.avatar_url ? (
@@ -202,14 +208,12 @@ function WorkerProfile(){
 
             <p>{profile.location || "Location not set"}</p>
 
-            {/* ⭐ RATING */}
             <p style={{ marginTop:"10px", fontWeight:"500" }}>
               ⭐ {avgRating} / 5 ({ratingCount})
             </p>
 
           </div>
 
-          {/* RIGHT */}
           <form className="profile-card" onSubmit={updateProfile}>
 
             <div className="form-row">
@@ -255,43 +259,6 @@ function WorkerProfile(){
             <button className="post-job-btn">
               Save Profile
             </button>
-
-            {/* ⭐ RATE USER */}
-            <div className="rating-box" style={{marginTop:"30px"}}>
-
-              <h3>Rate this User</h3>
-
-              <div className="stars">
-                {[1,2,3,4,5].map(num => (
-                  <span
-                    key={num}
-                    onClick={()=>setRating(num)}
-                    style={{
-                      cursor:"pointer",
-                      fontSize:"22px",
-                      color:num <= rating ? "#facc15" : "#555"
-                    }}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-
-              <textarea
-                placeholder="Write a review..."
-                value={review}
-                onChange={(e)=>setReview(e.target.value)}
-              />
-
-              <button
-                type="button"
-                onClick={submitRating}
-                className="post-job-btn"
-              >
-                Submit Rating
-              </button>
-
-            </div>
 
           </form>
 

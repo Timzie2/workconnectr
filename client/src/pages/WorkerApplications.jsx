@@ -2,33 +2,38 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import WorkerNavbar from "../components/WorkerNavbar"
-import "./WorkerDashboard.css"
+import { useAuth } from "../context/AuthContext"
+import "../styles/WorkerDashboard.css"
 
 function WorkerApplications(){
 
   const navigate = useNavigate()
 
+  const { user, loading: authLoading } = useAuth()
+
   const [applications,setApplications] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(()=>{
-    fetchApplications()
-  },[])
+  // ✅ SAFE REDIRECT
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/login")
+    }
+  }, [user, authLoading, navigate])
 
-  // ✅ FETCH APPLICATIONS (FIXED + DEBUG)
+  // ✅ LOAD AFTER AUTH
+  useEffect(()=>{
+    if (!authLoading && user) {
+      fetchApplications()
+    }
+  },[user, authLoading])
+
+  // ✅ FETCH APPLICATIONS
   async function fetchApplications(){
 
+    if (!user) return
+
     setLoading(true)
-
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if(!user){
-      console.log("No user found")
-      setLoading(false)
-      return
-    }
-
-    console.log("Current user:", user.id) // 🔥 DEBUG
 
     const { data,error } = await supabase
       .from("applications")
@@ -49,7 +54,6 @@ function WorkerApplications(){
     if(error){
       console.error("Applications error:", error.message)
     } else {
-      console.log("Applications fetched:", data) // 🔥 DEBUG
       setApplications(data || [])
     }
 
@@ -59,8 +63,7 @@ function WorkerApplications(){
   // ✅ WITHDRAW APPLICATION
   async function withdraw(jobId){
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if(!user) return
+    if (!user) return
 
     const { error } = await supabase
       .from("applications")
@@ -73,13 +76,26 @@ function WorkerApplications(){
       return
     }
 
-    // 🔥 INSTANT UI UPDATE
+    // ✅ INSTANT UI UPDATE
     setApplications(prev =>
       prev.filter(app => app.job_id !== jobId)
     )
   }
 
-  // ✅ LOADING STATE
+  // ✅ AUTH LOADING
+  if(authLoading){
+    return (
+      <>
+        <WorkerNavbar />
+        <div className="worker-dashboard">Loading...</div>
+      </>
+    )
+  }
+
+  // ✅ BLOCK RENDER UNTIL REDIRECT
+  if (!user) return null
+
+  // ✅ PAGE LOADING
   if(loading){
     return (
       <>
@@ -120,12 +136,11 @@ function WorkerApplications(){
                   <span>💰 ₦{job?.salary || "N/A"}/day</span>
                 </div>
 
-                {/* STATUS */}
                 <p style={{
                   marginTop:"10px",
                   fontWeight:"500",
                   color:
-                    app.status === "accepted"
+                    app.status === "approved"
                     ? "#22c55e"
                     : app.status === "rejected"
                     ? "#ef4444"
@@ -134,7 +149,6 @@ function WorkerApplications(){
                   ● {app.status}
                 </p>
 
-                {/* ACTIONS */}
                 <div className="worker-job-actions">
 
                   <button

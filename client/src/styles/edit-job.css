@@ -1,0 +1,21 @@
+.edit-job-wrapper{
+  display:flex;
+  justify-content:center;
+}
+
+.edit-job-card{
+  padding:30px;
+  border-radius:12px;
+}
+
+.save-btn{
+  background:#22c55e;
+}
+
+.cancel-btn{
+  background:#ef4444;
+}
+
+.spinner{
+  animation:spin 0.6s linear infinite;
+}

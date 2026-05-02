@@ -2,6 +2,8 @@ import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
 import supabase from "../supabaseClient"
+import { useAuth } from "../context/AuthContext" // ✅ USE GLOBAL AUTH
+import { useTheme } from "../context/ThemeContext"
 
 import {
   Home,
@@ -9,48 +11,29 @@ import {
   Users,
   Bell,
   User,
-  Settings,
-  LogOut,
   Sun,
   Moon,
-  Monitor,
   MessageSquare
 } from "lucide-react"
 
-import "./Navbar.css"
+import "../styles/ContractorNavbar.css"
 
-function ContractorNavbar({ darkMode, setDarkMode }) {
+function ContractorNavbar() {
 
   const navigate = useNavigate()
+  const { user } = useAuth()
+const [profile, setProfile] = useState(null)
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
-  const [themeMenu, setThemeMenu] = useState(false)
   const [notifications, setNotifications] = useState([])
-  const [userId, setUserId] = useState(null)
 
   const notifRef = useRef(null)
   const profileRef = useRef(null)
-
-  // ✅ GET USER
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-
-      if (!user) {
-        window.location.replace("/login")
-        return
-      }
-
-      setUserId(user.id)
-    }
-
-    getUser()
-  }, [])
+  const { darkMode, setDarkMode } = useTheme()
 
   // ✅ CLOSE DROPDOWNS
   useEffect(() => {
-
     const handleClickOutside = (event) => {
 
       if (profileRef.current?.contains(event.target)) return
@@ -65,13 +48,33 @@ function ContractorNavbar({ darkMode, setDarkMode }) {
     return () => {
       document.removeEventListener("click", handleClickOutside)
     }
-
   }, [])
 
-  // ✅ FETCH NOTIFICATIONS
   useEffect(() => {
 
-    if (!userId) return
+  if (!user) return
+
+  const getProfile = async () => {
+
+    const { data } = await supabase
+  .from("users")
+  .select("full_name, avatar_url")
+  .eq("id", user.id)
+  .single()
+
+if (data) {
+  setProfile(data)
+}
+  }
+
+  getProfile()
+
+}, [user])
+
+  // ✅ FETCH NOTIFICATIONS (SAFE)
+  useEffect(() => {
+
+    if (!user) return
 
     const fetchNotifications = async () => {
 
@@ -87,10 +90,13 @@ function ContractorNavbar({ darkMode, setDarkMode }) {
         `)
         .order("created_at", { ascending: false })
 
-      if (error) return console.log(error)
+      if (error) {
+        console.log(error)
+        return
+      }
 
       const filtered = data.filter(
-        item => item.jobs?.contractor_id === userId
+        item => item.jobs?.contractor_id === user.id
       )
 
       setNotifications(filtered)
@@ -98,38 +104,19 @@ function ContractorNavbar({ darkMode, setDarkMode }) {
 
     fetchNotifications()
 
-    const channel = supabase
-      .channel("applications-channel")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "applications"
-        },
-        () => {
-          fetchNotifications()
-          toast.success("🔔 New application received")
-        }
-      )
-      .subscribe()
+  }, [user])
 
-    return () => {
-      supabase.removeChannel(channel)
-    }
-
-  }, [userId])
-
-  // ✅ OPEN NOTIFICATIONS
+  // ✅ MARK AS READ
   const openNotifications = async () => {
 
     setNotifOpen(prev => !prev)
 
-    if (!notifOpen) {
+    if (!notifOpen && user) {
+
       await supabase
         .from("applications")
         .update({ is_read: true })
-        .eq("is_read", false)
+        .in("job_id", notifications.map(n => n.job_id))
 
       setNotifications(prev =>
         prev.map(n => ({ ...n, is_read: true }))
@@ -137,58 +124,23 @@ function ContractorNavbar({ darkMode, setDarkMode }) {
     }
   }
 
-  // ✅ DELETE NOTIFICATION
-  const deleteNotification = async (id) => {
-
-    await supabase
-      .from("applications")
-      .delete()
-      .eq("id", id)
-
-    setNotifications(prev =>
-      prev.filter(n => n.id !== id)
-    )
-  }
-
-  // ✅ THEME SWITCH
-  const toggleTheme = (mode) => {
-
-    if (mode === "light") setDarkMode(false)
-    if (mode === "dark") setDarkMode(true)
-
-    if (mode === "auto") {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-      setDarkMode(prefersDark)
-    }
-  }
-
   // ✅ LOGOUT
   const handleLogout = async () => {
 
-    try {
-      const { error } = await supabase.auth.signOut()
+    const { error } = await supabase.auth.signOut()
 
-      if (error) {
-        toast.error("Logout failed")
-        return
-      }
-
-      localStorage.clear()
-      sessionStorage.clear()
-
-      toast.success("Logged out 👋")
-      window.location.href = "/login"
-
-    } catch (err) {
-      console.error(err)
+    if (error) {
+      toast.error("Logout failed")
+      return
     }
+
+    toast.success("Logged out 👋")
+    navigate("/login")
   }
 
   return (
-
     <nav className="navbar">
 
-      {/* LEFT */}
       <div className="navbar-left">
 
         <h2 className="logo">WorkConnectr</h2>
@@ -207,136 +159,92 @@ function ContractorNavbar({ darkMode, setDarkMode }) {
 
       </div>
 
-      {/* RIGHT */}
       <div className="navbar-right">
 
-        {/* 🌗 QUICK THEME TOGGLE (NEW 🔥) */}
-        <div
-          className="icon-btn"
-          onClick={() => setDarkMode(prev => !prev)}
-          title="Toggle Theme"
-        >
-          {darkMode ? <Sun size={18}/> : <Moon size={18}/>}
-        </div>
-
         {/* 💬 MESSAGES */}
-        <div
-          className="icon-btn"
-          onClick={() => navigate("/messages")}
-        >
-          <MessageSquare size={20}/>
-        </div>
+<div
+  className="icon-btn"
+  onClick={() => navigate("/contractor-messages")}
+>
+  <MessageSquare size={20}/>
+</div>
 
-        {/* 🔔 NOTIFICATIONS */}
-        <div className="notification" ref={notifRef}>
+{/* 🔔 NOTIFICATIONS */}
+<div className="notification" ref={notifRef}>
+  <Bell size={20} onClick={openNotifications}/>
+</div>
 
-          <Bell size={20} onClick={openNotifications}/>
+{/* 👤 PROFILE */}
+<div
+  className="profile-icon"
+  ref={profileRef}
+  onClick={() => setMenuOpen(prev => !prev)}
+>
+  {profile?.avatar_url ? (
+  <img
+    src={profile.avatar_url}
+    alt="company logo"
+    className="nav-avatar"
+  />
+) : (
+  user?.email?.charAt(0).toUpperCase()
+)}
+</div>
 
-          {notifications.filter(n => !n.is_read).length > 0 && (
-            <span className="notification-count">
-              {notifications.filter(n => !n.is_read).length}
-            </span>
-          )}
+{/* ✅ NEW DROPDOWN */}
+{menuOpen && (
+  <div className="profile-dropdown">
 
-          {notifOpen && (
-            <div className="notification-panel">
+    {/* 🔥 USER HEADER */}
+    <div 
+  className="dropdown-user"
+  onClick={() => navigate("/contractor-profile")}
+>
+  <div className="avatar">
+  {profile?.avatar_url ? (
+  <img 
+    src={profile.avatar_url} 
+    alt="company logo" 
+    className="avatar-img"
+  />
+) : (
+    user?.email?.charAt(0).toUpperCase()
+  )}
+</div>
 
-              <h4 className="notif-header">Notifications</h4>
+  <div className="user-info">
+    <span className="user-name">
+  {profile?.full_name || user?.email}
+</span>
+    <span className="user-email">
+  Contractor
+</span>
+  </div>
+</div>
 
-              {notifications.length === 0 ? (
-                <div className="notif-empty">No notifications</div>
-              ) : (
-                notifications.map((notif) => (
+<div className="dropdown-divider"></div>
 
-                  <div
-                    key={notif.id}
-                    className="notif-card"
-                    onClick={() => navigate("/contractor-applications")}
-                  >
+    {/* MENU ITEMS */}
+    <div onClick={() => navigate("/contractor-profile")}>
+  👤 Profile
+</div>
 
-                    <div className="notif-icon">🔔</div>
+    <div>
+      ⚙️ Account Settings
+    </div>
 
-                    <div className="notif-content">
-                      <p>
-                        <strong>{notif.users?.full_name}</strong> applied for{" "}
-                        <strong>{notif.jobs?.title}</strong>
-                      </p>
+    <div onClick={() => setDarkMode(prev => !prev)}>
+      {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+    </div>
 
-                      <small>
-                        {new Date(notif.created_at).toLocaleString()}
-                      </small>
-                    </div>
+    <div className="dropdown-divider"></div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        deleteNotification(notif.id)
-                      }}
-                    >
-                      ✖
-                    </button>
+    <div className="logout" onClick={handleLogout}>
+      🚪 Logout
+    </div>
 
-                  </div>
-
-                ))
-              )}
-
-            </div>
-          )}
-
-        </div>
-
-        {/* 👤 PROFILE */}
-        <div
-          className="profile-icon"
-          ref={profileRef}
-          onClick={() => setMenuOpen(prev => !prev)}
-        >
-          <User size={18}/>
-        </div>
-
-        {menuOpen && (
-          <div className="profile-dropdown">
-
-            <p className="dropdown-title">Your Account</p>
-
-            {/* 🎨 THEME MENU */}
-            <div onClick={() => setThemeMenu(prev => !prev)}>
-              <Monitor size={16}/> Theme
-            </div>
-
-            {themeMenu && (
-              <>
-                <div onClick={() => toggleTheme("auto")}>Auto</div>
-                <div onClick={() => toggleTheme("light")}>
-                  <Sun size={14}/> Light
-                </div>
-                <div onClick={() => toggleTheme("dark")}>
-                  <Moon size={14}/> Dark
-                </div>
-              </>
-            )}
-
-            <Link to="/contractor-profile">
-              <User size={16}/> Profile
-            </Link>
-
-            <Link to="/settings">
-              <Settings size={16}/> Settings
-            </Link>
-
-            <button
-              className="logout"
-              onClick={(e) => {
-                e.stopPropagation()
-                handleLogout()
-              }}
-            >
-              <LogOut size={16}/> Logout
-            </button>
-
-          </div>
-        )}
+  </div>
+)}
 
       </div>
 

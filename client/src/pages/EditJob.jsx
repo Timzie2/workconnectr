@@ -2,103 +2,290 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import ContractorNavbar from "../components/ContractorNavbar"
+import "../styles/edit-job.css"
 
-function EditJob(){
+function EditJob() {
 
-const {id} = useParams()
-const navigate = useNavigate()
+  const { id } = useParams()
+  const navigate = useNavigate()
 
-const [title,setTitle] = useState("")
-const [description,setDescription] = useState("")
-const [location,setLocation] = useState("")
-const [salary,setSalary] = useState("")
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [location, setLocation] = useState("")
+  const [salary, setSalary] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [category, setCategory] = useState("")
+const [customCategory, setCustomCategory] = useState("")
+const [payType, setPayType] = useState("daily")
 
-useEffect(()=>{
-fetchJob()
-},[])
+  const [saving, setSaving] = useState(false)
+  const [showToast, setShowToast] = useState(false)
 
-async function fetchJob(){
+  // 🔥 NEW: UNSAVED CHANGES
+  const [isDirty, setIsDirty] = useState(false)
 
-const {data,error} = await supabase
-.from("jobs")
-.select("*")
-.eq("id",id)
-.single()
+  useEffect(() => {
+    checkAccessAndFetch()
+  }, [])
 
-if(!error){
-setTitle(data.title)
-setDescription(data.description)
-setLocation(data.location)
-setSalary(data.salary)
-}
+  // 🔥 WARN BEFORE LEAVING PAGE
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
+        e.preventDefault()
+        e.returnValue = ""
+      }
+    }
 
-}
+    window.addEventListener("beforeunload", handleBeforeUnload)
 
-async function updateJob(e){
-e.preventDefault()
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
+  }, [isDirty])
 
-await supabase
-.from("jobs")
-.update({
-title,
-description,
-location,
-salary
+  const checkAccessAndFetch = async () => {
+
+    const { data } = await supabase.auth.getSession()
+    const user = data.session?.user
+
+    if (!user) {
+      navigate("/login")
+      return
+    }
+
+    const { data: userData } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+
+    if (userData?.role !== "contractor") {
+      navigate("/worker-dashboard")
+      return
+    }
+
+    const { data: job, error } = await supabase
+      .from("jobs")
+      .select("*")
+      .eq("id", id)
+      .single()
+
+    if (error || !job) {
+      alert("Job not found")
+      navigate("/contractor-dashboard")
+      return
+    }
+
+    if (job.contractor_id !== user.id) {
+      alert("Unauthorized access")
+      navigate("/contractor-dashboard")
+      return
+    }
+
+    setTitle(job.title || "")
+    setDescription(job.description || "")
+    setLocation(job.location || "")
+    setSalary(job.salary || "")
+setCategory(job.category || "")
+setCustomCategory(job.custom_category || "")
+setPayType(job.pay_type || "daily")
+
+    setLoading(false)
+  }
+
+  const updateJob = async (e) => {
+    e.preventDefault()
+
+    if (!title || !description || !location) {
+      alert("Please fill all required fields")
+      return
+    }
+
+    setSaving(true)
+
+    const { error } = await supabase
+      .from("jobs")
+      .update({
+  title,
+  description,
+  location,
+  salary: salary ? Number(salary) : null,
+  category,
+  custom_category: category === "Other" ? customCategory : null,
+  pay_type: payType
 })
-.eq("id",id)
+      .eq("id", id)
 
-alert("Job Updated")
+    setSaving(false)
 
-navigate("/contractor-dashboard")
-}
+    if (error) {
+      alert("Failed to update job")
+      return
+    }
 
-return(
+    // ✅ RESET DIRTY STATE
+    setIsDirty(false)
 
-<>
-<ContractorNavbar/>
+    setShowToast(true)
 
-<div className="form-container">
+    setTimeout(() => {
+      setShowToast(false)
+      navigate("/contractor-dashboard")
+    }, 2000)
+  }
 
-<h2>Edit Job</h2>
+  if (loading) {
+    return (
+      <>
+        <ContractorNavbar />
+        <div className="edit-job-wrapper">
+          <p>Loading job...</p>
+        </div>
+      </>
+    )
+  }
 
-<form onSubmit={updateJob}>
+  return (
+    <>
+      <ContractorNavbar />
 
-<input
-value={title}
-onChange={(e)=>setTitle(e.target.value)}
-placeholder="Job Title"
-/>
+      <div className="edit-job-wrapper">
 
-<textarea
-value={description}
-onChange={(e)=>setDescription(e.target.value)}
-placeholder="Description"
-/>
+        <div className="edit-job-card">
 
-<input
-value={location}
-onChange={(e)=>setLocation(e.target.value)}
-placeholder="Location"
-/>
+          <h2>Edit Job</h2>
 
-<input
-value={salary}
-onChange={(e)=>setSalary(e.target.value)}
-placeholder="Salary"
-/>
+          <form onSubmit={updateJob}>
 
-<button type="submit">
-Save Changes
-</button>
+            <input
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value)
+                setIsDirty(true)
+              }}
+              placeholder="Job Title"
+              required
+            />
 
-</form>
+            <textarea
+              value={description}
+              onChange={(e) => {
+                setDescription(e.target.value)
+                setIsDirty(true)
+              }}
+              placeholder="Description"
+              required
+            />
 
-</div>
+            <input
+              value={location}
+              onChange={(e) => {
+                setLocation(e.target.value)
+                setIsDirty(true)
+              }}
+              placeholder="Location"
+              required
+            />
 
-</>
+            <input
+              type="number"
+              value={salary}
+              onChange={(e) => {
+                setSalary(e.target.value)
+                setIsDirty(true)
+              }}
+              placeholder="Salary (₦)"
+            />
 
-)
+            {/* CATEGORY */}
+<select
+  value={category}
+  onChange={(e) => {
+    setCategory(e.target.value)
+    setIsDirty(true)
+  }}
+>
+  <option value="">Select Category</option>
+  <option value="Construction">Construction</option>
+  <option value="Electrical">Electrical</option>
+  <option value="Cleaning">Cleaning</option>
+  <option value="IT">IT</option>
+  <option value="Accounting">Accounting</option>
+  <option value="Design">Design</option>
+  <option value="Marketing">Marketing</option>
+  <option value="Other">Other</option>
+</select>
 
+{/* OTHER CATEGORY INPUT */}
+{category === "Other" && (
+  <input
+    placeholder="Enter custom category"
+    value={customCategory}
+    onChange={(e) => {
+      setCustomCategory(e.target.value)
+      setIsDirty(true)
+    }}
+    required
+  />
+)}
+
+{/* PAY TYPE */}
+<select
+  value={payType}
+  onChange={(e) => {
+    setPayType(e.target.value)
+    setIsDirty(true)
+  }}
+>
+  <option value="daily">Per Day</option>
+  <option value="hourly">Per Hour</option>
+  <option value="weekly">Per Week</option>
+  <option value="monthly">Per Month</option>
+  <option value="fixed">Fixed Price</option>
+</select>
+
+            <div className="form-actions">
+
+              <button
+                type="submit"
+                className="save-btn"
+                disabled={saving}
+              >
+                {saving ? <span className="spinner"></span> : "💾 Save Changes"}
+              </button>
+
+              <button
+                type="button"
+                className="cancel-btn"
+                onClick={() => {
+                  if (isDirty) {
+                    const confirmLeave = window.confirm(
+                      "You have unsaved changes. Leave anyway?"
+                    )
+                    if (!confirmLeave) return
+                  }
+                  navigate("/contractor-dashboard")
+                }}
+              >
+                Cancel
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      {showToast && (
+        <div className="toast">
+          ✅ Job updated successfully!
+        </div>
+      )}
+    </>
+  )
 }
 
 export default EditJob

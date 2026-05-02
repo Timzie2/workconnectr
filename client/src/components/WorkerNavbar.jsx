@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
 import supabase from "../supabaseClient"
+import { useAuth } from "../context/AuthContext" // ✅ USE GLOBAL AUTH
+import { useTheme } from "../context/ThemeContext"
 
 import {
   Home,
@@ -12,65 +14,151 @@ import {
   Star,
   Bell,
   Sun,
-  Moon
+  Moon,
+  Search
 } from "lucide-react"
 
-import "./WorkerNavbar.css"
+import "../styles/WorkerNavbar.css"
 
-function WorkerNavbar({ darkMode, setDarkMode }){
+function WorkerNavbar(){
 
-  const navigate = useNavigate()
+const navbarRef = useRef(null)
+const [searchOpen, setSearchOpen] = useState(false)
+const [searchQuery, setSearchQuery] = useState("")
+const [searchResults, setSearchResults] = useState([])
+const [categories, setCategories] = useState([])
+const [selectedCategory, setSelectedCategory] = useState("")
+const [closing, setClosing] = useState(false)
+const searchRef = useRef(null)
+const [activeIndex, setActiveIndex] = useState(-1)
+const [filterOpen, setFilterOpen] = useState(false)
+const navigate = useNavigate()
+const { user } = useAuth() // ✅ ONLY SOURCE OF AUTH
 
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [notifOpen, setNotifOpen] = useState(false)
-  const [notifications, setNotifications] = useState([])
-  const [userId, setUserId] = useState(null)
+const [menuOpen, setMenuOpen] = useState(false)
+const [notifOpen, setNotifOpen] = useState(false)
+const [notifications, setNotifications] = useState([])
 
-  const profileRef = useRef(null)
-  const notifRef = useRef(null)
+const profileRef = useRef(null)
+const notifRef = useRef(null)
+const { darkMode, setDarkMode } = useTheme()
 
-  /* ✅ AUTH CHECK */
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
+  async function handleSearch(query, category = selectedCategory) {
+  setSearchQuery(query)
+  setActiveIndex(-1)
 
-      if (!user) {
-        localStorage.clear()
-        sessionStorage.clear()
-        navigate("/login", { replace: true })
-        return
-      }
+  if (!query.trim()) {
+    setSearchResults([])
+    return
+  }
 
-      setUserId(user.id)
-    }
+  let queryBuilder = supabase
+    .from("jobs")
+    .select(`
+  id,
+  title,
+  description,
+  salary,
+  pay_type,
+  users:contractor_id (
+    company_name,
+    full_name,
+    avatar_url
+  )
+`)
+    .ilike("title", `%${query}%`)
+    .limit(5)
 
-    checkUser()
-  }, [])
+  if (category) {
+    queryBuilder = queryBuilder.eq("category", category)
+  }
+
+  const { data, error } = await queryBuilder
+
+  if (!error) {
+    setSearchResults(data || [])
+  }
+}
+
+function handleKeyDown(e) {
+  if (!searchResults.length) return
+
+  if (e.key === "ArrowDown") {
+    e.preventDefault()
+    setActiveIndex(prev =>
+      prev < searchResults.length - 1 ? prev + 1 : 0
+    )
+  }
+
+  if (e.key === "ArrowUp") {
+    e.preventDefault()
+    setActiveIndex(prev =>
+      prev > 0 ? prev - 1 : searchResults.length - 1
+    )
+  }
+
+  if (e.key === "Enter" && activeIndex >= 0) {
+    navigate(`/job/${searchResults[activeIndex].id}`)
+    setSearchOpen(false)
+  }
+}
+
+useEffect(() => {
+  fetchCategories()
+}, [])
+
+async function fetchCategories() {
+  const { data } = await supabase
+    .from("jobs")
+    .select("category")
+
+  if (data) {
+    let unique = [...new Set(data.map(j => j.category).filter(Boolean))]
+
+// 🔥 Move "Other" to the end
+unique = unique
+  .filter(cat => cat !== "Other")
+  .concat(unique.includes("Other") ? ["Other"] : [])
+
+setCategories(unique)
+  }
+}
 
   /* ✅ CLOSE DROPDOWNS */
   useEffect(() => {
 
-    const handleClickOutside = (event) => {
+  const handleClickOutside = (event) => {
 
-      if (profileRef.current?.contains(event.target)) return
-      if (notifRef.current?.contains(event.target)) return
+    // ✅ Ignore clicks inside navbar
+    if (navbarRef.current?.contains(event.target)) return
 
-      setMenuOpen(false)
-      setNotifOpen(false)
+    // ✅ Close other dropdowns
+    setMenuOpen(false)
+    setNotifOpen(false)
+
+    // ✅ Only close search if it's open
+    if (searchOpen) {
+      setClosing(true)
+
+      setTimeout(() => {
+        setSearchOpen(false)
+        setClosing(false)
+      }, 200)
     }
+  }
 
-    document.addEventListener("click", handleClickOutside)
+  document.addEventListener("click", handleClickOutside)
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside)
-    }
+  return () => {
+    document.removeEventListener("click", handleClickOutside)
+  }
 
-  }, [])
+}, [searchOpen]) // ✅ IMPORTANT // ✅ THIS FIXES EVERYTHING
 
   /* ✅ FETCH + REALTIME NOTIFICATIONS */
   useEffect(() => {
 
-    if (!userId) return
+    if (!user) return
 
     fetchNotifications()
 
@@ -85,7 +173,7 @@ function WorkerNavbar({ darkMode, setDarkMode }){
         },
         (payload) => {
 
-          if (payload.new.user_id === userId) {
+          if (payload.new.user_id === user.id) {
 
             setNotifications(prev => {
 
@@ -104,15 +192,17 @@ function WorkerNavbar({ darkMode, setDarkMode }){
       supabase.removeChannel(channel)
     }
 
-  }, [userId])
+  }, [user])
 
   /* ✅ FETCH */
   const fetchNotifications = async () => {
 
+    if (!user) return
+
     const { data, error } = await supabase
       .from("notifications")
       .select("*")
-      .eq("user_id", userId)
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false })
 
     if (!error) {
@@ -132,12 +222,12 @@ function WorkerNavbar({ darkMode, setDarkMode }){
     const willOpen = !notifOpen
     setNotifOpen(willOpen)
 
-    if (willOpen && unreadCount > 0) {
+    if (willOpen && unreadCount > 0 && user) {
 
       await supabase
         .from("notifications")
         .update({ is_read: true })
-        .eq("user_id", userId)
+        .eq("user_id", user.id)
 
       setNotifications(prev =>
         prev.map(n => ({ ...n, is_read: true }))
@@ -151,9 +241,6 @@ function WorkerNavbar({ darkMode, setDarkMode }){
     try {
       await supabase.auth.signOut()
 
-      localStorage.clear()
-      sessionStorage.clear()
-
       navigate("/login", { replace: true })
 
     } catch (err) {
@@ -163,9 +250,8 @@ function WorkerNavbar({ darkMode, setDarkMode }){
 
   return(
 
-    <nav className="worker-navbar">
+  <nav ref={navbarRef} className="worker-navbar">
 
-      {/* LEFT */}
       <div className="worker-navbar-left">
 
         <h2 className="worker-logo">WorkConnectr</h2>
@@ -188,19 +274,149 @@ function WorkerNavbar({ darkMode, setDarkMode }){
 
       </div>
 
-      {/* RIGHT */}
       <div className="worker-navbar-right">
 
-        {/* 🌗 THEME TOGGLE (NEW 🔥) */}
         <div
-          className="worker-icon-btn"
-          onClick={() => setDarkMode(prev => !prev)}
-          title="Toggle Theme"
+  className="worker-icon-btn"
+  onClick={(e) => {
+  e.stopPropagation() // ✅ VERY IMPORTANT
+
+  if (searchOpen) {
+    setClosing(true)
+    setTimeout(() => {
+      setSearchOpen(false)
+      setClosing(false)
+    }, 200)
+  } else {
+    setSearchOpen(true)
+  }
+}}
+>
+  <Search size={22} />
+</div>
+
+{(searchOpen || closing) && (
+  <div
+  ref={searchRef}
+  className={`nav-search-dropdown ${closing ? "closing" : ""}`}
+>
+
+    {/* 🔍 SEARCH BAR */}
+    <div className="search-bar">
+
+  <Search size={18} />
+
+  <input
+    type="text"
+    placeholder="Search jobs..."
+    value={searchQuery}
+    onChange={(e) => handleSearch(e.target.value)}
+    onKeyDown={handleKeyDown}
+    autoFocus
+  />
+
+  <div className="custom-filter">
+
+    <div
+      className="filter-selected"
+      onClick={(e) => {
+        e.stopPropagation()
+        setFilterOpen(prev => !prev)
+      }}
+    >
+      {selectedCategory || "All"}
+      <span className={`arrow ${filterOpen ? "open" : ""}`}>▾</span>
+    </div>
+
+    {filterOpen && (
+      <div className="filter-dropdown">
+
+        <div
+          className="filter-option"
+          onClick={() => {
+            setSelectedCategory("")
+            handleSearch(searchQuery, "")
+            setFilterOpen(false)
+          }}
         >
-          {darkMode ? <Sun size={18}/> : <Moon size={18}/>}
+          All
         </div>
 
-        {/* 💬 MESSAGES */}
+        {categories.map((cat, i) => (
+          <div
+            key={i}
+            className="filter-option"
+            onClick={() => {
+              setSelectedCategory(cat)
+              handleSearch(searchQuery, cat)
+              setFilterOpen(false)
+            }}
+          >
+            {cat}
+          </div>
+        ))}
+
+      </div>
+    )}
+
+  </div>
+
+</div>
+
+    {/* 📋 RESULTS */}
+<div className="search-results">
+
+  {searchQuery.trim() === "" ? null : searchResults.length === 0 ? (
+    <p className="no-results">No jobs found</p>
+  ) : (
+
+    searchResults.map((job, index) => (
+      <div
+        key={job.id}
+        className={`search-item ${index === activeIndex ? "active" : ""}`}
+        onClick={() => {
+          setSearchOpen(false)
+          navigate(`/job/${job.id}`)
+        }}
+      >
+
+        <div className="search-item-row">
+
+          <img
+            src={
+              job.users?.avatar_url ||
+              `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                job.users?.company_name || job.users?.full_name || "User"
+              )}`
+            }
+            className="search-avatar"
+          />
+
+          <div className="search-info">
+            <h4>{job.title}</h4>
+
+            <p className="search-company">
+              {job.users?.company_name || job.users?.full_name}
+            </p>
+
+            <p className="search-salary">
+              ₦{job.salary?.toLocaleString() || "N/A"}{" "}
+              {job.pay_type ? `/ ${job.pay_type}` : ""}
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    ))
+
+  )}
+
+</div>
+
+  </div>
+)}
+
         <div
           className="worker-icon-btn"
           onClick={() => navigate("/worker-messages")}
@@ -208,11 +424,7 @@ function WorkerNavbar({ darkMode, setDarkMode }){
           <MessageSquare size={20}/>
         </div>
 
-        {/* 🔔 NOTIFICATIONS */}
-        <div
-          className="worker-notification"
-          ref={notifRef}
-        >
+        <div className="worker-notification" ref={notifRef}>
           <Bell size={20} onClick={openNotifications}/>
 
           {unreadCount > 0 && (
@@ -234,8 +446,10 @@ function WorkerNavbar({ darkMode, setDarkMode }){
                     key={notif.id}
                     className="worker-notif-item"
                     style={{
-                      background: notif.is_read ? "#0f172a" : "#334155"
-                    }}
+  background: notif.is_read
+    ? "var(--bg-card)"
+    : "rgba(34,197,94,0.1)"
+}}
                   >
                     {notif.message}
                   </div>
@@ -247,7 +461,6 @@ function WorkerNavbar({ darkMode, setDarkMode }){
 
         </div>
 
-        {/* 👤 PROFILE */}
         <div
           className="worker-profile-icon"
           ref={profileRef}
@@ -262,6 +475,17 @@ function WorkerNavbar({ darkMode, setDarkMode }){
             <Link to="/worker-profile" className="worker-dropdown-item">
               <User size={16}/> Profile
             </Link>
+
+            <button
+  className="worker-dropdown-item"
+  onClick={(e) => {
+    e.stopPropagation()
+    setDarkMode(prev => !prev)
+  }}
+>
+  {darkMode ? <Sun size={16}/> : <Moon size={16}/>}
+  {darkMode ? " Light Mode" : " Dark Mode"}
+</button>
 
             <button
               className="worker-dropdown-item logout"

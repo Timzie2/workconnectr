@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import WorkerNavbar from "../components/WorkerNavbar"
 import { useSaved } from "../context/SavedContext"
-import "./WorkerDashboard.css"
+import "../styles/WorkerDashboard.css"
 
 function SavedJobs() {
 

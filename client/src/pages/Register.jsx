@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import supabase from "../supabaseClient"
+import "../styles/auth.css"
 
 function Register(){
 
@@ -8,117 +9,156 @@ const [name,setName] = useState("")
 const [email,setEmail] = useState("")
 const [password,setPassword] = useState("")
 const [role,setRole] = useState("worker")
+const [showPassword, setShowPassword] = useState(false)
+const [loading, setLoading] = useState(false)
+const [errorMsg, setErrorMsg] = useState("")
 
 const navigate = useNavigate()
 
-const registerUser = async (e)=>{
+const registerUser = async (e) => {
+  e.preventDefault()
+  setLoading(true)
+  setErrorMsg("")
 
-e.preventDefault()
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    })
 
-try{
+    console.log("SIGN UP RESULT:", { data, error })
 
-// ✅ 1. CREATE AUTH USER
-const { data, error } = await supabase.auth.signUp({
-email,
-password
-})
+    if (error) {
+      setErrorMsg(error.message)
+      return
+    }
 
-if(error){
-alert(error.message)
-return
+    if (!data?.user) {
+      setErrorMsg("User not created properly")
+      return
+    }
+
+    const { error: insertError } = await supabase
+      .from("users")
+      .insert([
+        {
+          id: data.user.id,
+          full_name: name,
+          email,
+          role,
+          is_online: false,
+          location: null,
+          skills: "",
+          experience: null,
+          avatar_url: null,
+        },
+      ])
+
+    if (insertError) {
+      console.error("INSERT ERROR:", insertError)
+      setErrorMsg(insertError.message)
+      return
+    }
+
+    setErrorMsg("Registration successful 🎉")
+    setTimeout(() => navigate("/login"), 1500)
+  } catch (err) {
+    console.error("REGISTER CATCH ERROR:", err)
+    setErrorMsg("Registration failed")
+  } finally {
+    setLoading(false)
+    setTimeout(() => setErrorMsg(""), 3000)
+  }
 }
 
-// ✅ 2. SAVE EXTRA DATA IN users TABLE
-await supabase.from("users").insert({
-id: data.user.id, // 🔥 IMPORTANT (UUID)
-name,
-email,
-role,
-is_online: false
-})
+return (
+  <div className="login-page">
 
-alert("Registration successful")
+    <div className="login-card">
 
-navigate("/login")
+      <h1 className="app-title">WorkConnectr</h1>
 
-}catch(err){
+      <p className="app-subtitle">
+        Create your account
+      </p>
 
-alert("Registration failed")
+      <h3>Register</h3>
 
-}
+      <form onSubmit={registerUser}>
 
-}
+        {/* NAME */}
+        <div className="input-group">
+          <input
+            type="text"
+            placeholder=" "
+            value={name}
+            onChange={(e)=>setName(e.target.value)}
+            required
+          />
+          <label>Name</label>
+        </div>
 
-return(
+        {/* EMAIL */}
+        <div className="input-group">
+          <input
+            type="email"
+            placeholder=" "
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
+            required
+          />
+          <label>Email</label>
+        </div>
 
-<div style={{
-display:"flex",
-justifyContent:"center",
-alignItems:"center",
-height:"90vh"
-}}>
+        {/* PASSWORD */}
+        <div className="input-group password-group">
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder=" "
+    value={password}
+    onChange={(e)=>setPassword(e.target.value)}
+    required
+  />
+  <label>Password</label>
 
-<form
-onSubmit={registerUser}
-style={{
-width:"350px",
-display:"flex",
-flexDirection:"column",
-gap:"15px"
-}}
->
-
-<h2>Create Account</h2>
-
-<input
-placeholder="Name"
-value={name}
-onChange={(e)=>setName(e.target.value)}
-required
-/>
-
-<input
-placeholder="Email"
-value={email}
-onChange={(e)=>setEmail(e.target.value)}
-required
-/>
-
-<input
-type="password"
-placeholder="Password"
-value={password}
-onChange={(e)=>setPassword(e.target.value)}
-required
-/>
-
-<select
-value={role}
-onChange={(e)=>setRole(e.target.value)}
->
-
-<option value="worker">Worker</option>
-<option value="contractor">Contractor</option>
-
-</select>
-
-<button
-style={{
-padding:"12px",
-background:"#2563eb",
-color:"white",
-border:"none",
-borderRadius:"6px",
-cursor:"pointer"
-}}
->
-Register
-</button>
-
-</form>
-
+  <span
+    className="toggle-password"
+    onClick={() => setShowPassword(prev => !prev)}
+  >
+    {showPassword ? "🙈" : "👁️"}
+  </span>
 </div>
 
+        {/* ROLE */}
+        <div className="input-group">
+          <select
+            value={role}
+            onChange={(e)=>setRole(e.target.value)}
+          >
+            <option value="worker">Worker</option>
+            <option value="contractor">Contractor</option>
+          </select>
+        </div>
+
+        <button type="submit" disabled={loading}>
+  {loading ? <span className="spinner"></span> : "Register"}
+</button>
+<p className="login-footer">
+  Already have an account? <Link to="/login">Login</Link>
+</p>
+
+      </form>
+
+    </div>
+
+    {/* 🔔 ERROR / SUCCESS TOAST (CORRECT PLACE) */}
+    {errorMsg && (
+      <div className="toast">
+        {errorMsg}
+      </div>
+    )}
+
+  </div>
 )
 
 }

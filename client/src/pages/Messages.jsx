@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import ContractorNavbar from "../components/ContractorNavbar"
 
-function Messages({ darkMode, setDarkMode }) {
+function Messages() {
 
 const navigate = useNavigate()
 
@@ -68,10 +68,7 @@ return (
 
 <div>
 
-<ContractorNavbar
-darkMode={darkMode}
-setDarkMode={setDarkMode}
-/>
+<ContractorNavbar />
 
 
 <div style={{ padding: "40px" }}>

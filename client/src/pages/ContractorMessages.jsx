@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import ContractorNavbar from "../components/ContractorNavbar"
 
-function ContractorMessages({ darkMode, setDarkMode }) {
+function ContractorMessages() {
 
 const navigate = useNavigate()
 const [conversations, setConversations] = useState([])
@@ -48,10 +48,7 @@ setConversations(Object.values(unique))
 
 return (
 
-<div><ContractorNavbar
-darkMode={darkMode}
-setDarkMode={setDarkMode}
-/>
+<div><ContractorNavbar />
 
 <div style={{ padding: "40px" }}><h2>Messages</h2>{conversations.length === 0 && (
 

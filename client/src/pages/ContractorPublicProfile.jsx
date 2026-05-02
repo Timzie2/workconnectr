@@ -3,15 +3,16 @@ import { useParams } from "react-router-dom"
 import supabase from "../supabaseClient"
 import WorkerNavbar from "../components/WorkerNavbar"
 import StarRating from "../components/StarRating"
-import "./ContractorProfile.css"
+import "../styles/ContractorProfile.css"
 
-function ContractorPublicProfile({ darkMode, setDarkMode }) {
+function ContractorPublicProfile() {
 
   const { id } = useParams()
 
   const [contractor, setContractor] = useState(null)
   const [reviews, setReviews] = useState([])
   const [avgRating, setAvgRating] = useState("New")
+  const [ratings, setRatings] = useState([])
 
   useEffect(() => {
     fetchContractor()
@@ -32,16 +33,16 @@ function ContractorPublicProfile({ darkMode, setDarkMode }) {
   // ✅ FETCH REVIEWS (UPDATED 🔥)
   async function fetchReviews() {
 
-    const { data, error } = await supabase
-      .from("ratings")
-      .select(`
-        rating,
-        review,
-        created_at,
-        users:reviewer_id(full_name)
-      `)
-      .eq("reviewed_id", id)
-      .order("created_at", { ascending: false })
+      const { data, error } = await supabase
+  .from("ratings")
+  .select(`
+    rating,
+    comment,
+    created_at,
+    reviewer:reviewer_id(full_name)
+  `)
+  .eq("contractor_id", id)
+  .order("created_at", { ascending: false })
 
     if (error) {
       console.error(error)
@@ -62,7 +63,7 @@ function ContractorPublicProfile({ darkMode, setDarkMode }) {
 
   return (
     <>
-      <WorkerNavbar darkMode={darkMode} setDarkMode={setDarkMode} />
+      <WorkerNavbar />
 
       <div className="contractor-profile">
 
@@ -70,12 +71,12 @@ function ContractorPublicProfile({ darkMode, setDarkMode }) {
         <div className="profile-header">
 
           <div className="profile-avatar">
-            {contractor.full_name?.charAt(0)}
+            {contractor.company_name?.charAt(0) || contractor.full_name?.charAt(0)}
           </div>
 
           <div>
 
-            <h2>{contractor.full_name}</h2>
+            <h2>{contractor.company_name || contractor.full_name}</h2>
 
             <p className="profile-role">
               {contractor.role}
@@ -86,8 +87,8 @@ function ContractorPublicProfile({ darkMode, setDarkMode }) {
 
               {avgRating === "New" ? (
                 <span style={{ color: "#94a3b8" }}>
-                  No ratings yet
-                </span>
+  ⭐ No ratings yet
+</span>
               ) : (
                 <>
                   <StarRating rating={parseFloat(avgRating)} />
@@ -113,7 +114,7 @@ function ContractorPublicProfile({ darkMode, setDarkMode }) {
         {/* 📝 ABOUT */}
         <div className="profile-section">
           <h3>About</h3>
-          <p>{contractor.bio || "No description provided"}</p>
+          <p>{contractor.bio || "This contractor hasn’t added a description yet."}</p>
         </div>
 
         {/* ⭐ REVIEWS (UPGRADED 💎) */}
@@ -122,24 +123,24 @@ function ContractorPublicProfile({ darkMode, setDarkMode }) {
           <h3>Reviews</h3>
 
           {reviews.length === 0 ? (
-            <p>No reviews yet</p>
+            <p>No reviews yet — be the first to rate this contractor.</p>
           ) : (
             reviews.map((r, index) => (
               <div key={index} className="review-card">
 
                 <div className="review-top">
                   <p className="review-name">
-                    {r.users?.full_name || "Anonymous"}
+                    {r.reviewer?.full_name}
                   </p>
 
                   <StarRating rating={r.rating} />
                 </div>
 
-                {r.review && (
-                  <p className="review-text">
-                    {r.review}
-                  </p>
-                )}
+                {r.comment && (
+  <p className="review-text">
+    {r.comment}
+  </p>
+)}
 
                 <p className="review-date">
                   {new Date(r.created_at).toLocaleDateString()}

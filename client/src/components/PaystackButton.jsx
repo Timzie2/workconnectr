@@ -1,107 +1,71 @@
-import { PaystackButton } from "react-paystack"
+import { useState } from "react"
+import { usePaystackPayment } from "react-paystack"
+import "../styles/payments.css"
 
-function PayButton({
-  jobId,
-  email,
-  userId,
-  loading,
-  startLoading,
-  stopLoading,
-  onSuccess
-}) {
+function PayButton({ email, amount, jobId, selectedPlan, user }) {
+
+  const [loading, setLoading] = useState(false)
 
   const publicKey = "pk_test_381c898e5ce344e689d30c21daf0397d3b9cf9dd"
 
-  const VERIFY_URL =
-    "https://vpmddvbycrexfxonovds.supabase.co/functions/v1/verify-payment"
+  const reference = `job_${jobId}_${Date.now()}`
 
-  // ❌ BLOCK IF DATA NOT READY
-  if (!jobId || !email || !userId) {
-    return (
-      <button className="boost-btn disabled" disabled>
-        Loading...
-      </button>
-    )
-  }
-
-  const componentProps = {
+  const config = {
+    reference,
     email,
-    amount: 50000,
-    currency: "NGN",
-
-    metadata: {
-      job_id: jobId,
-      user_id: userId
-    },
-
+    amount,
     publicKey,
-
-    text: loading ? "Processing..." : "💎 Boost Job",
-
-    onSuccess: async (reference) => {
-
-      if (loading) return
-
-      startLoading() // 🔥 START LOADING (FROM PARENT)
-
-      try {
-        console.log("Payment success:", reference)
-
-        const payload = {
-          reference: reference.reference,
-          jobId,
-          userId
-        }
-
-        const res = await fetch(VERIFY_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        })
-
-        if (!res.ok) {
-          const text = await res.text()
-          console.error("Server error:", text)
-          alert("Verification failed")
-          stopLoading()
-          return
-        }
-
-        const data = await res.json()
-
-        if (!data.success) {
-          alert(data.message || "❌ Payment failed")
-          stopLoading()
-          return
-        }
-
-        if (onSuccess) onSuccess()
-
-        alert("🚀 Job boosted successfully!")
-
-      } catch (err) {
-        console.error(err)
-        alert("Something went wrong")
-        stopLoading()
-      } finally {
-        stopLoading() // 🔥 ALWAYS RESET
-      }
-    },
-
-    onClose: () => {
-      console.log("Payment closed")
-      stopLoading() // 🔥 IMPORTANT
+    currency: "NGN",
+    metadata: {
+      jobId,
+      userId: user?.id,
+      plan: selectedPlan
     }
   }
 
+  const initializePayment = usePaystackPayment(config)
+
+  const handlePayment = (e) => {
+    e.preventDefault()
+
+    if (!email || !jobId || !selectedPlan || !user?.id) {
+      alert("Missing payment details ❌")
+      return
+    }
+
+    console.log("🚀 Starting payment...")
+    console.log("REFERENCE:", reference)
+
+    setLoading(true)
+
+    initializePayment({
+      onSuccess: () => {
+        setLoading(false)
+
+        alert("Payment received! Processing... 🚀")
+
+        // reload to reflect webhook update
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
+      },
+
+      onClose: () => {
+        setLoading(false)
+        alert("Payment cancelled ❌")
+      }
+    })
+  }
+
   return (
-    <PaystackButton
-      {...componentProps}
-      className={`boost-btn ${loading ? "disabled" : ""}`}
+    <button
+      type="button"
+      className="boost-btn"
+      onClick={handlePayment}
       disabled={loading}
-    />
+    >
+      {loading ? "Processing..." : "💳 Pay Now"}
+    </button>
   )
 }
 

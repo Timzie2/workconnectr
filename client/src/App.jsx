@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 
 import PostJob from "./pages/PostJob"
@@ -19,37 +19,20 @@ import ProfileSetup from "./pages/ProfileSetup"
 import JobDetails from "./pages/JobDetails"
 import ProtectedRoute from "./components/ProtectedRoute"
 import ContractorPublicProfile from "./pages/ContractorPublicProfile"
-
+import PaymentHistory from "./pages/PaymentHistory"
+import EditJob from "./pages/EditJob"
+import ContractorApplicationsAll from "./pages/ContractorApplicationsAll"
 import "./theme.css"
+import "./styles/layout.css"
+import "./styles/components.css"
+import "./styles/dashboard.css"
+import ForgotPassword from "./pages/ForgotPassword"
+import ResetPassword from "./pages/ResetPassword"
+
+
 
 function App(){
 
-  const [darkMode, setDarkMode] = useState(true)
-
-  /* ✅ LOAD THEME (LOCAL STORAGE OR SYSTEM) */
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme")
-
-    if (savedTheme === "light") {
-      setDarkMode(false)
-    } else if (savedTheme === "dark") {
-      setDarkMode(true)
-    } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-      setDarkMode(prefersDark)
-    }
-  }, [])
-
-  /* ✅ APPLY + SAVE THEME */
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.remove("light-mode")
-      localStorage.setItem("theme", "dark")
-    } else {
-      document.body.classList.add("light-mode")
-      localStorage.setItem("theme", "light")
-    }
-  }, [darkMode])
 
   return(
 
@@ -60,7 +43,6 @@ function App(){
       <Route path="/register" element={<Register />} />
 
       {/* PUBLIC */}
-      <Route path="/jobs" element={<Jobs />} />
       <Route path="/job/:id" element={<JobDetails />} />
 
       {/* WORKER ROUTES */}
@@ -68,7 +50,7 @@ function App(){
         path="/worker-dashboard"
         element={
           <ProtectedRoute role="worker">
-            <WorkerDashboard darkMode={darkMode} setDarkMode={setDarkMode}/>
+            <WorkerDashboard />
           </ProtectedRoute>
         }
       />
@@ -104,7 +86,7 @@ function App(){
         path="/worker-messages"
         element={
           <ProtectedRoute role="worker">
-            <WorkerMessages darkMode={darkMode} setDarkMode={setDarkMode}/>
+            <WorkerMessages />
           </ProtectedRoute>
         }
       />
@@ -114,43 +96,62 @@ function App(){
         path="/contractor-dashboard"
         element={
           <ProtectedRoute role="contractor">
-            <ContractorDashboard darkMode={darkMode} setDarkMode={setDarkMode}/>
+            <ContractorDashboard />
           </ProtectedRoute>
         }
       />
 
       <Route
-        path="/contractor-applications"
-        element={
-          <ProtectedRoute role="contractor">
-            <ContractorApplications />
-          </ProtectedRoute>
-        }
-      />
+  path="/contractor-applications"
+  element={
+    <ProtectedRoute role="contractor">
+      <ContractorApplicationsAll />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/contractor-applications/:jobId"
+  element={
+    <ProtectedRoute role="contractor">
+      <ContractorApplications />
+    </ProtectedRoute>
+  }
+/>
 
       <Route
-        path="/post-job"
-        element={
-          <ProtectedRoute role="contractor">
-            <PostJob />
-          </ProtectedRoute>
-        }
-      />
+  path="/jobs"
+  element={
+    <ProtectedRoute role="worker">
+      <Jobs />
+    </ProtectedRoute>
+  }
+/>
+
 
       <Route
-        path="/contractor-profile"
-        element={
-          <ProtectedRoute role="contractor">
-            <ContractorProfile />
-          </ProtectedRoute>
-        }
-      />
+  path="/post-job"
+  element={
+    <ProtectedRoute role="contractor">
+      <PostJob />
+    </ProtectedRoute>
+  }
+/>
+
+      <Route
+  path="/contractor-profile"
+  element={
+    <ProtectedRoute role="contractor">
+      <ContractorProfile />
+    </ProtectedRoute>
+  }
+/>
 
       <Route
         path="/contractor-messages"
         element={
           <ProtectedRoute role="contractor">
-            <ContractorMessages darkMode={darkMode} setDarkMode={setDarkMode}/>
+            <ContractorMessages />
           </ProtectedRoute>
         }
       />
@@ -160,7 +161,7 @@ function App(){
         path="/chat/:workerId"
         element={
           <ProtectedRoute>
-            <Chat darkMode={darkMode} setDarkMode={setDarkMode}/>
+            <Chat />
           </ProtectedRoute>
         }
       />
@@ -169,7 +170,7 @@ function App(){
         path="/worker/chat/:id"
         element={
           <ProtectedRoute>
-            <Chat darkMode={darkMode} setDarkMode={setDarkMode}/>
+            <Chat />
           </ProtectedRoute>
         }
       />
@@ -178,7 +179,7 @@ function App(){
         path="/contractor/chat/:id"
         element={
           <ProtectedRoute>
-            <Chat darkMode={darkMode} setDarkMode={setDarkMode}/>
+            <Chat />
           </ProtectedRoute>
         }
       />
@@ -193,13 +194,21 @@ function App(){
         }
       />
 
-      {/* DEFAULT */}
-      <Route path="*" element={<Jobs />} />
 
-      <Route
-  path="/contractor/:id"
-  element={<ContractorPublicProfile />}
-/>
+{/* DEFAULT */}
+<Route path="/" element={<Navigate to="/login" />} />
+
+<Route path="/payments" element={<PaymentHistory />} />
+<Route path="/contractor/edit-job/:id" element={<EditJob />} />
+
+<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password" element={<ResetPassword />} />
+
+
+<Route path="/contractor/:id" element={<ContractorPublicProfile />} />
+
+{/* ✅ ALWAYS LAST */}
+<Route path="*" element={<Navigate to="/login" />} />
 
     </Routes>
 

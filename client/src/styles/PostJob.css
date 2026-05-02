@@ -1,0 +1,207 @@
+/* 🔥 PAGE WRAPPER */
+.post-job-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  padding: 40px 20px;
+  background: var(--bg-main);
+}
+
+/* 🔥 CARD */
+.post-job-card {
+  width: 100%;
+  max-width: 600px;
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: fadeIn 0.4s ease-in-out;
+  backdrop-filter: blur(10px);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+/* 🔥 FORM */
+.post-job-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* 🔥 INPUT GROUP */
+.input-group {
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border-radius: 8px;
+  padding: 0 12px;
+  transition: 0.2s;
+  border: 1px solid var(--border-color);
+}
+
+.input-group span {
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+.input-group input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 12px 0;
+  color: var(--text-main);
+  outline: none;
+}
+
+/* ✨ INPUT FOCUS */
+.input-group:focus-within {
+  box-shadow: 0 0 0 2px #22c55e;
+  border-color: #22c55e;
+}
+
+/* 🔥 TEXTAREA */
+.post-job-form textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 8px;
+  color: var(--text-main);
+  min-height: 120px;
+  resize: none;
+  outline: none;
+  transition: 0.2s;
+}
+
+.post-job-form textarea:focus {
+  box-shadow: 0 0 0 2px #22c55e;
+  border-color: #22c55e;
+}
+
+/* 🔥 SELECT */
+.select-input {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 8px;
+  color: var(--text-main);
+  width: 100%;
+  outline: none;
+}
+
+.select-input:focus {
+  box-shadow: 0 0 0 2px #22c55e;
+  border-color: #22c55e;
+}
+
+/* 🔥 PLACEHOLDER */
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+/* 🔥 BUTTON */
+.post-job-btn {
+  background: #22c55e;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.post-job-btn:hover {
+  background: #16a34a;
+}
+
+.post-job-btn:active {
+  transform: scale(0.98);
+}
+
+.post-job-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 🔙 BACK BUTTON */
+.back-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: 0.2s;
+}
+
+.back-btn:hover {
+  background: var(--border-color);
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 600px) {
+  .post-job-card {
+    padding: 20px;
+  }
+
+  .post-job-container {
+    padding: 20px 10px;
+  }
+}
+
+/* ✨ ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-job-container {
+  max-width: 600px;
+  margin: 60px auto;
+  background: var(--bg-card);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.post-job-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.post-job-form input,
+.post-job-form textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-input);
+  color: var(--text-main);
+}
+
+.salary-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.salary-group input {
+  flex: 1;            /* 🔥 THIS FIXES IT */
+  min-width: 120px;   /* optional safety */
+}
+
+.salary-group select {
+  width: 140px;       /* keeps dropdown clean */
+}
