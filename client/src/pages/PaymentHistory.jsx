@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import supabase from "../supabaseClient"
 import ContractorNavbar from "../components/ContractorNavbar"
-import jsPDF from "jspdf"
+import { jsPDF } from "jspdf"
 
 function PaymentHistory() {
 
