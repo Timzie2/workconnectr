@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import supabase from "../supabaseClient"
 import ContractorNavbar from "../components/ContractorNavbar"
-import { jsPDF } from "jspdf"
+
 
 function PaymentHistory() {
 
@@ -97,54 +97,52 @@ function PaymentHistory() {
   }
 
   // 📥 RECEIPT (₦ FIXED PROPERLY)
-  const downloadReceipt = (payment) => {
-    const doc = new jsPDF()
+  const downloadReceipt = async (payment) => {
+  const { jsPDF } = await import("jspdf") // ✅ dynamic import
 
-    doc.setFillColor(37, 99, 235)
-    doc.rect(0, 0, 210, 30, "F")
+  const doc = new jsPDF()
 
-    doc.setTextColor(255, 255, 255)
-    doc.setFontSize(16)
-    doc.text("WorkConnectr", 20, 18)
+  doc.setFillColor(37, 99, 235)
+  doc.rect(0, 0, 210, 30, "F")
 
-    doc.setFontSize(12)
-    doc.text("Payment Receipt", 140, 18)
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(16)
+  doc.text("WorkConnectr", 20, 18)
 
-    doc.setTextColor(0, 0, 0)
+  doc.setFontSize(12)
+  doc.text("Payment Receipt", 140, 18)
 
-    doc.rect(15, 40, 180, 90)
+  doc.setTextColor(0, 0, 0)
 
-    let y = 55
+  doc.rect(15, 40, 180, 90)
 
-    const addRow = (label, value) => {
-      doc.setFont(undefined, "bold")
-      doc.text(label, 20, y)
+  let y = 55
 
-      doc.setFont(undefined, "normal")
-      doc.text(String(value), 90, y)
+  const addRow = (label, value) => {
+    doc.setFont(undefined, "bold")
+    doc.text(label, 20, y)
 
-      y += 10
-    }
+    doc.setFont(undefined, "normal")
+    doc.text(String(value), 90, y)
 
-    addRow("Job:", payment.jobs?.title || "Job")
-    addRow("Plan:", payment.plan.toUpperCase())
-    addRow("Amount:", `₦${payment.amount.toLocaleString()}`)
-    addRow("Status:", payment.status.toUpperCase())
-    addRow("Date:", new Date(payment.created_at).toLocaleDateString("en-NG"))
-    addRow("Reference:", `#${payment.id}`)
-
-    doc.setFontSize(14)
-    doc.text(
-      `Total Paid: ₦${payment.amount.toLocaleString()}`,
-      20,
-      y + 15
-    )
-
-    doc.setFontSize(10)
-    doc.text("Thank you for using WorkConnectr!", 20, 160)
-
-    doc.save(`receipt_${payment.id}.pdf`)
+    y += 10
   }
+
+  addRow("Job:", payment.jobs?.title || "Job")
+  addRow("Plan:", payment.plan.toUpperCase())
+  addRow("Amount:", `₦${payment.amount.toLocaleString()}`)
+  addRow("Status:", payment.status.toUpperCase())
+  addRow("Date:", new Date(payment.created_at).toLocaleDateString("en-NG"))
+  addRow("Reference:", `#${payment.id}`)
+
+  doc.setFontSize(14)
+  doc.text(`Total Paid: ₦${payment.amount.toLocaleString()}`, 20, y + 15)
+
+  doc.setFontSize(10)
+  doc.text("Thank you for using WorkConnectr!", 20, 160)
+
+  doc.save(`receipt_${payment.id}.pdf`)
+}
 
   return (
     <>
