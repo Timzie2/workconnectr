@@ -427,10 +427,17 @@
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.05),transparent);
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(34,197,94,0.08),
+    transparent
+  );
+
   opacity:0;
   transition:0.3s;
-  pointer-events:none; /* 🔥 THIS FIXES YOUR ISSUE */
+  pointer-events:none;
 }
 
 .worker-job-card:hover::before{
@@ -655,7 +662,12 @@
 .worker-job-card:hover,
 .featured-job-card:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+
+  box-shadow:
+    0 10px 25px rgba(34,197,94,0.12),
+    0 4px 12px rgba(0,0,0,0.08);
+
+  border-color: rgba(34,197,94,0.35);
 }
 
 .rating-new {
@@ -991,12 +1003,16 @@
 
 /* 🔥 CARD */
 .worker-job-card {
-  background: linear-gradient(145deg, #1f2937, #111827);
+  background: var(--bg-card);
+  color: var(--text-main);
+
   border-radius: 18px;
   padding: 20px;
+
   transition: all 0.25s ease;
   cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.05);
+
+  border: 1px solid var(--border-color);
 }
 
 .worker-job-card:hover {
@@ -1021,7 +1037,7 @@
 .company-name {
   font-size: 14px;
   font-weight: 600;
-  color: #d1d5db;
+  color: var(--text-main);
 }
 
 .company-tag {
@@ -1047,7 +1063,7 @@
   color: #000;
 }
 
-.status-badge.accepted {
+.status-badge.approved {
   background: #22c55e;
   color: white;
 }

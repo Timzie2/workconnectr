@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import supabase from "../supabaseClient"
 import WorkerNavbar from "../components/WorkerNavbar"
 import StarRating from "../components/StarRating"
-import "../styles/ContractorProfile.css"
+import "../styles/ContractorPublicProfile.css"
 
 function ContractorPublicProfile() {
 
@@ -68,53 +68,100 @@ function ContractorPublicProfile() {
       <div className="contractor-profile">
 
         {/* 🔥 HEADER */}
-        <div className="profile-header">
+<div className="profile-header">
 
-          <div className="profile-avatar">
-            {contractor.company_name?.charAt(0) || contractor.full_name?.charAt(0)}
-          </div>
+  {/* LEFT */}
+  <div className="profile-left">
 
-          <div>
+    {contractor.avatar_url ? (
 
-            <h2>{contractor.company_name || contractor.full_name}</h2>
+      <img
+        src={contractor.avatar_url}
+        alt="contractor"
+        className="contractor-avatar"
+      />
 
-            <p className="profile-role">
-              {contractor.role}
-            </p>
+    ) : (
 
-            {/* ⭐ RATING (UPGRADED) */}
-            <div className="profile-rating">
+      <div className="profile-avatar">
+        {contractor.company_name?.charAt(0) ||
+         contractor.full_name?.charAt(0)}
+      </div>
 
-              {avgRating === "New" ? (
-                <span style={{ color: "#94a3b8" }}>
-  ⭐ No ratings yet
-</span>
-              ) : (
-                <>
-                  <StarRating rating={parseFloat(avgRating)} />
-                  <span style={{ marginLeft: "6px", fontSize: "13px" }}>
-                    {avgRating} ({reviews.length} reviews)
-                  </span>
-                </>
-              )}
+    )}
 
-            </div>
+  </div>
 
-            {/* ✅ VERIFIED */}
-            {reviews.length >= 3 && (
-              <span className="verified-badge">
-                ✔ Verified Contractor
-              </span>
-            )}
+  {/* RIGHT */}
+  <div className="profile-right">
 
-          </div>
+    <h1>
+      {contractor.company_name || contractor.full_name}
+    </h1>
 
-        </div>
+    <p className="profile-role">
+      {contractor.role}
+    </p>
+
+    {/* ⭐ RATING */}
+    <div className="profile-rating">
+
+      {avgRating === "New" ? (
+
+        <span style={{ color:"#94a3b8" }}>
+          ⭐ No ratings yet
+        </span>
+
+      ) : (
+
+        <>
+          <StarRating rating={parseFloat(avgRating)} />
+
+          <span
+            style={{
+              marginLeft:"8px",
+              fontSize:"14px"
+            }}
+          >
+            {avgRating} ({reviews.length} reviews)
+          </span>
+        </>
+
+      )}
+
+    </div>
+
+    {/* VERIFIED */}
+    {reviews.length >= 3 && (
+      <span className="verified-badge">
+        ✔ Verified Contractor
+      </span>
+    )}
+
+    {/* EXTRA INFO */}
+    <div className="contractor-meta">
+
+      <span>
+        📍 {contractor.location || "No location"}
+      </span>
+
+      <span>
+        💼 Contractor
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
 
         {/* 📝 ABOUT */}
         <div className="profile-section">
           <h3>About</h3>
-          <p>{contractor.bio || "This contractor hasn’t added a description yet."}</p>
+          <p>
+  {contractor.about_company ||
+   "This contractor hasn’t added a description yet."}
+</p>
         </div>
 
         {/* ⭐ REVIEWS (UPGRADED 💎) */}

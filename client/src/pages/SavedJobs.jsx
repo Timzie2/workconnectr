@@ -3,15 +3,20 @@ import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import WorkerNavbar from "../components/WorkerNavbar"
 import { useSaved } from "../context/SavedContext"
-import "../styles/WorkerDashboard.css"
+import "../styles/SavedJobs.css"
 
 function SavedJobs() {
 
   const navigate = useNavigate()
   const [jobs, setJobs] = useState([])
+  const [search, setSearch] = useState("")
 
   // ✅ GLOBAL STATE
   const { savedJobs, toggleSave } = useSaved()
+
+  const filteredJobs = jobs.filter(job =>
+  job.title?.toLowerCase().includes(search.toLowerCase())
+)
 
   // ✅ FETCH JOBS BASED ON GLOBAL SAVED IDS
   useEffect(() => {
@@ -27,7 +32,14 @@ function SavedJobs() {
 
     const { data, error } = await supabase
       .from("jobs")
-      .select("*")
+      .select(`
+  *,
+  users!jobs_contractor_id_fkey (
+    full_name,
+    company_name,
+    avatar_url
+  )
+`)
       .in("id", savedJobs)
 
     if (error) {
@@ -45,54 +57,160 @@ function SavedJobs() {
 
         <h1 className="dashboard-title">Saved Jobs ⭐</h1>
 
-        {jobs.length === 0 && (
-          <div style={{ textAlign: "center", opacity: 0.7, marginTop: "40px" }}>
-            <h3>No saved jobs yet ⭐</h3>
-            <p>Save jobs to see them here</p>
-          </div>
-        )}
+        <div className="search-bar">
+
+  <input
+    type="text"
+    placeholder="Search saved jobs..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    className="search-input"
+  />
+
+</div>
+
+<div className="stats-grid">
+
+  <div className="stat-card">
+    <h4>Total Saved</h4>
+    <p>{jobs.length}</p>
+  </div>
+
+  <div className="stat-card">
+    <h4>Showing</h4>
+    <p>{filteredJobs.length}</p>
+  </div>
+
+</div>
+
+        {filteredJobs.length === 0 && (
+  <div className="empty-state">
+
+    <div className="empty-icon">
+      ⭐
+    </div>
+
+    <h3>
+      {search
+        ? "No matching saved jobs"
+        : "No saved jobs yet"}
+    </h3>
+
+    <p>
+      {search
+        ? "Try another keyword."
+        : "Save jobs to view them later."}
+    </p>
+
+    <button
+      className="browse-btn"
+      onClick={() => navigate("/jobs")}
+    >
+      Browse Jobs
+    </button>
+
+  </div>
+)}
 
         <div className="worker-jobs-grid">
 
-          {jobs.map((job) => (
+          {filteredJobs.map((job) => (
 
-            <div className="worker-job-card" key={job.id}>
+  <div className="application-card" key={job.id}>
 
-              <h3>{job.title}</h3>
+    {/* COMPANY */}
+    <div className="company-row saved-company-row">
 
-              <p style={{ fontSize: "12px", opacity: 0.7 }}>
-                🏷 {job.category || "General"}
-              </p>
+      <img
+        src={
+          job.users?.avatar_url
+            ? job.users.avatar_url
+            : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                job.users?.company_name ||
+                job.users?.full_name ||
+                "User"
+              )}&background=0D8ABC&color=fff`
+        }
+        alt="logo"
+        className="company-logo"
+        onClick={() => navigate(`/contractor/${job.contractor_id}`)}
+      />
 
-              <p>{job.description}</p>
+      <div>
 
-              <div className="worker-job-info">
-                <span>📍 {job.location}</span>
-                <span>💰 ₦{job.salary || job.daily_pay}</span>
-              </div>
+        <p
+  className="company-name"
+  onClick={() => navigate(`/contractor/${job.contractor_id}`)}
+  style={{ cursor: "pointer" }}
+>
+  {job.users?.company_name ||
+    job.users?.full_name ||
+    "Anonymous"}
+</p>
+      </div>
 
-              <div className="worker-job-actions">
+    </div>
 
-                <button
-                  className="worker-view-btn"
-                  onClick={() => navigate(`/job/${job.id}`)}
-                >
-                  View
-                </button>
+    {/* CATEGORY */}
+    <div className="status-badge pending">
+      🏷 {job.category || "General"}
+    </div>
 
-                {/* ✅ GLOBAL REMOVE */}
-                <button
-                  className="save-btn saved"
-                  onClick={() => toggleSave(job.id)}
-                >
-                  Remove
-                </button>
+    {/* TITLE */}
+    <h3 className="job-title">
+      {job.title}
+    </h3>
 
-              </div>
+    {/* DESCRIPTION */}
+    <p className="job-desc">
+      {job.description?.slice(0, 100)}...
+    </p>
 
-            </div>
+    {/* INFO */}
+    <div className="app-info">
 
-          ))}
+      <span>
+        📍 {job.location}
+      </span>
+
+      <span className="salary">
+  💰 ₦{Number(job.salary || 0).toLocaleString()}{" "}
+
+  {job.pay_type === "fixed"
+    ? "(fixed)"
+    : job.pay_type === "daily"
+    ? "per day"
+    : job.pay_type === "weekly"
+    ? "per week"
+    : job.pay_type === "monthly"
+    ? "per month"
+    : "per job"}
+</span>
+
+    </div>
+
+    {/* ACTIONS */}
+    <div className="app-actions">
+
+      <button
+        className="view-btn"
+        onClick={() => navigate(`/job/${job.id}`)}
+      >
+        View Job
+      </button>
+
+      <button
+        className="withdraw-btn"
+        onClick={() => toggleSave(job.id)}
+      >
+        Remove
+      </button>
+
+    </div>
+
+  </div>
+
+))}
 
         </div>
 

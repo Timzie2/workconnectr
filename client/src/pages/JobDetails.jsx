@@ -41,7 +41,7 @@ function JobDetails() {
 
   useEffect(() => {
   const interval = setInterval(() => {
-    setTick(prev => prev + 1)
+    setTick(Date.now())
   }, 1000)
 
   return () => clearInterval(interval)
@@ -243,7 +243,7 @@ const getTimeRemainingText = (date) => {
   if (loading) return <div className="worker-dashboard">Loading...</div>
   if (!job) return <div className="worker-dashboard">Job not found</div>
 
-  const now = new Date(tick)
+  const now = new Date()
 
   const isExpired =
   job.expires_at &&
@@ -371,8 +371,8 @@ const isUrgentActive =
   : alreadyApplied
   ? status === "pending"
     ? "⏳ Pending (Withdraw)"
-    : status === "accepted"
-    ? "✅ Accepted (Withdraw)"
+    : status === "approved"
+    ? "✅ Approved (Withdraw)"
     : "❌ Rejected (Withdraw)"
   : isExpired
   ? "Expired"

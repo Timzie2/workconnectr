@@ -338,7 +338,7 @@ const avgRating =
 </div>
 
   {/* 🔥 TOP: COMPANY */}
-  <div className="company-row">
+  <div className="company-row jobs-company-row">
     <img
       src={
         job.users?.avatar_url
@@ -356,7 +356,13 @@ const avgRating =
     />
 
     <div>
-      <p className="company-name">
+      <p
+  className="company-name"
+  onClick={(e) => {
+    e.stopPropagation()
+    navigate(`/contractor/${job.contractor_id}`)
+  }}
+>
   {job.users?.company_name || job.users?.full_name || "Anonymous"}
 
   {avgRating && (
@@ -445,7 +451,7 @@ const avgRating =
       }}
     >
       {status === "pending" && "⏳ Pending"}
-      {status === "accepted" && "✅ Accepted"}
+      {status === "approved" && "✅ approved"}
       {status === "rejected" && "❌ Rejected"}
       {" (Withdraw)"}
     </button>

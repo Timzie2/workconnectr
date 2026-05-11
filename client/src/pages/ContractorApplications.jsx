@@ -58,39 +58,42 @@ if (!job) {
       setJobTitle(job?.title || "Job")
 
       // 🔥 GET APPLICATIONS
-      const { data: apps, error: appError } = await supabase
-        .from("applications")
-        .select(`
-          *,
-          users:worker_id (
-            full_name,
-            skills
-          )
-        `)
-        .eq("job_id", jobId)
-        .order("created_at", { ascending: false })
+const { data: apps, error: appError } = await supabase
+  .from("applications")
+  .select("*")
+  .eq("job_id", jobId)
+  .order("created_at", { ascending: false })
 
-      if (appError) throw appError
+if (appError) throw appError
 
-      if (!apps || apps.length === 0) {
-        setApplications([])
-        setLoading(false)
-        return
-      }
+if (!apps || apps.length === 0) {
+  setApplications([])
+  setLoading(false)
+  return
+}
 
-      // ⭐ ADD RATINGS
-      // 🔥 get all worker IDs
+// ✅ GET WORKER IDS
 const workerIds = [...new Set(apps.map(app => app.worker_id))]
 
-const { data: ratingsData } = workerIds.length
-  ? await supabase
-      .from("ratings")
-      .select("reviewed_id, rating")
-      .in("reviewed_id", workerIds)
-  : { data: [] }
+// ✅ FETCH PROFILES
+const { data: profilesData } = await supabase
+  .from("profiles")
+  .select("id, full_name, skills, avatar_url")
+  .in("id", workerIds)
 
-// 🔥 map ratings
+// ✅ FETCH RATINGS
+const { data: ratingsData } = await supabase
+  .from("ratings")
+  .select("reviewed_id, rating")
+  .in("reviewed_id", workerIds)
+
+// ✅ MERGE DATA
 const formattedApps = apps.map(app => {
+
+  const profile = profilesData?.find(
+    p => p.id === app.worker_id
+  )
+
   const workerRatings = ratingsData?.filter(
     r => r.reviewed_id === app.worker_id
   ) || []
@@ -99,20 +102,27 @@ const formattedApps = apps.map(app => {
   let ratingCount = 0
 
   if (workerRatings.length > 0) {
-    const total = workerRatings.reduce((sum, r) => sum + r.rating, 0)
-    avgRating = (total / workerRatings.length).toFixed(1)
+    const total = workerRatings.reduce(
+      (sum, r) => sum + r.rating,
+      0
+    )
+
+    avgRating = (
+      total / workerRatings.length
+    ).toFixed(1)
+
     ratingCount = workerRatings.length
   }
 
   return {
     ...app,
+    profile,
     avgRating,
     ratingCount
   }
 })
-  
 
-      setApplications(formattedApps)
+setApplications(formattedApps)
 
     } catch (err) {
       console.error("Fetch error:", err.message)
@@ -124,49 +134,71 @@ const formattedApps = apps.map(app => {
   // ✅ APPROVE
   const approveWorker = async (app) => {
 
-    try {
-      const { error } = await supabase
-        .from("applications")
-        .update({ status: "approved" })
-        .eq("id", app.id)
+  try {
 
-      if (error) throw error
+    console.log("APP ID:", app.id)
 
-      await supabase.from("notifications").insert({
-        user_id: app.worker_id,
-        message: "🎉 Your job application was approved!"
-      })
+    const { data, error } = await supabase
+  .from("applications")
+  .update({ status: "approved" })
+  .eq("id", app.id)
+  .select()
 
-      fetchApplications()
-      navigate(`/chat/${app.worker_id}`)
+    console.log("UPDATE DATA:", data)
+    console.log("UPDATE ERROR:", error)
 
-    } catch (err) {
-      alert("Failed to approve worker")
-    }
+    if (error) throw error
+
+    setApplications(prev =>
+  prev.map(a =>
+    a.worker_id === app.worker_id &&
+    a.job_id === app.job_id
+      ? { ...a, status: "approved" }
+      : a
+  )
+)
+
+alert("Approved successfully")
+
+fetchApplications()
+
+  } catch (err) {
+
+    console.error("FULL ERROR:", err)
+
+    alert(err.message || "Failed to approve worker")
   }
+}
 
   // ❌ REJECT
-  const rejectWorker = async (id, worker_id) => {
+  const rejectWorker = async (app) => {
 
-    try {
-      const { error } = await supabase
-        .from("applications")
-        .update({ status: "rejected" })
-        .eq("id", id)
+  try {
 
-      if (error) throw error
+    const { error } = await supabase
+      .from("applications")
+      .update({ status: "rejected" })
+      .eq("id", app.id)
 
-      await supabase.from("notifications").insert({
-        user_id: worker_id,
-        message: "❌ Your application was rejected"
-      })
+    if (error) throw error
 
-      fetchApplications()
+    await supabase.from("notifications").insert({
+      user_id: app.worker_id,
+      message: "❌ Your application was rejected"
+    })
 
-    } catch (err) {
-      console.error(err.message)
-    }
+    setApplications(prev =>
+      prev.map(a =>
+        a.id === app.id
+          ? { ...a, status: "rejected" }
+          : a
+      )
+    )
+
+  } catch (err) {
+    console.error(err.message)
   }
+}
 
   const handleBack = () => {
   if (location.state?.from === "dashboard") {
@@ -220,13 +252,34 @@ const formattedApps = apps.map(app => {
 
               <p><strong>{jobTitle}</strong></p>
 
-              <p>
-                👤 {app.users?.full_name || "Unknown Worker"}
-              </p>
+              <div className="worker-info">
 
-              <p>
-                🛠 {app.users?.skills || "No skills listed"}
-              </p>
+  <img
+  onClick={() => navigate(`/worker/${app.worker_id}`)}
+    src={
+      app.profile?.avatar_url ||
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        app.profile?.full_name || "Worker"
+      )}&background=0f172a&color=fff`
+    }
+    alt="worker"
+    className="worker-avatar"
+  />
+
+  <div>
+    <p
+  className="worker-name clickable"
+  onClick={() => navigate(`/worker/${app.worker_id}`)}
+>
+  {app.profile?.full_name || "Unknown Worker"}
+</p>
+
+    <p className="worker-skill">
+      🛠 {app.profile?.skills || "No skills listed"}
+    </p>
+  </div>
+
+</div>
 
               {app.ratingCount > 0 ? (
   <p>⭐ {app.avgRating} / 5 ({app.ratingCount})</p>
@@ -251,7 +304,7 @@ const formattedApps = apps.map(app => {
 
                     <button
                       className="reject-btn"
-                      onClick={() => rejectWorker(app.id, app.worker_id)}
+                      onClick={() => rejectWorker(app)}
                     >
                       ❌ Reject
                     </button>

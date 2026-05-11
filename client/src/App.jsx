@@ -28,6 +28,7 @@ import "./styles/components.css"
 import "./styles/dashboard.css"
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
+import WorkerPublicProfile from "./pages/WorkerPublicProfile"
 
 
 
@@ -165,6 +166,8 @@ function App(){
           </ProtectedRoute>
         }
       />
+
+      <Route path="/worker/:id" element={<WorkerPublicProfile />} />
 
       <Route
         path="/worker/chat/:id"

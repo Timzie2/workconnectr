@@ -1,6 +1,9 @@
 body {
+  margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
-  background: #f4f6f8;
+  background: #020617;
+  color: white;
 }
 
 .container {
@@ -46,36 +49,11 @@ color:white;
 min-height:100vh;
 }
 
-.light{
-background:#f5f5f5;
-color:#111;
-min-height:100vh;
-}
 
 .dark{
 background:#020617;
 color:white;
 min-height:100vh;
-}
-
-.light{
-background:#f8fafc;
-color:#111827;
-min-height:100vh;
-}
-
-.light .job-card{
-background:white;
-color:#111;
-}
-
-.light .stats-card{
-background:white;
-}
-
-.light .navbar{
-background:white;
-color:black;
 }
 
 #root {
@@ -86,5 +64,52 @@ color:black;
 body {
   margin: 0;
   padding: 0;
+}
+
+/* 🌞 LIGHT MODE FIXES */
+
+.light .dashboard-container{
+  background: linear-gradient(to bottom, #f8fafc, #eef2ff);
+}
+
+.light .dashboard-title{
+  color:#111827;
+}
+
+.light .job-card,
+.light .grouped-card{
+  background:white;
+  border:1px solid #e5e7eb;
+  box-shadow:0 10px 25px rgba(0,0,0,0.06);
+}
+
+.light .job-card strong,
+.light .worker-name,
+.light .group-header h3{
+  color:#111827;
+}
+
+.light .job-card p,
+.light .worker-skill,
+.light .app-count{
+  color:#4b5563;
+}
+
+.light .back-btn{
+  background:white;
+  color:#111827;
+  border:1px solid #d1d5db;
+}
+
+.light .group-body{
+  border-top:1px solid #e5e7eb;
+}
+
+.light .new-request-badge{
+  background:rgba(59,130,246,0.08);
+}
+
+.light .worker-avatar{
+  border:2px solid rgba(59,130,246,0.15);
 }
 

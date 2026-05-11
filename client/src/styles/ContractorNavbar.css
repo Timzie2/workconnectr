@@ -78,7 +78,7 @@
 }
 
 /* PROFILE ICON */
-.profile-icon{
+.contractor-profile-icon{
   width:32px;
   height:32px;
   display:flex;
@@ -183,7 +183,8 @@
 .dropdown-divider{
   height:1px;
   background: var(--border-color);
-  margin:6px 0;
+  margin-top:2px;
+  margin-bottom:10px;
 }
 
 /* 🔥 ITEMS */
@@ -450,29 +451,36 @@ body.light-mode .profile-dropdown .active-item{
   border-radius:10px;
 }
 
-.avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
+.contractor-dropdown-avatar{
+  width:69px;
+  height:69px;
 
-  background: var(--primary);
+  min-width:69px;
+  min-height:69px;
+
+
+  border-radius:50%;
+  overflow:hidden;
+
+  flex-shrink:0;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  overflow:hidden;
-  flex-shrink:0; /* 🔥 prevents shrinking */
+  
 }
 
-.avatar-img{
+.contractor-avatar-img{
   width:100%;
   height:100%;
   object-fit:cover;
-  object-position: 50% 25%;
+  object-position: center;
+  border-radius:10%;
+  display:block;
 }
 
-.nav-avatar {
+.contractor-nav-avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -480,7 +488,7 @@ body.light-mode .profile-dropdown .active-item{
   border: 2px solid rgba(0,255,150,0.3);
 }
 
-.profile-icon:hover{
+.contractor-profile-icon:hover{
   box-shadow: 0 0 0 3px rgba(34,197,94,0.3);
 }
 
@@ -507,4 +515,291 @@ body.light-mode .profile-dropdown .active-item{
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+@media (max-width:320px){
+
+  /* NAVBAR */
+  .navbar{
+    padding:10px 12px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+
+  .navbar::-webkit-scrollbar{
+    display:none;
+  }
+
+  .navbar-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-width:max-content;
+  }
+
+  .navbar-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-left:14px;
+  }
+
+  .logo{
+    font-size:16px;
+    white-space:nowrap;
+  }
+
+  .nav-link{
+    font-size:12px;
+    white-space:nowrap;
+    gap:4px;
+  }
+
+  .nav-link svg{
+    width:14px;
+    height:14px;
+  }
+
+  .profile-avatar,
+  .contractor-avatar{
+    width:30px;
+    height:30px;
+    min-width:30px;
+  }
+
+  /* CONTRACTOR PROFILE */
+  .profile-page{
+    padding:14px 10px;
+  }
+
+  .profile-card{
+    padding:14px;
+    border-radius:14px;
+  }
+
+  .profile-header{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:12px;
+    padding:18px 14px;
+  }
+
+  .company-avatar{
+    width:70px;
+    height:70px;
+    min-width:70px;
+  }
+
+  .profile-header h1{
+    font-size:20px;
+    line-height:1.2;
+  }
+
+  .profile-header p{
+    font-size:13px;
+  }
+
+  /* STATS */
+  .profile-stats{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .stat-box{
+    width:100%;
+    padding:14px;
+  }
+
+  .stat-box h3{
+    font-size:18px;
+  }
+
+  .stat-box p{
+    font-size:12px;
+  }
+
+  /* FORM */
+  .form-section{
+    gap:12px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select{
+    font-size:14px;
+    padding:12px;
+  }
+
+  textarea{
+    min-height:90px;
+  }
+
+  .save-btn{
+    width:100%;
+    font-size:14px;
+    padding:12px;
+  }
+
+  /* REVIEWS */
+  .review-card{
+    padding:10px;
+  }
+
+  .review-text{
+    font-size:13px;
+  }
+
+  .review-date{
+    font-size:11px;
+  }
+}
+
+@media (max-width:375px){
+
+  /* NAVBAR */
+  .navbar{
+    padding:12px 14px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+
+  .navbar::-webkit-scrollbar{
+    display:none;
+  }
+
+  .navbar-left{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    min-width:max-content;
+  }
+
+  .navbar-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-left:16px;
+  }
+
+  .logo{
+    font-size:18px;
+    white-space:nowrap;
+  }
+
+  .nav-link{
+    font-size:13px;
+    white-space:nowrap;
+    gap:5px;
+  }
+
+  .nav-link svg{
+    width:15px;
+    height:15px;
+  }
+
+  .profile-avatar,
+  .contractor-avatar{
+    width:34px;
+    height:34px;
+    min-width:34px;
+  }
+
+  /* DASHBOARD */
+  .dashboard-container{
+    padding:18px 14px;
+  }
+
+  .dashboard-title{
+    font-size:24px;
+    line-height:1.2;
+  }
+
+  .jobs-grid{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+
+  .job-card,
+  .grouped-card{
+    padding:16px;
+    border-radius:16px;
+  }
+
+  /* PROFILE */
+  .profile-page{
+    padding:18px 12px;
+  }
+
+  .profile-card{
+    padding:18px;
+    border-radius:16px;
+  }
+
+  .profile-header{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:14px;
+  }
+
+  .company-avatar{
+    width:80px;
+    height:80px;
+    min-width:80px;
+  }
+
+  .profile-header h1{
+    font-size:22px;
+  }
+
+  .profile-header p{
+    font-size:14px;
+  }
+
+  /* STATS */
+  .profile-stats{
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .stat-box{
+    width:100%;
+    padding:16px;
+  }
+
+  /* FORM */
+  .form-section{
+    gap:14px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select{
+    padding:13px;
+    font-size:14px;
+  }
+
+  textarea{
+    min-height:100px;
+  }
+
+  .save-btn{
+    width:100%;
+    padding:13px;
+    font-size:14px;
+  }
+
+  /* BUTTONS */
+  .job-actions{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .approve-btn,
+  .reject-btn,
+  .message-btn,
+  .view-btn{
+    width:100%;
+  }
 }

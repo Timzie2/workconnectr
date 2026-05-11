@@ -15,7 +15,8 @@ import {
   Bell,
   Sun,
   Moon,
-  Search
+  Search,
+  Settings
 } from "lucide-react"
 
 import "../styles/WorkerNavbar.css"
@@ -33,11 +34,12 @@ const searchRef = useRef(null)
 const [activeIndex, setActiveIndex] = useState(-1)
 const [filterOpen, setFilterOpen] = useState(false)
 const navigate = useNavigate()
-const { user } = useAuth() // ✅ ONLY SOURCE OF AUTH
+const { user } = useAuth()
 
 const [menuOpen, setMenuOpen] = useState(false)
 const [notifOpen, setNotifOpen] = useState(false)
 const [notifications, setNotifications] = useState([])
+const [profileData, setProfileData] = useState(null)
 
 const profileRef = useRef(null)
 const notifRef = useRef(null)
@@ -193,6 +195,27 @@ setCategories(unique)
     }
 
   }, [user])
+
+  useEffect(() => {
+
+  if(user){
+    fetchProfile()
+  }
+
+}, [user])
+
+async function fetchProfile(){
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single()
+
+  if(data){
+    setProfileData(data)
+  }
+}
 
   /* ✅ FETCH */
   const fetchNotifications = async () => {
@@ -462,43 +485,88 @@ setCategories(unique)
         </div>
 
         <div
-          className="worker-profile-icon"
-          ref={profileRef}
-          onClick={() => setMenuOpen(prev => !prev)}
-        >
-          <User size={18}/>
-        </div>
+  className="worker-profile-icon"
+  ref={profileRef}
+  onClick={() => setMenuOpen(prev => !prev)}
+>
 
-        {menuOpen && (
-          <div className="worker-profile-dropdown">
+  <img
+    src={
+  profileData?.avatar_url ||
+  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    profileData?.full_name || "User"
+  )}`
+}
+    alt="profile"
+    className="worker-avatar"
+  />
 
-            <Link to="/worker-profile" className="worker-dropdown-item">
-              <User size={16}/> Profile
-            </Link>
+</div>
 
-            <button
+{menuOpen && (
+  <div className="worker-profile-dropdown">
+
+    {/* 🔥 TOP USER INFO */}
+    <div className="dropdown-user-info">
+
+      <img
+        src={
+  profileData?.avatar_url ||
+  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    profileData?.full_name || "User"
+  )}`
+}
+        alt="profile"
+        className="dropdown-avatar"
+      />
+
+      <div>
+        <h4>
+          {profileData?.full_name || "Worker"}
+        </h4>
+
+        <p>Worker</p>
+      </div>
+
+    </div>
+
+    <div className="dropdown-divider"></div>
+
+    {/* MENU */}
+    <Link to="/worker-profile" className="worker-dropdown-item">
+  <User size={18}/> Profile
+</Link>
+
+<button className="worker-dropdown-item">
+  <Settings size={18}/> Account Settings
+</button>
+
+<button
   className="worker-dropdown-item"
   onClick={(e) => {
     e.stopPropagation()
     setDarkMode(prev => !prev)
   }}
 >
-  {darkMode ? <Sun size={16}/> : <Moon size={16}/>}
+  {darkMode ? <Sun size={18}/> : <Moon size={18}/>}
   {darkMode ? " Light Mode" : " Dark Mode"}
 </button>
 
-            <button
-              className="worker-dropdown-item logout"
-              onClick={(e) => {
-                e.stopPropagation()
-                logout()
-              }}
-            >
-              <LogOut size={16}/> Logout
-            </button>
+    <div className="dropdown-divider"></div>
 
-          </div>
-        )}
+    {/* LOGOUT */}
+    <button
+      className="worker-dropdown-item logout"
+      onClick={(e) => {
+        e.stopPropagation()
+        logout()
+      }}
+    >
+      <LogOut size={18}/> Logout
+    </button>
+
+  </div>
+)}
 
       </div>
 

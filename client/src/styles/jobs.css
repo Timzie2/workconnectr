@@ -44,11 +44,12 @@
 }
 
 /* 🔥 COMPANY */
-.company-row {
+.jobs-company-row {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 14px;
+  margin-top:-26px; /* 🔥 moves it upward */
 }
 
 .company-logo {
@@ -265,8 +266,8 @@
   color: #000;
 }
 
-/* ✅ Accepted */
-.apply-btn.applied.accepted {
+/* ✅ Approved */
+.apply-btn.applied.approved {
   background-color: #22c55e; /* green */
 }
 

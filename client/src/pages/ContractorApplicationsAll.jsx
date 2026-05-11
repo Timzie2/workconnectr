@@ -141,14 +141,17 @@ setApplications(Object.entries(grouped))
 
           <div key={app.id} className="applicant-card">
 
+            {app.status === "pending" && (
+  <div className="new-request-badge">
+    <span className="pulse-dot"></span>
+    New Request
+  </div>
+)}
+
             <div className="applicant-header">
               <p className="applicant-name">
                 👤 {app.users?.full_name || "Unknown Worker"}
-              </p>
-
-              {!app.is_read && (
-                <span className="new-badge">NEW</span>
-              )}
+              </p>    
             </div>
 
             <p className="applicant-skill">

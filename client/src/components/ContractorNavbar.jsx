@@ -176,7 +176,7 @@ if (data) {
 
 {/* 👤 PROFILE */}
 <div
-  className="profile-icon"
+  className="contractor-profile-icon"
   ref={profileRef}
   onClick={() => setMenuOpen(prev => !prev)}
 >
@@ -184,7 +184,7 @@ if (data) {
   <img
     src={profile.avatar_url}
     alt="company logo"
-    className="nav-avatar"
+    className="contractor-nav-avatar"
   />
 ) : (
   user?.email?.charAt(0).toUpperCase()
@@ -200,12 +200,12 @@ if (data) {
   className="dropdown-user"
   onClick={() => navigate("/contractor-profile")}
 >
-  <div className="avatar">
+  <div className="contractor-dropdown-avatar">
   {profile?.avatar_url ? (
   <img 
     src={profile.avatar_url} 
     alt="company logo" 
-    className="avatar-img"
+    className="contractor-avatar-img"
   />
 ) : (
     user?.email?.charAt(0).toUpperCase()

@@ -442,8 +442,8 @@ const status = application?.status
                 {status === "pending" && (
   <span className="status-badge pending">⏳ Pending</span>
 )}
-{status === "accepted" && (
-  <span className="status-badge accepted">✅ Accepted</span>
+{status === "approved" && (
+  <span className="status-badge approved">✅ Approved</span>
 )}
 {status === "rejected" && (
   <span className="status-badge rejected">❌ Rejected</span>
@@ -482,9 +482,9 @@ const status = application?.status
     >
       ❌ Withdraw
     </button>
-  ) : status === "accepted" ? (
+  ) : status === "approved" ? (
     <button className="btn success" disabled>
-      ✅ Accepted
+      ✅ Approved
     </button>
   ) : (
     <button className="btn secondary" disabled>
@@ -603,8 +603,8 @@ const status = application?.status
         {status === "pending" && (
   <span className="status-badge pending">⏳ Pending</span>
 )}
-{status === "accepted" && (
-  <span className="status-badge accepted">✅ Accepted</span>
+{status === "approved" && (
+  <span className="status-badge approved">✅ Approved</span>
 )}
 {status === "rejected" && (
   <span className="status-badge rejected">❌ Rejected</span>
@@ -641,9 +641,9 @@ const status = application?.status
     >
       ❌ Withdraw
     </button>
-  ) : status === "accepted" ? (
+  ) : status === "approved" ? (
     <button className="btn success" disabled>
-      ✅ Accepted
+      ✅ Approved
     </button>
   ) : (
     <button className="btn secondary" disabled>
@@ -773,8 +773,8 @@ const status = application?.status
 {status === "pending" && (
   <span className="status-badge pending">⏳ Pending</span>
 )}
-{status === "accepted" && (
-  <span className="status-badge accepted">✅ Accepted</span>
+{status === "approved" && (
+  <span className="status-badge approved">✅ Approved</span>
 )}
 {status === "rejected" && (
   <span className="status-badge rejected">❌ Rejected</span>
@@ -811,9 +811,9 @@ const status = application?.status
     >
       ❌ Withdraw
     </button>
-  ) : status === "accepted" ? (
+  ) : status === "approved" ? (
     <button className="btn success" disabled>
-      ✅ Accepted
+      ✅ Approved
     </button>
   ) : (
     <button className="btn secondary" disabled>

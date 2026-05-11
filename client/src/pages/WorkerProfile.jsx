@@ -11,12 +11,15 @@ function WorkerProfile(){
   const [user,setUser] = useState(null)
 
   const [profile,setProfile] = useState({
-    full_name:"",
-    location:"",
-    skills:"",
-    experience:"",
-    avatar_url:""
-  })
+  full_name:"",
+  headline:"",
+  phone:"",
+  availability:"Available",
+  location:"",
+  skills:"",
+  experience:"",
+  avatar_url:""
+})
 
   const [avgRating,setAvgRating] = useState(0)
   const [ratingCount,setRatingCount] = useState(0)
@@ -131,49 +134,82 @@ function WorkerProfile(){
   }
 
   // 📸 UPLOAD IMAGE
-  async function uploadAvatar(e){
+async function uploadAvatar(e){
 
-    const file = e.target.files[0]
-    if(!file || !user) return
+  const file = e.target.files[0]
 
-    const fileExt = file.name.split(".").pop()
-    const fileName = `${user.id}.${fileExt}`
+  if(!file || !user) return
 
-    const {error} = await supabase.storage
-      .from("avatars")
-      .upload(fileName,file,{ upsert:true })
+  const fileExt = file.name.split(".").pop()
 
-    if(error){
-      alert("Upload failed")
-      return
-    }
+  const fileName = `${user.id}.${fileExt}`
 
-    const {data} = supabase.storage
-      .from("avatars")
-      .getPublicUrl(fileName)
-
-    setProfile({
-      ...profile,
-      avatar_url:data.publicUrl
+  // ✅ UPLOAD IMAGE
+  const { error: uploadError } = await supabase.storage
+    .from("avatars")
+    .upload(fileName, file, {
+      upsert: true
     })
+
+  if(uploadError){
+  console.error(uploadError)
+  alert(uploadError.message)
+  return
+}
+
+  // ✅ GET PUBLIC URL
+  const { data } = supabase.storage
+    .from("avatars")
+    .getPublicUrl(fileName)
+
+  const avatarUrl = data.publicUrl
+
+  // ✅ SAVE TO DATABASE
+  const { error: updateError } = await supabase
+    .from("profiles")
+    .update({
+      avatar_url: avatarUrl
+    })
+    .eq("id", user.id)
+
+  if(updateError){
+    console.error(updateError)
+    alert(updateError.message)
+    return
   }
 
-  // ✅ UPDATE PROFILE
-  async function updateProfile(e){
+  // ✅ UPDATE UI
+  setProfile(prev => ({
+    ...prev,
+    avatar_url: avatarUrl
+  }))
 
-    e.preventDefault()
+  alert("Photo updated ✅")
+}
 
-    if(!user) return
 
-    await supabase
-      .from("profiles")
-      .upsert({
-        id:user.id,
-        ...profile
-      })
+// ✅ UPDATE PROFILE
+async function updateProfile(e){
 
-    alert("Profile updated ✅")
+  e.preventDefault()
+
+  if(!user) return
+
+  const { error } = await supabase
+    .from("profiles")
+    .upsert({
+      id: user.id,
+      ...profile
+    })
+
+  if(error){
+    console.error(error)
+    alert("Failed to update profile")
+    return
   }
+
+  alert("Profile updated ✅")
+}
 
   if(loading){
     return <div>Loading profile...</div>
@@ -189,15 +225,32 @@ function WorkerProfile(){
 
         <div className="profile-layout">
 
-          <div className="profile-avatar">
+          <div className="worker-profile-sidebar">
 
             {profile.avatar_url ? (
-              <img src={profile.avatar_url} className="avatar-img"/>
-            ):(
-              <div className="avatar-circle">
-                {profile.full_name?.charAt(0)?.toUpperCase() || "U"}
-              </div>
-            )}
+  <img
+    src={profile.avatar_url}
+    className="worker-avatar-img"
+    alt="avatar"
+    onError={(e)=>{
+      e.target.onerror = null
+      e.target.src =
+        "https://ui-avatars.com/api/?name=" +
+        encodeURIComponent(profile.full_name || "U") +
+        "&background=2563eb&color=fff&size=128"
+    }}
+  />
+) : (
+  <img
+    src={
+      "https://ui-avatars.com/api/?name=" +
+      encodeURIComponent(profile.full_name || "U") +
+      "&background=2563eb&color=fff&size=128"
+    }
+    className="avatar-img"
+    alt="avatar"
+  />
+)}
 
             <label className="upload-btn">
               Change Photo
@@ -206,7 +259,21 @@ function WorkerProfile(){
 
             <h3>{profile.full_name || "No Name"}</h3>
 
-            <p>{profile.location || "Location not set"}</p>
+<p className="worker-headline">
+  {profile.headline || "No headline"}
+</p>
+
+<div className="worker-location">
+  📍 {profile.location || "Location not set"}
+</div>
+
+<div className="availability-badge">
+  🟢 {profile.availability || "Available"}
+</div>
+
+<div className="worker-phone">
+  📞 {profile.phone || "No phone"}
+</div>
 
             <p style={{ marginTop:"10px", fontWeight:"500" }}>
               ⭐ {avgRating} / 5 ({ratingCount})
@@ -239,6 +306,58 @@ function WorkerProfile(){
               </div>
 
             </div>
+
+            <div className="form-row">
+
+  <div>
+    <label>Professional Headline</label>
+
+    <input
+      placeholder="e.g. Electrician"
+      value={profile.headline || ""}
+      onChange={(e)=>
+        setProfile({
+          ...profile,
+          headline:e.target.value
+        })
+      }
+    />
+  </div>
+
+  <div>
+    <label>Phone Number</label>
+
+    <input
+      placeholder="08012345678"
+      value={profile.phone || ""}
+      onChange={(e)=>
+        setProfile({
+          ...profile,
+          phone:e.target.value
+        })
+      }
+    />
+  </div>
+
+</div>
+
+<label>Availability</label>
+
+<select
+  value={profile.availability || "Available"}
+  onChange={(e)=>
+    setProfile({
+      ...profile,
+      availability:e.target.value
+    })
+  }
+>
+
+  <option>Available</option>
+  <option>Busy</option>
+  <option>Open to Remote Work</option>
+
+</select>
 
             <label>Skills</label>
             <textarea
