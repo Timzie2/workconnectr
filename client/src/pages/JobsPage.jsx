@@ -142,6 +142,28 @@ useEffect(() => {
     return
   }
 
+  const selectedJob = jobs.find(job => job.id === jobId)
+
+const { data: workerProfile } = await supabase
+  .from("users")
+  .select("full_name, avatar_url")
+  .eq("id", user.id)
+  .single()
+
+const { error: notificationError } = await supabase
+  .from("notifications")
+  .insert({
+    user_id: selectedJob.contractor_id,
+    sender_id: user.id,
+    title: "New Application",
+    message: `${workerProfile?.full_name || "A worker"} applied for ${selectedJob.title}`,
+    type: "application",
+    job_id: jobId,
+    is_read: false
+  })
+
+console.log(notificationError)
+
   toast.success("Application sent 🚀")
 
   // ✅ update applications instead

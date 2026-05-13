@@ -70,6 +70,25 @@ function Verify() {
             status: "success"
           })
 
+          // 🔔 PAYMENT NOTIFICATION
+await supabase
+  .from("notifications")
+  .insert({
+    user_id: user?.id,
+
+    sender_id: user?.id,
+
+    title: "Payment Successful",
+
+    message: `Your ${plan} boost payment was successful`,
+
+    type: "payment",
+
+    job_id: jobId,
+
+    is_read: false
+  })
+
           // 🔥 BOOST LOGIC
           const planDays = {
             basic: 1,

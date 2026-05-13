@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import { useAuth } from "../context/AuthContext" // ✅ NEW
+import "../styles/ProfileSetup.css"
 
 function ProfileSetup() {
 
@@ -10,9 +11,9 @@ function ProfileSetup() {
   const { user, loading: authLoading } = useAuth() // ✅ GLOBAL AUTH
 
   const [name, setName] = useState("")
-  const [role, setRole] = useState("worker")
   const [skills, setSkills] = useState("")
   const [loading, setLoading] = useState(false)
+  const [userRole, setUserRole] = useState("")
 
   // ✅ REDIRECT IF NOT LOGGED IN
   useEffect(() => {
@@ -20,6 +21,29 @@ function ProfileSetup() {
       navigate("/login")
     }
   }, [user, authLoading])
+
+  useEffect(() => {
+
+  if (!user) return
+
+  const getUserRole = async () => {
+
+    const { data } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+
+    console.log("ROLE DATA:", data)
+
+if (data?.role) {
+  setUserRole(data.role)
+}
+  }
+
+  getUserRole()
+
+}, [user])
 
   // ✅ HANDLE PROFILE SAVE
   const handleSaveProfile = async (e) => {
@@ -32,10 +56,10 @@ function ProfileSetup() {
     const { error } = await supabase
       .from("users")
       .update({
-        full_name: name,
-        role: role,
-        skills: skills
-      })
+  full_name: name,
+  skills: skills,
+  profile_completed: true
+})
       .eq("id", user.id)
 
     if (error) {
@@ -47,11 +71,19 @@ function ProfileSetup() {
     alert("Profile saved!")
 
     // ✅ REDIRECT BASED ON ROLE
-    if (role === "worker") {
-      navigate("/worker-dashboard")
-    } else {
-      navigate("/contractor-dashboard")
-    }
+   if (!userRole) {
+  alert("Role not found")
+  setLoading(false)
+  return
+}
+
+if (userRole === "worker") {
+  navigate("/worker-dashboard")
+} else if (userRole === "contractor") {
+  navigate("/contractor-dashboard")
+} else {
+  alert("Invalid role")
+}
   }
 
   // ✅ AUTH LOADING
@@ -60,42 +92,90 @@ function ProfileSetup() {
   }
 
   return (
-    <div className="login-page">
-      <div className="login-card">
+  <div className="profile-setup-page">
 
-        <h2>Complete Your Profile</h2>
+    <div className="login-card profile-setup-card">
 
-        <form onSubmit={handleSaveProfile}>
 
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={name}
-            onChange={(e)=>setName(e.target.value)}
-            required
-          />
 
-          <select value={role} onChange={(e)=>setRole(e.target.value)}>
-            <option value="worker">Worker</option>
-            <option value="contractor">Contractor</option>
-          </select>
+  <div className="setup-icon">
+    👋
+  </div>
 
-          <input
-            type="text"
-            placeholder="Skills (e.g electrician, plumber)"
-            value={skills}
-            onChange={(e)=>setSkills(e.target.value)}
-          />
+  <h2>Welcome to WorkConnectr</h2>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Saving..." : "Continue"}
-          </button>
+  <p className="setup-subtext">
+    Complete your profile to start applying
+    for jobs and connecting with contractors.
+  </p>
 
-        </form>
+  <form onSubmit={handleSaveProfile}>
 
-      </div>
+    <div className="input-group">
+      <span>👤</span>
+
+      <input
+        type="text"
+        placeholder="Your full name"
+        value={name}
+        onChange={(e)=>setName(e.target.value)}
+        required
+      />
     </div>
-  )
+
+    <div className="input-group">
+      <span>🛠️</span>
+
+      <input
+        type="text"
+        placeholder="Skills (e.g Graphic Designer, plumber)"
+        value={skills}
+        onChange={(e)=>setSkills(e.target.value)}
+      />
+    </div>
+
+    <div className="skill-suggestions">
+
+  {[
+    "Frontend Developer",
+    "UI/UX Designer",
+    "Electrician",
+    "Plumber",
+    "Graphic Designer",
+    "Video Editor",
+    "Mobile App Developer",
+    "Carpenter",
+    "Painter",
+    "Virtual Assistant"
+  ].map((skill) => (
+
+    <button
+      type="button"
+      key={skill}
+      className="skill-chip"
+      onClick={() => setSkills(skill)}
+    >
+      {skill}
+    </button>
+
+  ))}
+
+</div>
+
+    <button
+  type="submit"
+  disabled={loading}
+  className="profile-submit-btn"
+>
+      {loading ? "Saving..." : "Continue"}
+    </button>
+
+  </form>
+
+</div>
+
+  </div>
+)
 }
 
 export default ProfileSetup

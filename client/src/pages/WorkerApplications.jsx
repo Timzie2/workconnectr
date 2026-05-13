@@ -150,6 +150,31 @@ async function submitRating(){
     return
   }
 
+  const { data: reviewerProfile } = await supabase
+  .from("users")
+  .select("full_name")
+  .eq("id", user.id)
+  .single()
+
+await supabase
+  .from("notifications")
+  .insert({
+    user_id:
+      selectedApplication.jobs.contractor_id,
+
+    sender_id: user.id,
+
+    title: "New Review",
+
+    message: `${
+      reviewerProfile?.full_name || "Someone"
+    } left you a review`,
+
+    type: "review",
+
+    is_read: false
+  })
+
   alert("Review submitted ✅")
 
   setShowRatingModal(false)

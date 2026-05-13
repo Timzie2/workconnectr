@@ -1,3 +1,5 @@
+import { useAuth } from "./context/AuthContext"
+import OfflineScreen from "./components/OfflineScreen"
 import { Routes, Route, Navigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 
@@ -33,6 +35,12 @@ import WorkerPublicProfile from "./pages/WorkerPublicProfile"
 
 
 function App(){
+
+  const { networkError } = useAuth()
+
+if (networkError) {
+  return <OfflineScreen />
+}
 
 
   return(

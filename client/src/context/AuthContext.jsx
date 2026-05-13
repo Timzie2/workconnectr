@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(undefined)
   const [role, setRole] = useState(null) // ✅ ADD ROLE
   const [loading, setLoading] = useState(true)
+  const [networkError, setNetworkError] = useState(false)
 
   useEffect(() => {
 
@@ -41,27 +42,27 @@ export function AuthProvider({ children }) {
       console.error("ROLE FETCH ERROR:", error)
     }
 
-    let finalRole = "none"
+    let finalRole = "worker"
 
-    if (!data) {
-      console.log("User not found, creating...")
+    if (error) {
+  console.error("ROLE FETCH ERROR:", error)
 
-      const { data: insertedUser } = await supabase
-        .from("users")
-        .insert([
-          {
-            id: sessionUser.id,
-            email: sessionUser.email,
-            role: "none"
-          }
-        ])
-        .select()
-        .single()
+  setNetworkError(true)
 
-      finalRole = insertedUser?.role || "none"
-    } else {
-      finalRole = data.role || "none"
-    }
+  setLoading(false)
+
+  return
+}
+
+if (!data) {
+  console.log("User row not found")
+  setLoading(false)
+  return
+}
+
+finalRole = data.role || "worker"
+
+setNetworkError(false)
 
     setRole(finalRole)
 
@@ -99,7 +100,14 @@ export function AuthProvider({ children }) {
 }, [])
 
   return (
-    <AuthContext.Provider value={{ user, role, loading }}>
+    <AuthContext.Provider
+  value={{
+    user,
+    role,
+    loading,
+    networkError
+  }}
+>
       {children}
     </AuthContext.Provider>
   )

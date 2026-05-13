@@ -143,6 +143,22 @@ message: text,
 is_read: false
 })
 
+await supabase
+  .from("notifications")
+  .insert({
+    user_id: contractorId,
+
+    sender_id: workerId,
+
+    title: "New Message",
+
+    message: `${workerName} sent you a message`,
+
+    type: "message",
+
+    is_read: false
+  })
+
 if (!error) {
 
 // 2️⃣ create notification
