@@ -24,10 +24,19 @@ function WorkerPublicProfile() {
   async function fetchProfile() {
 
     const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", id)
-      .single()
+  .from("users")
+  .select(`
+    id,
+    full_name,
+    avatar_url,
+    headline,
+    location,
+    skills,
+    experience,
+    phone
+  `)
+  .eq("id", id)
+  .single()
 
     if (error) {
       console.error(error)

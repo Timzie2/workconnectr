@@ -173,20 +173,38 @@ setCategories(unique)
           schema: "public",
           table: "notifications"
         },
-        (payload) => {
+        async (payload) => {
 
-          if (payload.new.user_id === user.id) {
+  const newNotif = payload.new
 
-            setNotifications(prev => {
+  const { data: fullNotif, error } = await supabase
+  .from("notifications")
+  .select(`
+    *,
+    sender:sender_id (
+      full_name,
+      avatar_url
+    )
+  `)
+    .eq("id", newNotif.id)
+    .single()
 
-              const exists = prev.some(n => n.id === payload.new.id)
-              if (exists) return prev
+  if (fullNotif?.user_id === user.id) {
 
-              return [payload.new, ...prev]
-            })
+    setNotifications(prev => {
 
-          }
-        }
+      const exists = prev.some(
+        n => n.id === fullNotif.id
+      )
+
+      if (exists) return prev
+
+      return [fullNotif, ...prev]
+    })
+
+    new Audio("/notification.mp3").play()
+  }
+}
       )
       .subscribe()
 
@@ -207,8 +225,8 @@ setCategories(unique)
 async function fetchProfile(){
 
   const { data } = await supabase
-    .from("profiles")
-    .select("*")
+    .from("users")
+   .select("*")
     .eq("id", user.id)
     .single()
 
@@ -223,8 +241,14 @@ async function fetchProfile(){
     if (!user) return
 
     const { data, error } = await supabase
-      .from("notifications")
-      .select("*")
+  .from("notifications")
+  .select(`
+    *,
+    sender:sender_id (
+      full_name,
+      avatar_url
+    )
+  `)
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
 
@@ -245,17 +269,9 @@ async function fetchProfile(){
     const willOpen = !notifOpen
     setNotifOpen(willOpen)
 
-    if (willOpen && unreadCount > 0 && user) {
-
-      await supabase
-        .from("notifications")
-        .update({ is_read: true })
-        .eq("user_id", user.id)
-
-      setNotifications(prev =>
-        prev.map(n => ({ ...n, is_read: true }))
-      )
-    }
+    const openNotifications = () => {
+  setNotifOpen(prev => !prev)
+}
   }
 
   /* ✅ LOGOUT */
@@ -270,6 +286,23 @@ async function fetchProfile(){
       console.error(err)
     }
   }
+
+  const getTimeAgo = (date) => {
+
+  const seconds = Math.floor(
+    (new Date() - new Date(date)) / 1000
+  )
+
+  const minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
+  const days = Math.floor(hours / 24)
+
+  if (seconds < 60) return "Just now"
+  if (minutes < 60) return `${minutes} min ago`
+  if (hours < 24) return `${hours}h ago`
+
+  return `${days}d ago`
+}
 
   return(
 
@@ -459,27 +492,89 @@ async function fetchProfile(){
           {notifOpen && (
             <div className="worker-notification-panel">
 
-              <h4>Notifications</h4>
+  <div className="worker-notif-header">
 
-              {notifications.length === 0 ? (
-                <p>No notifications</p>
-              ) : (
-                notifications.map((notif) => (
-                  <div
-                    key={notif.id}
-                    className="worker-notif-item"
-                    style={{
-  background: notif.is_read
-    ? "var(--bg-card)"
-    : "rgba(34,197,94,0.1)"
-}}
-                  >
-                    {notif.message}
-                  </div>
-                ))
-              )}
+    <h4>Notifications</h4>
 
-            </div>
+    {notifications.some(n => !n.is_read) && (
+      <button
+        className="mark-read-btn"
+        onClick={async (e) => {
+
+          e.stopPropagation()
+
+          await supabase
+            .from("notifications")
+            .update({ is_read: true })
+            .eq("user_id", user.id)
+
+          setNotifications(prev =>
+            prev.map(n => ({
+              ...n,
+              is_read: true
+            }))
+          )
+        }}
+      >
+        Mark all read
+      </button>
+    )}
+
+  </div>
+
+  {notifications.length === 0 ? (
+
+    <div className="worker-empty-notif">
+
+      <Bell size={38} />
+
+      <p>No notifications yet</p>
+
+    </div>
+
+  ) : (
+
+    notifications.map((notif) => (
+
+      <div
+        key={notif.id}
+        className={`
+          worker-notif-card
+          ${!notif.is_read ? "unread" : ""}
+        `}
+      >
+
+        <div className="worker-notif-avatar">
+
+          {notif.sender?.avatar_url ? (
+            <img
+              src={notif.sender.avatar_url}
+              className="notif-avatar-img"
+              alt="user"
+            />
+          ) : (
+            "🔔"
+          )}
+
+        </div>
+
+        <div className="worker-notif-content">
+
+          <p>{notif.message}</p>
+
+          <span>
+            {getTimeAgo(notif.created_at)}
+          </span>
+
+        </div>
+
+      </div>
+
+    ))
+
+  )}
+
+</div>
           )}
 
         </div>

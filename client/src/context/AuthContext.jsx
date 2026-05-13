@@ -6,9 +6,11 @@ const AuthContext = createContext()
 export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(undefined)
-  const [role, setRole] = useState(null) // ✅ ADD ROLE
-  const [loading, setLoading] = useState(true)
-  const [networkError, setNetworkError] = useState(false)
+  const [role, setRole] = useState(null)
+const [loading, setLoading] = useState(true)
+const [networkError, setNetworkError] = useState(false)
+
+const [profileCompleted, setProfileCompleted] = useState(true)
 
   useEffect(() => {
 
@@ -34,7 +36,7 @@ export function AuthProvider({ children }) {
 
     const { data, error } = await supabase
       .from("users")
-      .select("role")
+      .select("role, profile_completed")
       .eq("id", sessionUser.id)
       .maybeSingle()
 
@@ -55,8 +57,13 @@ export function AuthProvider({ children }) {
 }
 
 if (!data) {
+
   console.log("User row not found")
+
+  setProfileCompleted(false)
+
   setLoading(false)
+
   return
 }
 
@@ -64,11 +71,17 @@ finalRole = data.role || "worker"
 
 setNetworkError(false)
 
-    setRole(finalRole)
+setRole(finalRole)
 
-    console.log("SETTING LOADING FALSE")
-    setLoading(false)
-  }
+setProfileCompleted(
+  data.profile_completed ?? false
+)
+
+console.log("SETTING LOADING FALSE")
+
+setLoading(false)
+
+}
 
   // ✅ INITIAL SESSION (ONLY ONCE)
   supabase.auth.getSession().then(({ data: { session } }) => {
@@ -105,7 +118,8 @@ setNetworkError(false)
     user,
     role,
     loading,
-    networkError
+    networkError,
+    profileCompleted
   }}
 >
       {children}

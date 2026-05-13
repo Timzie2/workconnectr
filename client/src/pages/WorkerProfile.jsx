@@ -55,28 +55,21 @@ function WorkerProfile(){
   // ✅ FETCH PROFILE
   async function fetchProfile(userId){
 
-    const {data} = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .maybeSingle()
+    const { data } = await supabase
+  .from("users")
+  .select("*")
+  .eq("id", userId)
+  .maybeSingle()
 
     if(data){
       setProfile(data)
     } else {
 
-      const newProfile = {
-        id:userId,
-        full_name:"",
-        location:"",
-        skills:"",
-        experience:"",
-        avatar_url:""
-      }
-
-      await supabase.from("profiles").insert(newProfile)
-      setProfile(newProfile)
-    }
+  setProfile(prev => ({
+    ...prev,
+    id: userId
+  }))
+}
   }
 
   // ⭐ FETCH RATING
@@ -173,10 +166,10 @@ async function uploadAvatar(e){
 
   // ✅ SAVE TO DATABASE
   const { error: updateError } = await supabase
-    .from("profiles")
-    .update({
-      avatar_url: avatarUrl
-    })
+    .from("users")
+.update({
+  avatar_url: avatarUrl
+})
     .eq("id", user.id)
 
   if(updateError){
@@ -203,26 +196,17 @@ async function updateProfile(e){
   if(!user) return
 
   const { error } = await supabase
-  .from("profiles")
-  .upsert({
-    id: user.id,
+  .from("users")
+  .update({
     ...profile
   })
+  .eq("id", user.id)
 
 if(error){
   console.error(error)
   alert("Failed to update profile")
   return
 }
-
-// ✅ ALSO UPDATE USERS TABLE
-await supabase
-  .from("users")
-  .update({
-    full_name: profile.full_name,
-    avatar_url: profile.avatar_url
-  })
-  .eq("id", user.id)
 
   if(error){
     console.error(error)

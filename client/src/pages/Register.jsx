@@ -29,36 +29,61 @@ const registerUser = async (e) => {
     console.log("SIGN UP RESULT:", { data, error })
 
     if (error) {
-      setErrorMsg(error.message)
+      if (
+  error.message.toLowerCase().includes("already registered")
+) {
+  setErrorMsg(
+    "An account with this email already exists"
+  )
+} else {
+  setErrorMsg(error.message)
+}
       return
     }
 
-    if (!data?.user) {
-      setErrorMsg("User not created properly")
-      return
-    }
+    if (!data?.user?.id) {
+  setErrorMsg("Authentication failed")
+  setLoading(false)
+  return
+}
 
     const { error: insertError } = await supabase
-      .from("users")
-      .insert([
-        {
-          id: data.user.id,
-          full_name: name,
-          email,
-          role,
-          is_online: false,
-          location: null,
-          skills: "",
-          experience: null,
-          avatar_url: null,
-        },
-      ])
+  .from("users")
+  .insert([
+    {
+      id: data.user.id,
+
+      full_name: name,
+
+      email,
+
+      role,
+
+      is_online: false,
+
+      location: "",
+
+      skills: "",
+
+      experience: "",
+
+      avatar_url: "",
+
+      profile_completed: false
+    },
+  ])
 
     if (insertError) {
-      console.error("INSERT ERROR:", insertError)
-      setErrorMsg(insertError.message)
-      return
-    }
+
+  // rollback auth session if db insert fails
+  await supabase.auth.signOut()
+
+  console.error("INSERT ERROR:", insertError)
+
+  setErrorMsg(insertError.message)
+
+  return
+}
 
     setErrorMsg("Registration successful 🎉")
     setTimeout(() => navigate("/login"), 1500)

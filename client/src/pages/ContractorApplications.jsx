@@ -77,7 +77,7 @@ const workerIds = [...new Set(apps.map(app => app.worker_id))]
 
 // ✅ FETCH PROFILES
 const { data: profilesData } = await supabase
-  .from("profiles")
+  .from("users")
   .select("id, full_name, skills, avatar_url")
   .in("id", workerIds)
 
@@ -149,10 +149,19 @@ setApplications(formattedApps)
 
     if (error) throw error
 
+    await supabase
+  .from("notifications")
+  .insert({
+    user_id: app.worker_id,
+    sender_id: user.id,
+    type: "approved",
+    title: "Application Approved 🎉",
+    message: `Your application for "${jobTitle}" was approved`
+  })
+
     setApplications(prev =>
   prev.map(a =>
-    a.worker_id === app.worker_id &&
-    a.job_id === app.job_id
+    a.id === app.id
       ? { ...a, status: "approved" }
       : a
   )
@@ -182,10 +191,15 @@ fetchApplications()
 
     if (error) throw error
 
-    await supabase.from("notifications").insert({
-      user_id: app.worker_id,
-      message: "❌ Your application was rejected"
-    })
+    await supabase
+  .from("notifications")
+  .insert({
+    user_id: app.worker_id,
+    sender_id: user.id,
+    type: "rejected",
+    title: "Application Rejected",
+    message: `Your application for "${jobTitle}" was rejected`
+  })
 
     setApplications(prev =>
       prev.map(a =>

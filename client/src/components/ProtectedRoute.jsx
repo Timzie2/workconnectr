@@ -20,14 +20,19 @@ if (!user) {
 }
 
 // 🔥 WAIT for role to load before checking
+if (role === "incomplete") {
+  return <Navigate to="/profile-setup" replace />
+}
+
 if (requiredRole) {
+
   if (role === null) {
-    return <div>Loading...</div> // ⬅️ FIX: DON'T REDIRECT HERE
+    return <div>Loading...</div>
   }
 
   if (role !== requiredRole) {
-  return <Navigate to={`/${role}-dashboard`} replace />
-}
+    return <Navigate to={`/${role}-dashboard`} replace />
+  }
 }
 
 return children
