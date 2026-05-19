@@ -475,7 +475,7 @@ async function fetchProfile(){
 
         <div
           className="worker-icon-btn"
-          onClick={() => navigate("/worker-messages")}
+          onClick={() => navigate("/messages")}
         >
           <MessageSquare size={20}/>
         </div>

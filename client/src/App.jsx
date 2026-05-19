@@ -31,6 +31,7 @@ import "./styles/dashboard.css"
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
 import WorkerPublicProfile from "./pages/WorkerPublicProfile"
+import Messages from "./pages/Messages"
 
 
 
@@ -205,6 +206,20 @@ if (networkError) {
         }
       />
 
+      <Route
+  path="/messages"
+  element={
+    <ProtectedRoute>
+      <Messages />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/messages/:id?"
+  element={<Messages />}
+/>
+
 
 {/* DEFAULT */}
 <Route path="/" element={<Navigate to="/login" />} />
@@ -220,6 +235,7 @@ if (networkError) {
 
 {/* ✅ ALWAYS LAST */}
 <Route path="*" element={<Navigate to="/login" />} />
+
 
     </Routes>
 

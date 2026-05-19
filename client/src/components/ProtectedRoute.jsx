@@ -3,39 +3,63 @@ import { useAuth } from "../context/AuthContext"
 
 function ProtectedRoute({ children, role: requiredRole }) {
 
-  const { user, role, loading } = useAuth()
+  const {
+    user,
+    role,
+    loading,
+    profileCompleted
+  } = useAuth()
 
-  console.log("ProtectedRoute:", { user, role, loading }) // ✅ ADD HERE
-  console.log("Required:", requiredRole)
-console.log("Actual:", role)
+  console.log("ProtectedRoute:", {
+    user,
+    role,
+    loading,
+    profileCompleted
+  })
 
-  // ⏳ wait until auth fully loads
-if (loading || user === undefined) {
-  return <div>Loading...</div>
-}
-
-// 🔒 not logged in
-if (!user) {
-  return <Navigate to="/login" replace />
-}
-
-// 🔥 WAIT for role to load before checking
-if (role === "incomplete") {
-  return <Navigate to="/profile-setup" replace />
-}
-
-if (requiredRole) {
-
-  if (role === null) {
+  // ✅ WAIT FOR EVERYTHING
+  if (
+    loading ||
+    profileCompleted === null
+  ) {
     return <div>Loading...</div>
   }
 
-  if (role !== requiredRole) {
-    return <Navigate to={`/${role}-dashboard`} replace />
+  // ✅ NOT LOGGED IN
+  if (!user) {
+    return <Navigate to="/login" replace />
   }
-}
 
-return children
+  // ✅ PROFILE SETUP
+  if (profileCompleted === false) {
+
+    // 🛑 prevent infinite redirect loop
+    if (
+      window.location.pathname !== "/profile-setup"
+    ) {
+      return (
+        <Navigate
+          to="/profile-setup"
+          replace
+        />
+      )
+    }
+  }
+
+  // ✅ ROLE PROTECTION
+  if (
+    requiredRole &&
+    role !== requiredRole
+  ) {
+    return (
+      <Navigate
+        to={`/${role}-dashboard`}
+        replace
+      />
+    )
+  }
+
+  return children
 }
 
 export default ProtectedRoute

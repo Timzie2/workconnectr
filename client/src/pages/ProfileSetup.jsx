@@ -14,6 +14,8 @@ function ProfileSetup() {
   const [skills, setSkills] = useState("")
   const [loading, setLoading] = useState(false)
   const [userRole, setUserRole] = useState("")
+  const [location, setLocation] = useState("")
+  const [aboutCompany, setAboutCompany] = useState("")
 
   // ✅ REDIRECT IF NOT LOGGED IN
   useEffect(() => {
@@ -53,14 +55,32 @@ if (data?.role) {
 
     setLoading(true)
 
-    const { error } = await supabase
-      .from("users")
-      .update({
-  full_name: name,
-  skills: skills,
+    let updates = {
   profile_completed: true
-})
-      .eq("id", user.id)
+}
+
+if (userRole === "worker") {
+  updates = {
+    ...updates,
+    full_name: name,
+    skills,
+    location
+  }
+}
+
+if (userRole === "contractor") {
+  updates = {
+    ...updates,
+    company_name: name,
+    about_company: aboutCompany,
+    location
+  }
+}
+
+const { error } = await supabase
+  .from("users")
+  .update(updates)
+  .eq("id", user.id)
 
     if (error) {
       alert(error.message)
@@ -77,13 +97,10 @@ if (data?.role) {
   return
 }
 
-if (userRole === "worker") {
-  navigate("/worker-dashboard")
-} else if (userRole === "contractor") {
-  navigate("/contractor-dashboard")
-} else {
-  alert("Invalid role")
-}
+window.location.href =
+  userRole === "worker"
+    ? "/worker-dashboard"
+    : "/contractor-dashboard"
   }
 
   // ✅ AUTH LOADING
@@ -94,7 +111,7 @@ if (userRole === "worker") {
   return (
   <div className="profile-setup-page">
 
-    <div className="login-card profile-setup-card">
+    <div className="profile-setup-card">
 
 
 
@@ -105,72 +122,124 @@ if (userRole === "worker") {
   <h2>Welcome to WorkConnectr</h2>
 
   <p className="setup-subtext">
-    Complete your profile to start applying
-    for jobs and connecting with contractors.
-  </p>
+  {userRole === "contractor"
+    ? "Complete your company profile to start hiring workers."
+    : "Complete your profile to start applying for jobs and connecting with contractors."
+  }
+</p>
 
   <form onSubmit={handleSaveProfile}>
 
-    <div className="input-group">
-      <span>👤</span>
+  {/* NAME */}
+  <div className="input-group">
+    <span>
+      {userRole === "contractor" ? "🏢" : "👤"}
+    </span>
 
-      <input
-        type="text"
-        placeholder="Your full name"
-        value={name}
-        onChange={(e)=>setName(e.target.value)}
-        required
-      />
-    </div>
+    <input
+      type="text"
+      placeholder={
+        userRole === "contractor"
+          ? "Company name"
+          : "Your full name"
+      }
+      value={name}
+      onChange={(e)=>setName(e.target.value)}
+      required
+    />
+  </div>
 
-    <div className="input-group">
-      <span>🛠️</span>
+  {/* WORKER */}
+  {userRole === "worker" && (
+    <>
+      <div className="input-group">
+        <span>🛠️</span>
 
-      <input
-        type="text"
-        placeholder="Skills (e.g Graphic Designer, plumber)"
-        value={skills}
-        onChange={(e)=>setSkills(e.target.value)}
-      />
-    </div>
+        <input
+          type="text"
+          placeholder="Skills (e.g Graphic Designer, plumber)"
+          value={skills}
+          onChange={(e)=>setSkills(e.target.value)}
+        />
+      </div>
 
-    <div className="skill-suggestions">
+      <div className="input-group">
+        <span>📍</span>
 
-  {[
-    "Frontend Developer",
-    "UI/UX Designer",
-    "Electrician",
-    "Plumber",
-    "Graphic Designer",
-    "Video Editor",
-    "Mobile App Developer",
-    "Carpenter",
-    "Painter",
-    "Virtual Assistant"
-  ].map((skill) => (
+        <input
+          type="text"
+          placeholder="Your location"
+          value={location}
+          onChange={(e)=>setLocation(e.target.value)}
+        />
+      </div>
 
-    <button
-      type="button"
-      key={skill}
-      className="skill-chip"
-      onClick={() => setSkills(skill)}
-    >
-      {skill}
-    </button>
+      <div className="skill-suggestions">
 
-  ))}
+        {[
+          "Frontend Developer",
+          "UI/UX Designer",
+          "Electrician",
+          "Plumber",
+          "Graphic Designer",
+          "Video Editor",
+          "Mobile App Developer",
+          "Carpenter",
+          "Painter",
+          "Virtual Assistant"
+        ].map((skill) => (
 
-</div>
+          <button
+            type="button"
+            key={skill}
+            className="skill-chip"
+            onClick={() => setSkills(skill)}
+          >
+            {skill}
+          </button>
 
-    <button
-  type="submit"
-  disabled={loading}
-  className="profile-submit-btn"
->
-      {loading ? "Saving..." : "Continue"}
-    </button>
+        ))}
 
-  </form>
+      </div>
+    </>
+  )}
+
+  {/* CONTRACTOR */}
+  {userRole === "contractor" && (
+    <>
+      <div className="input-group">
+        <span>📝</span>
+
+        <input
+          type="text"
+          placeholder="About your company"
+          value={aboutCompany}
+          onChange={(e)=>setAboutCompany(e.target.value)}
+        />
+      </div>
+
+      <div className="input-group">
+        <span>📍</span>
+
+        <input
+          type="text"
+          placeholder="Company location"
+          value={location}
+          onChange={(e)=>setLocation(e.target.value)}
+        />
+      </div>
+    </>
+  )}
+
+  <button
+    type="submit"
+    disabled={loading}
+    className="profile-submit-btn"
+  >
+    {loading ? "Saving..." : "Continue"}
+  </button>
+
+</form>
 
 </div>
 

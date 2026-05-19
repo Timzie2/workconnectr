@@ -1,59 +1,62 @@
-import { useEffect, useState } from "react"
-import supabase from "../supabaseClient"
+function UserConversation({
+  user,
+  displayName,
+  lastMessage,
+  unreadCount,
+  active,
+  online,
+  onClick
+}) {
 
-function UserConversation({ userId, message, onClick }) {
+  return (
 
-const [user,setUser] = useState(null)
+    <div
+      onClick={onClick}
+      className={`conversation-card ${active ? "active" : ""}`}
+    >
 
-useEffect(()=>{
+      <div className="conversation-avatar-wrapper">
 
-const fetchUser = async()=>{
+        <img
+          src={
+            user?.avatar_url ||
+            "/default-avatar.png"
+          }
+          className="conversation-avatar"
+        />
 
-const { data } = await supabase
-.from("users")
-.select("full_name, avatar_url")
-.eq("id", userId)
-.single()
+        {online && (
+          <span className="online-dot"></span>
+        )}
 
-setUser(data)
+      </div>
 
-}
+      <div className="conversation-info">
 
-fetchUser()
+        <div className="conversation-top">
 
-},[userId])
+          <h4>
+  {displayName ||
+    user?.full_name ||
+    "User"}
+</h4>
 
-return(
+          {unreadCount > 0 && (
+            <span className="unread-badge">
+              {unreadCount}
+            </span>
+          )}
 
-<div
-onClick={onClick}
-style={{
-display:"flex",
-alignItems:"center",
-gap:"12px",
-border:"1px solid #ddd",
-padding:"12px",
-marginBottom:"10px",
-borderRadius:"10px",
-cursor:"pointer"
-}}
-><img
-src={user?.avatar_url || "/default-avatar.png"}
-style={{
-width:"40px",
-height:"40px",
-borderRadius:"50%"
-}}
-/>
+        </div>
 
-<div>
-<p style={{margin:0,fontWeight:"bold"}}>
-{user?.full_name || "User"}
-</p><p style={{margin:0,opacity:0.7}}>
-{message}
-</p>
-</div></div>)
+        <p className="conversation-last-message">
+          {lastMessage || "Start chatting"}
+        </p>
 
+      </div>
+
+    </div>
+  )
 }
 
 export default UserConversation

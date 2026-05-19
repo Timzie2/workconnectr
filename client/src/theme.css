@@ -21,11 +21,39 @@
 
   --bg-dropdown:#ffffff;
 
-  --bg-input: #f1f5f9;
+  --bg-input:#f1f5f9;
+
+  --sidebar-border:rgba(255,255,255,.08);
+  --sidebar-shadow:rgba(0,0,0,.22);
+
+  /* 😀 EMOJI THEME */
+  --emoji-bg:#ffffff;
+  --emoji-text:#0f172a;
+  --emoji-input:#f1f5f9;
+
+  --emoji-border:
+    rgba(15,23,42,.08);
+
+  --emoji-hover:
+    rgba(15,23,42,.06);
+
+  --emoji-active:
+    rgba(59,130,246,.14);
+
+  --emoji-icon:#475569;
+
+   --card-bg:#ffffff;
+
+  --text-color:#111827;
+
+  --hover-bg:#f3f4f6;
+
+  --border-color:#e5e7eb;
 }
 
 /* 🌙 DARK MODE */
 body.dark {
+
   --bg-main:#020617;
   --bg-card:#1e293b;
   --bg-navbar:#0f172a;
@@ -33,18 +61,46 @@ body.dark {
   --text-main:#f1f5f9;
   --text-secondary:#94a3b8;
 
-  --border-color:rgba(255,255,255,0.06);
+  --border-color:
+    rgba(255,255,255,0.06);
 
   --button-primary:#3b82f6;
   --button-success:#22c55e;
 
   --danger:#ef4444;
 
-  --shadow:0 8px 25px rgba(0,0,0,0.25);
+  --shadow:
+    0 8px 25px rgba(0,0,0,0.25);
 
   --bg-dropdown:#1e293b;
 
-  --bg-input: #020617;
+  --bg-input:#020617;
+
+  /* 😀 EMOJI THEME */
+  --emoji-bg:#111827;
+
+  --emoji-text:#ffffff;
+
+  --emoji-input:#0f172a;
+
+  --emoji-border:
+    rgba(255,255,255,.08);
+
+  --emoji-hover:
+    rgba(255,255,255,.08);
+
+  --emoji-active:
+    rgba(59,130,246,.18);
+
+  --emoji-icon:#94a3b8;
+
+  --card-bg:#111827;
+
+  --text-color:#ffffff;
+
+  --hover-bg:rgba(255,255,255,.08);
+
+  --border-color:#374151;
 }
 
 

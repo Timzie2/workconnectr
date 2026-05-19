@@ -10,77 +10,69 @@ export function AuthProvider({ children }) {
 const [loading, setLoading] = useState(true)
 const [networkError, setNetworkError] = useState(false)
 
-const [profileCompleted, setProfileCompleted] = useState(true)
+const [profileCompleted, setProfileCompleted] = useState(null)
 
   useEffect(() => {
 
-  let isMounted = true // 🛑 prevents double execution issues
-
   const loadUser = async (sessionUser) => {
-    console.log("AUTH USER:", sessionUser)
 
-    if (!isMounted) return
+  console.log("LOAD USER RUNNING")
+
+  try {
 
     if (!sessionUser) {
+
       setUser(null)
       setRole(null)
-      setLoading(false)
+      setProfileCompleted(null)
+
       return
     }
 
-    // 🛑 prevent duplicate runs
-    setUser(prev => {
-      if (prev?.id === sessionUser.id) return prev
-      return sessionUser
-    })
+    setUser(sessionUser)
 
     const { data, error } = await supabase
       .from("users")
-      .select("role, profile_completed")
+      .select(`
+        role,
+        profile_completed
+      `)
       .eq("id", sessionUser.id)
-      .maybeSingle()
+      .single()
+
+    console.log("USER DATA:", data)
 
     if (error) {
-      console.error("ROLE FETCH ERROR:", error)
+
+      console.error(
+        "ROLE FETCH ERROR:",
+        error
+      )
+
+      setNetworkError(true)
+
+      return
     }
 
-    let finalRole = "worker"
+    setNetworkError(false)
 
-    if (error) {
-  console.error("ROLE FETCH ERROR:", error)
+    setRole(data.role || "worker")
 
-  setNetworkError(true)
+    setProfileCompleted(
+      data.profile_completed ?? false
+    )
 
-  setLoading(false)
+  } catch (err) {
 
-  return
-}
+    console.error(
+      "LOAD USER CRASH:",
+      err
+    )
 
-if (!data) {
+  } finally {
 
-  console.log("User row not found")
-
-  setProfileCompleted(false)
-
-  setLoading(false)
-
-  return
-}
-
-finalRole = data.role || "worker"
-
-setNetworkError(false)
-
-setRole(finalRole)
-
-setProfileCompleted(
-  data.profile_completed ?? false
-)
-
-console.log("SETTING LOADING FALSE")
-
-setLoading(false)
-
+    setLoading(false)
+  }
 }
 
   // ✅ INITIAL SESSION (ONLY ONCE)
@@ -89,28 +81,119 @@ setLoading(false)
   })
 
   // ✅ LISTENER (ONLY FOR SIGN IN / OUT)
-  const { data: listener } = supabase.auth.onAuthStateChange(
-    (event, session) => {
+  const { data: listener } =
+  supabase.auth.onAuthStateChange(
+    async (event, session) => {
+
       console.log("AUTH EVENT:", event)
 
-      if (event === "SIGNED_IN") {
-        loadUser(session?.user)
-      }
+      if (
+  event === "SIGNED_IN" ||
+  event === "TOKEN_REFRESHED" ||
+  event === "INITIAL_SESSION"
+) {
+
+  if (session?.user) {
+
+    supabase
+  .from("users")
+  .update({
+    is_online: true,
+    last_seen: null,
+    last_active: new Date().toISOString()
+  })
+  .eq("id", session.user.id)
+  .then(({ error }) => {
+
+    console.log(
+      "ONLINE UPDATE ERROR:",
+      error
+    )
+
+  })
+
+setTimeout(() => {
+
+  loadUser(session.user)
+
+}, 500)
+  }
+}
 
       if (event === "SIGNED_OUT") {
-        setUser(null)
-        setRole(null)
-        setLoading(false)
-      }
+
+  if (user?.id) {
+
+    await supabase
+      .from("users")
+      .update({
+        is_online: false,
+        last_seen: new Date().toISOString()
+      })
+      .eq("id", user.id)
+
+  }
+
+  setUser(null)
+  setRole(null)
+  setProfileCompleted(null)
+  setLoading(false)
+}
     }
   )
 
+  const handleOffline = async () => {
+
+  if (!user?.id) return
+
+  await supabase
+    .from("users")
+    .update({
+      is_online: false,
+      last_seen: new Date().toISOString()
+    })
+    .eq("id", user.id)
+}
+
+window.addEventListener(
+  "beforeunload",
+  handleOffline
+)
+
   return () => {
-    isMounted = false
-    listener.subscription.unsubscribe()
-  }
+
+  window.removeEventListener(
+    "beforeunload",
+    handleOffline
+  )
+
+  listener.subscription.unsubscribe()
+}
 
 }, [])
+
+useEffect(() => {
+
+  if (!user?.id) return
+
+  const heartbeatInterval = setInterval(async () => {
+
+  await supabase
+    .from("users")
+    .update({
+      is_online: true,
+      last_active: new Date().toISOString(),
+      last_seen: new Date().toISOString()
+    })
+    .eq("id", user.id)
+
+}, 15000)
+
+  return () => {
+    clearInterval(heartbeatInterval)
+  }
+
+}, [user])
 
   return (
     <AuthContext.Provider

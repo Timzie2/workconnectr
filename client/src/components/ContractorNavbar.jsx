@@ -270,7 +270,7 @@ const getNotificationIcon = (type) => {
     setMenuOpen(false)
     setNotifOpen(false)
 
-    navigate("/contractor-messages")
+    navigate("/messages")
   }}
 >
   <MessageSquare size={20}/>

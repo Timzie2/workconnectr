@@ -1,5 +1,12 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import {
+  useEffect,
+  useState
+} from "react"
+
+import {
+  useParams,
+  useNavigate
+} from "react-router-dom"
 import supabase from "../supabaseClient"
 import WorkerNavbar from "../components/WorkerNavbar"
 import StarRating from "../components/StarRating"
@@ -8,6 +15,7 @@ import "../styles/ContractorPublicProfile.css"
 function ContractorPublicProfile() {
 
   const { id } = useParams()
+  const navigate = useNavigate()
 
   const [contractor, setContractor] = useState(null)
   const [reviews, setReviews] = useState([])
@@ -66,6 +74,18 @@ function ContractorPublicProfile() {
       <WorkerNavbar />
 
       <div className="contractor-profile">
+
+        <div className="profile-back-btn">
+
+  <button
+    onClick={() => navigate(-1)}
+  >
+
+    ← Back
+
+  </button>
+
+</div>
 
         {/* 🔥 HEADER */}
 <div className="profile-header">
