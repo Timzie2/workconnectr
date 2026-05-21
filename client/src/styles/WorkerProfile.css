@@ -361,3 +361,286 @@
     font-size:11px;
   }
 }
+
+/* ========================= */
+/* RESPONSIVE IMPROVEMENTS */
+/* ========================= */
+
+/* LARGE TABLETS */
+@media (max-width:1024px){
+
+  .profile-layout{
+    gap:24px;
+  }
+
+  .worker-profile-sidebar{
+    padding:22px 18px;
+  }
+
+  .profile-card{
+    padding:22px;
+  }
+
+}
+
+/* ========================= */
+/* TABLETS + MOBILE */
+/* ========================= */
+
+@media (max-width:768px){
+
+  .profile-layout{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  /* SIDEBAR */
+  .worker-profile-sidebar{
+    width:100%;
+    border-radius:18px;
+  }
+
+  .worker-avatar-img,
+  .profile-avatar img{
+    width:100px !important;
+    height:100px !important;
+  }
+
+  .avatar-circle{
+    width:100px;
+    height:100px;
+  }
+
+  .avatar-circle span{
+    font-size:34px !important;
+  }
+
+  .profile-avatar h3{
+    font-size:22px !important;
+    text-align:center;
+  }
+
+  .worker-headline{
+    font-size:15px !important;
+    text-align:center;
+  }
+
+  .worker-location,
+  .availability-badge,
+  .worker-phone{
+    font-size:14px !important;
+    text-align:center;
+  }
+
+  /* FORM CARD */
+  .profile-card{
+    width:100%;
+    padding:20px 16px;
+    border-radius:18px;
+  }
+
+  /* STACK ROWS */
+  .form-row{
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .form-row div{
+    width:100%;
+  }
+
+  /* INPUTS */
+  .profile-card input,
+  .profile-card textarea,
+  .profile-card select{
+    width:100%;
+    font-size:16px;
+    padding:12px;
+  }
+
+  textarea{
+    min-height:120px;
+  }
+
+  /* BUTTONS */
+  .upload-btn,
+  .post-job-btn{
+    width:100%;
+    text-align:center;
+  }
+
+}
+
+/* ========================= */
+/* SMALL PHONES */
+/* ========================= */
+
+@media (max-width:480px){
+
+  .dashboard-container{
+    padding:18px 12px;
+  }
+
+  .profile-layout{
+    gap:18px;
+    margin-top:20px;
+  }
+
+  .worker-profile-sidebar{
+    padding:18px 14px;
+  }
+
+  .worker-avatar-img,
+  .profile-avatar img{
+    width:88px !important;
+    height:88px !important;
+    min-width:88px;
+    min-height:88px;
+    max-width:88px;
+    max-height:88px;
+  }
+
+  .avatar-circle{
+    width:88px;
+    height:88px;
+  }
+
+  .avatar-circle span{
+    font-size:30px !important;
+  }
+
+  .profile-avatar h3{
+    font-size:19px !important;
+  }
+
+  .worker-headline{
+    font-size:13px !important;
+  }
+
+  .worker-location,
+  .availability-badge,
+  .worker-phone{
+    font-size:12px !important;
+  }
+
+  .profile-card{
+    padding:16px 12px;
+  }
+
+  .profile-card input,
+  .profile-card textarea,
+  .profile-card select{
+    padding:11px;
+    font-size:14px;
+  }
+
+  textarea{
+    min-height:100px;
+  }
+
+  .upload-btn,
+  .post-job-btn{
+    font-size:14px;
+    padding:12px;
+  }
+
+  .dashboard-container h1{
+    font-size:24px;
+    text-align:center;
+  }
+
+}
+
+/* ========================= */
+/* EXTRA SMALL DEVICES */
+/* ========================= */
+
+@media (max-width:320px){
+
+  .dashboard-container{
+    padding:14px 10px;
+  }
+
+  .worker-profile-sidebar{
+    padding:14px 10px;
+  }
+
+  .profile-card{
+    padding:14px 10px;
+  }
+
+  .worker-avatar-img,
+  .profile-avatar img{
+    width:76px !important;
+    height:76px !important;
+    min-width:76px;
+    min-height:76px;
+    max-width:76px;
+    max-height:76px;
+  }
+
+  .avatar-circle{
+    width:76px;
+    height:76px;
+  }
+
+  .avatar-circle span{
+    font-size:26px !important;
+  }
+
+  .profile-avatar h3{
+    font-size:17px !important;
+  }
+
+  .worker-headline{
+    font-size:12px !important;
+  }
+
+  .worker-location,
+  .availability-badge,
+  .worker-phone{
+    font-size:11px !important;
+  }
+
+  .profile-card input,
+  .profile-card textarea,
+  .profile-card select{
+    font-size:13px;
+    padding:10px;
+  }
+
+  .upload-btn,
+  .post-job-btn{
+    font-size:13px;
+    padding:10px;
+  }
+
+}
+
+/* ========================= */
+/* GLOBAL SAFETY FIXES */
+/* ========================= */
+
+.profile-card,
+.worker-profile-sidebar{
+  overflow:hidden;
+}
+
+img{
+  max-width:100%;
+}
+
+input,
+textarea,
+select{
+  max-width:100%;
+}
+
+button{
+  min-height:44px;
+}
+
+html,
+body{
+  overflow-x:hidden;
+}

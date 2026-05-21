@@ -246,3 +246,197 @@
   }
 
 }
+
+/* ========================= */
+/* RESPONSIVE FIXES */
+/* ========================= */
+
+@media (max-width:1024px){
+
+  .saved-jobs-page{
+    padding:24px 18px;
+  }
+
+  .saved-jobs-grid{
+    grid-template-columns:
+      repeat(auto-fit,minmax(280px,1fr));
+  }
+
+}
+
+/* ========================= */
+/* TABLETS */
+/* ========================= */
+
+@media (max-width:768px){
+
+  .saved-jobs-page{
+    padding:20px 14px;
+  }
+
+  /* SEARCH */
+  .search-input{
+    padding:13px 14px;
+    font-size:14px;
+  }
+
+  /* STATS */
+  .stats-grid{
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+
+  .stat-card{
+    padding:18px;
+    border-radius:16px;
+  }
+
+  .stat-card p{
+    font-size:24px;
+  }
+
+  /* GRID */
+  .saved-jobs-grid{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  /* CARD */
+  .saved-job-card{
+    padding:18px;
+    border-radius:18px;
+  }
+
+  .saved-company-row{
+    margin-top:0;
+    gap:10px;
+  }
+
+  .company-logo{
+    width:46px;
+    height:46px;
+  }
+
+  .company-name{
+    font-size:13px;
+  }
+
+  .job-title{
+    font-size:20px;
+    line-height:1.4;
+  }
+
+  .job-desc{
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .app-info{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+    font-size:13px;
+  }
+
+  /* BUTTONS */
+  .app-actions{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .view-btn,
+  .withdraw-btn,
+  .browse-btn{
+    width:100%;
+    padding:12px;
+    font-size:14px;
+  }
+
+  /* EMPTY STATE */
+  .empty-state{
+    padding:60px 15px;
+  }
+
+  .empty-icon{
+    font-size:50px;
+  }
+
+  .empty-state h3{
+    font-size:22px;
+  }
+
+}
+
+/* ========================= */
+/* SMALL PHONES */
+/* ========================= */
+
+@media (max-width:480px){
+
+  .saved-jobs-page{
+    padding:18px 12px;
+  }
+
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+
+  .saved-job-card{
+    padding:16px;
+    border-radius:16px;
+  }
+
+  .job-title{
+    font-size:18px;
+  }
+
+  .job-desc{
+    font-size:12.5px;
+  }
+
+  .status-badge{
+    font-size:11px;
+    padding:6px 12px;
+  }
+
+  .salary{
+    font-size:13px;
+  }
+
+  .view-btn,
+  .withdraw-btn,
+  .browse-btn{
+    font-size:13px;
+    border-radius:10px;
+  }
+
+  .empty-state h3{
+    font-size:20px;
+  }
+
+  .empty-state p{
+    font-size:14px;
+  }
+
+}
+
+/* ========================= */
+/* SAFETY FIXES */
+/* ========================= */
+
+img{
+  max-width:100%;
+}
+
+button{
+  min-height:44px;
+}
+
+input{
+  font-size:16px;
+}
+
+html,
+body{
+  overflow-x:hidden;
+}

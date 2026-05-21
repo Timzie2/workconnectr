@@ -198,3 +198,52 @@ p{
 .dashboard-container{
   padding:30px;
 }
+
+/* 🌍 GLOBAL */
+body{
+  margin:0;
+  font-family:"Inter", sans-serif;
+  background:var(--bg-main);
+  color:var(--text-main);
+  transition:background 0.25s ease,color 0.25s ease;
+}
+
+/* ALL YOUR OTHER CSS */
+
+
+/* ===================================== */
+/* 📱 GLOBAL MOBILE FIXES */
+/* ===================================== */
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  overflow-x:hidden;
+  width:100%;
+}
+
+/* Prevent iPhone zoom */
+input,
+textarea,
+select{
+  font-size:16px;
+}
+
+/* Media responsive */
+img,
+video{
+  max-width:100%;
+}
+
+/* Prevent text overflow */
+h1,
+h2,
+h3,
+h4,
+p,
+span{
+  word-break:break-word;
+}

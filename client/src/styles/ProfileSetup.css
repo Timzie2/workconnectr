@@ -252,3 +252,209 @@
     font-size: 15px;
   }
 }
+
+/* ========================= */
+/* PROFILE SETUP RESPONSIVE */
+/* ========================= */
+
+.profile-setup-page{
+  width:100%;
+  overflow-x:hidden;
+}
+
+/* CARD */
+.profile-setup-card{
+  width:100%;
+  color:var(--text-main);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* INPUT FIX */
+.input-group{
+  width:100%;
+  min-height:54px;
+}
+
+.input-group input{
+  width:100%;
+  min-width:0;
+  font-size:15px;
+}
+
+/* PLACEHOLDER */
+.input-group input::placeholder{
+  color:rgba(255,255,255,0.55);
+}
+
+/* SKILLS */
+.skill-suggestions{
+  width:100%;
+}
+
+.skill-chip{
+  user-select:none;
+}
+
+/* BUTTON */
+.profile-submit-btn{
+  min-height:54px;
+}
+
+.profile-submit-btn:active{
+  transform:scale(.98);
+}
+
+/* ========================= */
+/* TABLETS */
+/* ========================= */
+
+@media (max-width:768px){
+
+  .profile-setup-page{
+    padding:24px 18px;
+    align-items:flex-start;
+  }
+
+  .profile-setup-card{
+    max-width:100%;
+    padding:34px 26px;
+  }
+
+  .profile-setup-card h2{
+    font-size:30px;
+  }
+
+  .setup-subtext{
+    font-size:14px;
+  }
+
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width:480px){
+
+  .profile-setup-page{
+    padding:18px 14px;
+  }
+
+  .profile-setup-card{
+    padding:26px 18px;
+    border-radius:18px;
+  }
+
+  .setup-icon{
+    font-size:38px;
+  }
+
+  .profile-setup-card h2{
+    font-size:24px;
+    line-height:1.3;
+  }
+
+  .setup-subtext{
+    font-size:13px;
+    margin-bottom:20px;
+  }
+
+  .input-group{
+    min-height:50px;
+    padding:0 12px;
+    border-radius:12px;
+  }
+
+  .input-group input{
+    height:50px;
+    font-size:14px;
+  }
+
+  .input-group span{
+    font-size:16px;
+  }
+
+  .skill-suggestions{
+    gap:8px;
+  }
+
+  .skill-chip{
+    font-size:12px;
+    padding:7px 12px;
+  }
+
+  .profile-submit-btn{
+    height:50px;
+    font-size:14px;
+    border-radius:12px;
+  }
+
+}
+
+/* ========================= */
+/* EXTRA SMALL DEVICES */
+/* ========================= */
+
+@media (max-width:320px){
+
+  .profile-setup-page{
+    padding:14px 10px;
+  }
+
+  .profile-setup-card{
+    padding:20px 14px;
+    border-radius:16px;
+  }
+
+  .setup-icon{
+    font-size:32px;
+  }
+
+  .profile-setup-card h2{
+    font-size:20px;
+  }
+
+  .setup-subtext{
+    font-size:12px;
+    line-height:1.5;
+  }
+
+  .input-group{
+    min-height:46px;
+    padding:0 10px;
+  }
+
+  .input-group input{
+    height:46px;
+    font-size:13px;
+  }
+
+  .skill-chip{
+    font-size:11px;
+    padding:6px 10px;
+  }
+
+  .profile-submit-btn{
+    height:46px;
+    font-size:13px;
+  }
+
+}
+
+/* ========================= */
+/* GLOBAL SAFETY */
+/* ========================= */
+
+html,
+body{
+  overflow-x:hidden;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+input,
+button{
+  max-width:100%;
+}

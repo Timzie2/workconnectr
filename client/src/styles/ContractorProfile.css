@@ -325,3 +325,194 @@ textarea{
 .profile-card {
   background: var(--bg-card) !important;
 }
+
+/* ========================= */
+/* CONTRACTOR PROFILE MOBILE */
+/* ========================= */
+
+@media (max-width:768px){
+
+  .contractor-profile{
+    margin:20px auto;
+    padding:14px;
+  }
+
+  .profile-page{
+    padding:20px 12px;
+  }
+
+  .profile-card{
+    padding:18px;
+    border-radius:18px;
+  }
+
+  /* HEADER */
+  .profile-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:18px;
+
+    padding:22px;
+    border-radius:20px;
+  }
+
+  .profile-header h1{
+    font-size:26px;
+    line-height:1.2;
+  }
+
+  .profile-header p{
+    font-size:14px;
+  }
+
+  /* AVATAR */
+  .company-avatar{
+    width:72px;
+    height:72px;
+    font-size:28px;
+  }
+
+  /* STATS */
+  .profile-stats{
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .stat-box{
+    padding:18px;
+  }
+
+  .stat-box h3{
+    font-size:22px;
+  }
+
+  .stat-box p{
+    font-size:13px;
+  }
+
+  /* FORM */
+  .form-section{
+    gap:14px;
+  }
+
+  .form-group label,
+  .logo-upload label{
+    font-size:13px;
+  }
+
+  .form-group input,
+  .form-group textarea{
+    padding:13px;
+    font-size:14px;
+    border-radius:12px;
+  }
+
+  textarea{
+    min-height:120px;
+  }
+
+  /* LOGO */
+  .logo-box{
+    width:90px;
+    height:90px;
+  }
+
+  /* REVIEWS */
+  .review-card{
+    padding:14px;
+    border-radius:14px;
+  }
+
+  .review-top{
+    gap:10px;
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .review-name{
+    font-size:14px;
+  }
+
+  .review-text{
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .review-date{
+    font-size:11px;
+  }
+
+  /* PROGRESS */
+  .progress-top{
+    font-size:12px;
+    gap:10px;
+  }
+
+  .progress-warning{
+    font-size:12px;
+    line-height:1.4;
+  }
+
+  /* BUTTON */
+  .save-btn{
+    padding:14px;
+    font-size:14px;
+    border-radius:12px;
+  }
+
+}
+
+/* SMALLER PHONES */
+@media (max-width:480px){
+
+  .contractor-profile{
+    padding:10px;
+  }
+
+  .profile-page{
+    padding:14px 10px;
+  }
+
+  .profile-card{
+    padding:14px;
+    border-radius:16px;
+  }
+
+  .profile-header{
+    padding:18px;
+    gap:14px;
+  }
+
+  .profile-header h1{
+    font-size:22px;
+  }
+
+  .company-avatar{
+    width:64px;
+    height:64px;
+  }
+
+  .stat-box{
+    padding:14px;
+  }
+
+  .stat-box h3{
+    font-size:20px;
+  }
+
+  .form-group input,
+  .form-group textarea{
+    padding:12px;
+    font-size:14px;
+  }
+
+  .logo-box{
+    width:80px;
+    height:80px;
+  }
+
+  .save-btn{
+    width:100%;
+  }
+
+}

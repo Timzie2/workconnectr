@@ -166,15 +166,7 @@ textarea::placeholder {
   }
 }
 
-.post-job-container {
-  max-width: 600px;
-  margin: 60px auto;
-  background: var(--bg-card);
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border-color);
-}
+
 
 .post-job-form {
   display: flex;
@@ -204,4 +196,91 @@ textarea::placeholder {
 
 .salary-group select {
   width: 140px;       /* keeps dropdown clean */
+}
+
+/* ========================= */
+/* POST JOB RESPONSIVE */
+/* ========================= */
+
+@media (max-width:768px){
+
+  .post-job-container{
+    padding:20px 14px;
+    min-height:auto;
+  }
+
+  .post-job-card{
+    padding:22px;
+    border-radius:14px;
+  }
+
+  .post-job-form{
+    gap:14px;
+  }
+
+  .input-group{
+    padding:0 10px;
+  }
+
+  .input-group input{
+    font-size:16px; /* prevents iphone zoom */
+  }
+
+  .post-job-form textarea{
+    font-size:16px; /* prevents iphone zoom */
+    min-height:110px;
+  }
+
+  .select-input{
+    font-size:16px;
+  }
+
+  .post-job-btn{
+    width:100%;
+    padding:14px;
+  }
+
+  .back-btn{
+    width:100%;
+    margin-bottom:10px;
+  }
+
+  /* SALARY GROUP */
+  .salary-group{
+    flex-direction:column;
+    align-items:stretch;
+    gap:12px;
+  }
+
+  .salary-group input,
+  .salary-group select{
+    width:100%;
+  }
+
+}
+
+/* SMALLER PHONES */
+@media (max-width:480px){
+
+  .post-job-container{
+    padding:16px 10px;
+  }
+
+  .post-job-card{
+    padding:18px;
+    border-radius:12px;
+  }
+
+  .input-group{
+    border-radius:10px;
+  }
+
+  .post-job-form textarea{
+    min-height:100px;
+  }
+
+  .post-job-btn{
+    font-size:14px;
+  }
+
 }

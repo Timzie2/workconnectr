@@ -13,7 +13,10 @@ import {
   User,
   Sun,
   Moon,
-  MessageSquare
+  MessageSquare,
+  Menu,
+  X,
+  LogOut
 } from "lucide-react"
 
 import "../styles/ContractorNavbar.css"
@@ -22,11 +25,12 @@ function ContractorNavbar() {
 
   const navigate = useNavigate()
   const { user } = useAuth()
-const [profile, setProfile] = useState(null)
+  const [profile, setProfile] = useState(null)
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const notifRef = useRef(null)
   const profileRef = useRef(null)
@@ -245,7 +249,23 @@ const getNotificationIcon = (type) => {
 
       <div className="navbar-left">
 
-        <h2 className="logo">WorkConnectr</h2>
+  {/* MOBILE MENU BUTTON */}
+  <button
+    className="mobile-menu-btn"
+    onClick={() =>
+      setMobileMenuOpen(prev => !prev)
+    }
+  >
+
+    {mobileMenuOpen ? (
+      <X size={22} />
+    ) : (
+      <Menu size={22} />
+    )}
+
+  </button>
+
+  <h2 className="logo">WorkConnectr</h2>
 
         <Link to="/contractor-dashboard" className="nav-link">
           <Home size={18}/> Dashboard
@@ -473,10 +493,10 @@ if (notif.type === "rejected") {
 
 {/* 👤 PROFILE */}
 <div
-  className="contractor-profile-icon"
+  className="contractor-profile-icon desktop-profile"
   ref={profileRef}
   onClick={() => {
-    setNotifOpen(false) // ✅ close notifications
+    setNotifOpen(false)
     setMenuOpen(prev => !prev)
   }}
 >
@@ -497,7 +517,7 @@ if (notif.type === "rejected") {
 
     {/* 🔥 USER HEADER */}
     <div 
-  className="dropdown-user"
+  className="contractor-dropdown-user"
   onClick={() => navigate("/contractor-profile")}
 >
   <div className="contractor-dropdown-avatar">
@@ -512,11 +532,11 @@ if (notif.type === "rejected") {
   )}
 </div>
 
-  <div className="user-info">
-    <span className="user-name">
+  <div className="contractor-user-info">
+    <span className="contractor-user-name">
   {profile?.full_name || user?.email}
 </span>
-    <span className="user-email">
+    <span className="contractor-user-email">
   Contractor
 </span>
   </div>
@@ -547,6 +567,85 @@ if (notif.type === "rejected") {
 )}
 
       </div>
+
+      {/* MOBILE MENU */}
+{mobileMenuOpen && (
+  <div className="mobile-menu-dropdown">
+
+    <div className="mobile-menu-profile">
+
+      <img
+        src={
+          profile?.avatar_url ||
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            profile?.full_name || "Contractor"
+          )}`
+        }
+        alt="profile"
+        className="mobile-profile-avatar"
+      />
+
+      <div>
+        <h3>{profile?.full_name || "Contractor"}</h3>
+        <p>Contractor</p>
+      </div>
+
+    </div>
+
+    <Link
+      to="/contractor-dashboard"
+      className="mobile-menu-link"
+      onClick={() => setMobileMenuOpen(false)}
+    >
+      <Home size={18}/>
+      Dashboard
+    </Link>
+
+    <Link
+      to="/post-job"
+      className="mobile-menu-link"
+      onClick={() => setMobileMenuOpen(false)}
+    >
+      <Briefcase size={18}/>
+      Post Job
+    </Link>
+
+    <Link
+      to="/contractor-applications"
+      className="mobile-menu-link"
+      onClick={() => setMobileMenuOpen(false)}
+    >
+      <Users size={18}/>
+      Applicants
+    </Link>
+
+    <Link
+      to="/contractor-profile"
+      className="mobile-menu-link"
+      onClick={() => setMobileMenuOpen(false)}
+    >
+      <User size={18}/>
+      Profile
+    </Link>
+
+    <button
+      className="mobile-menu-link"
+      onClick={() => setDarkMode(prev => !prev)}
+    >
+      {darkMode ? <Sun size={18}/> : <Moon size={18}/>}
+      {darkMode ? "Light Mode" : "Dark Mode"}
+    </button>
+
+    <button
+      className="mobile-menu-link logout"
+      onClick={handleLogout}
+    >
+      <LogOut size={18}/>
+      Logout
+    </button>
+
+  </div>
+)}
 
     </nav>
   )

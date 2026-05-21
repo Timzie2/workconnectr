@@ -573,3 +573,200 @@
   }
 }
 
+/* ========================= */
+/* WORKER APPLICATIONS MOBILE */
+/* ========================= */
+
+@media (max-width:768px){
+
+  /* PAGE */
+  .worker-applications,
+  .worker-dashboard{
+    padding:20px 14px;
+  }
+
+  /* HEADER */
+  .app-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .app-header h1{
+    font-size:24px;
+  }
+
+  .dashboard-title{
+    font-size:30px;
+    line-height:1.2;
+  }
+
+  /* SEARCH */
+  .search-input,
+  .search-bar input{
+    max-width:100%;
+    font-size:16px; /* prevents iphone zoom */
+  }
+
+  /* TABS */
+  .tabs{
+    gap:10px;
+  }
+
+  .tabs button{
+    flex:1;
+    min-width:120px;
+    text-align:center;
+  }
+
+  /* STATS */
+  .stats-grid{
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .stat-card{
+    padding:20px;
+    border-radius:18px;
+  }
+
+  .stat-card p{
+    font-size:28px;
+  }
+
+  /* APPLICATION GRID */
+  .applications-grid{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  /* CARD */
+  .application-card{
+    padding:18px;
+    border-radius:18px;
+  }
+
+  /* JOB TITLE */
+  .job-title{
+    font-size:22px;
+    line-height:1.3;
+  }
+
+  /* INFO */
+  .app-info{
+    flex-direction:column;
+    gap:8px;
+    font-size:14px;
+  }
+
+  /* ACTION BUTTONS */
+  .app-actions{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .view-btn,
+  .withdraw-btn,
+  .rate-btn{
+    width:100%;
+  }
+
+  /* COMPANY */
+  .company-row,
+  .applications-company-row{
+    gap:10px;
+    align-items:center;
+  }
+
+  .company-logo{
+    width:46px;
+    height:46px;
+  }
+
+  .company-name{
+    font-size:14px;
+  }
+
+  /* EMPTY STATE */
+  .empty-state{
+    margin-top:50px;
+    padding:0 10px;
+  }
+
+  .empty-icon{
+    font-size:56px;
+  }
+
+  .empty-state h3{
+    font-size:24px;
+  }
+
+  .browse-btn{
+    width:100%;
+  }
+
+  /* MODAL */
+  .modal-overlay{
+    padding:16px;
+  }
+
+  .modal{
+    width:100%;
+    max-width:100%;
+    padding:20px;
+    border-radius:18px;
+  }
+
+  .modal select,
+  .modal textarea{
+    font-size:16px; /* prevents iphone zoom */
+  }
+
+  .modal-actions{
+    flex-direction:column;
+  }
+
+  .modal-actions button{
+    width:100%;
+  }
+
+}
+
+/* SMALLER PHONES */
+@media (max-width:480px){
+
+  .worker-applications,
+  .worker-dashboard{
+    padding:16px 12px;
+  }
+
+  .dashboard-title{
+    font-size:26px;
+  }
+
+  .application-card{
+    padding:16px;
+  }
+
+  .job-title{
+    font-size:20px;
+  }
+
+  .tabs button{
+    width:100%;
+  }
+
+  .status-badge{
+    font-size:12px;
+    padding:5px 12px;
+  }
+
+  .stat-card p{
+    font-size:24px;
+  }
+
+  .modal{
+    padding:18px;
+  }
+
+}

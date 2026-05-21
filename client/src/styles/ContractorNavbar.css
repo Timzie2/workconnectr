@@ -79,8 +79,8 @@
 
 /* PROFILE ICON */
 .contractor-profile-icon{
-  width:32px;
-  height:32px;
+  width:38px;
+  height:38px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -132,51 +132,52 @@
 }
 
 /* 🔥 USER HEADER (FIXED ALIGNMENT) */
-.dropdown-user{
+.contractor-dropdown-user{
   display:flex;
   align-items:center;
   gap:14px;
   padding:10px;
+
+  width:100%;
+  min-width:0;
+
+  cursor:pointer;
+  transition:.2s;
 }
 
-/* AVATAR */
-.avatar{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  background: var(--primary);
-  color:white;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-weight:600;
-  font-size:14px;
-
-  flex-shrink:0;
+.contractor-dropdown-user:hover{
+  background:rgba(255,255,255,.06);
+  border-radius:12px;
 }
 
 /* USER INFO */
-.user-info{
+.contractor-user-info{
   display:flex;
   flex-direction:column;
+
+  flex:1;
+  min-width:0;
+
   overflow:hidden;
 }
 
-.user-name{
+.contractor-user-name{
   font-size:16px;
   font-weight:600;
-  color: var(--text-main);
+  color:var(--text-main);
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-.user-email{
+.contractor-user-email{
   font-size:13px;
-  color: var(--text-secondary);
+  color:var(--text-secondary);
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 /* 🔥 DIVIDER */
@@ -188,7 +189,7 @@
 }
 
 /* 🔥 ITEMS */
-.profile-dropdown div:not(.dropdown-user):not(.dropdown-divider){
+.profile-dropdown div:not(.contractor-dropdown-user):not(.dropdown-divider){
   display:flex;
   align-items:center;
   gap:12px;
@@ -206,7 +207,7 @@ font-weight:500;
 
 
 /* 🔥 HOVER (DARK MODE) */
-.profile-dropdown div:not(.dropdown-user):not(.dropdown-divider):hover{
+.profile-dropdown div:not(.contractor-dropdown-user):not(.dropdown-divider):hover{
   background: rgba(255,255,255,0.12);
   transform: translateX(4px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -230,7 +231,7 @@ body.light-mode .profile-dropdown .active-item{
 
 
 /* 🔥 CLICK FEEDBACK */
-.profile-dropdown div:not(.dropdown-user):not(.dropdown-divider):active{
+.profile-dropdown div:not(.contractor-dropdown-user):not(.dropdown-divider):active{
   transform: scale(0.96);
 }
 
@@ -443,6 +444,20 @@ body.light-mode .profile-dropdown .active-item{
   border-radius:50%;
 }
 
+.contractor-nav-avatar{
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+  object-position:center;
+
+  border-radius:50%;
+
+  display:block;
+
+  border:2px solid rgba(0,255,150,0.3);
+}
+
 .contractor-notif-card {
   transition: 0.2s ease;
 }
@@ -590,88 +605,18 @@ body.light-mode .profile-dropdown .active-item{
   }
 }
 
-@media (max-width: 480px){
-  .navbar{
-    padding: 10px 15px; /* 🔥 tighter for phones */
-  }
+.contractor-dropdown-user:hover{
+  background:rgba(255,255,255,.06);
+  border-radius:12px;
 }
 
-/* 📱 MOBILE NAVBAR FIX */
-@media (max-width: 768px){
-
-  .navbar {
-    padding: 10px 15px;
-  }
-
-  .navbar-left {
-    gap: 10px;
-  }
-
-  /* 🔥 HIDE TEXT (keep icons only) */
-  .nav-link {
-    font-size: 0;
-  }
-
-  .nav-link svg {
-    font-size: 20px;
-  }
-
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* 🔥 RIPPLE EFFECT */
-.profile-dropdown div{
-  position: relative;
-  overflow: hidden;
-}
-
-.profile-dropdown div::after{
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 50%;
-  transform: scale(0);
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* 🔥 TRIGGER RIPPLE */
-.profile-dropdown div:active::after{
-  transform: scale(3);
-  opacity: 1;
-  transition: transform 0.4s ease, opacity 0.6s ease;
-}
-
-/* 🔥 ACTIVE GLOW */
-.profile-dropdown div:not(.dropdown-user):not(.dropdown-divider):active{
-  background: var(--bg-input);
-  box-shadow: 0 0 12px rgba(34,197,94,0.4); /* green glow */
-}
-
-.dropdown-user{
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.dropdown-user:hover{
-  background: rgba(255,255,255,0.08);
-  border-radius:10px;
-}
-
+/* CONTRACTOR DROPDOWN AVATAR */
 .contractor-dropdown-avatar{
-  width:69px;
-  height:69px;
+  width:64px;
+  height:64px;
 
-  min-width:69px;
-  min-height:69px;
-
+  min-width:64px;
+  min-height:64px;
 
   border-radius:50%;
   overflow:hidden;
@@ -682,338 +627,256 @@ body.light-mode .profile-dropdown .active-item{
   align-items:center;
   justify-content:center;
 
-  
+  background:rgba(255,255,255,.05);
 }
 
+/* DROPDOWN IMAGE */
 .contractor-avatar-img{
   width:100%;
   height:100%;
+
   object-fit:cover;
-  object-position: center;
-  border-radius:10%;
+  object-position:center;
+
   display:block;
-}
 
-.contractor-nav-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(0,255,150,0.3);
-}
-
-.contractor-profile-icon:hover{
-  box-shadow: 0 0 0 3px rgba(34,197,94,0.3);
-}
-
-.nav-avatar{
-  width:100%;
-  height:100%;
-  object-fit:cover;
   border-radius:50%;
 }
 
-.avatar-img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:50%;
+/* ================================= */
+/* MOBILE + TABLET RESPONSIVE NAVBAR */
+/* ================================= */
+
+.mobile-menu-btn{
+  display:none;
+
+  background:none;
+  border:none;
+  color:var(--text-main);
+
+  cursor:pointer;
+
+  padding:0;
+
+  align-items:center;
+  justify-content:center;
+
+  z-index:2001;
 }
 
-.logo img {
-  height: 32px;
-  object-fit: contain;
+/* MOBILE MENU */
+.mobile-menu-dropdown{
+  display:none;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
+/* TABLET + MOBILE */
+@media (max-width:768px){
 
-@media (max-width:320px){
-
-  /* NAVBAR */
   .navbar{
-    padding:10px 12px;
-    overflow-x:auto;
-    scrollbar-width:none;
+    position:relative;
+
+    padding:12px 14px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+
+    overflow:visible;
   }
 
-  .navbar::-webkit-scrollbar{
+  /* LEFT */
+  .navbar-left{
+    flex:1;
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    min-width:0;
+  }
+
+  /* HAMBURGER */
+  .mobile-menu-btn{
+    display:flex;
+
+    width:36px;
+    height:36px;
+
+    min-width:36px;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:10px;
+
+    transition:.2s;
+  }
+
+  .mobile-menu-btn:hover{
+    background:rgba(255,255,255,.06);
+  }
+
+  /* LOGO */
+  .logo{
+    font-size:18px;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+
+    flex:1;
+  }
+
+  /* HIDE DESKTOP LINKS */
+  .nav-link{
     display:none;
   }
 
-  .navbar-left{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    min-width:max-content;
-  }
-
+  /* RIGHT */
   .navbar-right{
     display:flex;
     align-items:center;
+
     gap:10px;
-    margin-left:14px;
+
+    flex-shrink:0;
+  }
+
+  .icon-btn,
+  .notification,
+  .contractor-profile-icon{
+    width:36px;
+    height:36px;
+
+    min-width:36px;
+    min-height:36px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+  }
+
+  /* MOBILE DROPDOWN */
+  .mobile-menu-dropdown{
+    display:flex;
+    flex-direction:column;
+
+    position:absolute;
+
+    top:68px;
+    left:14px;
+
+    width:240px;
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border-color);
+
+    border-radius:20px;
+
+    padding:10px;
+
+    z-index:3000;
+
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+
+    animation:mobileMenuFade .2s ease;
+  }
+
+  @keyframes mobileMenuFade{
+    from{
+      opacity:0;
+      transform:translateY(-8px);
+    }
+
+    to{
+      opacity:1;
+      transform:translateY(0);
+    }
+  }
+
+  .mobile-menu-link{
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    padding:14px;
+
+    border-radius:14px;
+
+    text-decoration:none;
+
+    color:var(--text-main);
+
+    font-size:15px;
+    font-weight:500;
+
+    transition:.2s;
+  }
+
+  .mobile-menu-link:hover{
+    background:rgba(255,255,255,.06);
+  }
+
+  /* PROFILE DROPDOWN */
+  .profile-dropdown{
+    width:min(92vw, 280px);
+
+    top:60px;
+    right:0;
+  }
+
+  /* NOTIFICATION PANEL */
+  .notification-panel{
+    width:min(94vw, 340px);
+
+    right:0;
+    top:60px;
+  }
+}
+
+/* SMALL PHONES */
+@media (max-width:480px){
+
+  .navbar{
+    padding:10px 12px;
   }
 
   .logo{
     font-size:16px;
-    white-space:nowrap;
-  }
-
-  .nav-link{
-    font-size:12px;
-    white-space:nowrap;
-    gap:4px;
-  }
-
-  .nav-link svg{
-    width:14px;
-    height:14px;
-  }
-
-  .profile-avatar,
-  .contractor-avatar{
-    width:30px;
-    height:30px;
-    min-width:30px;
-  }
-
-  /* CONTRACTOR PROFILE */
-  .profile-page{
-    padding:14px 10px;
-  }
-
-  .profile-card{
-    padding:14px;
-    border-radius:14px;
-  }
-
-  .profile-header{
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    gap:12px;
-    padding:18px 14px;
-  }
-
-  .company-avatar{
-    width:70px;
-    height:70px;
-    min-width:70px;
-  }
-
-  .profile-header h1{
-    font-size:20px;
-    line-height:1.2;
-  }
-
-  .profile-header p{
-    font-size:13px;
-  }
-
-  /* STATS */
-  .profile-stats{
-    flex-direction:column;
-    gap:10px;
-  }
-
-  .stat-box{
-    width:100%;
-    padding:14px;
-  }
-
-  .stat-box h3{
-    font-size:18px;
-  }
-
-  .stat-box p{
-    font-size:12px;
-  }
-
-  /* FORM */
-  .form-section{
-    gap:12px;
-  }
-
-  .form-group input,
-  .form-group textarea,
-  .form-group select{
-    font-size:14px;
-    padding:12px;
-  }
-
-  textarea{
-    min-height:90px;
-  }
-
-  .save-btn{
-    width:100%;
-    font-size:14px;
-    padding:12px;
-  }
-
-  /* REVIEWS */
-  .review-card{
-    padding:10px;
-  }
-
-  .review-text{
-    font-size:13px;
-  }
-
-  .review-date{
-    font-size:11px;
-  }
-}
-
-@media (max-width:375px){
-
-  /* NAVBAR */
-  .navbar{
-    padding:12px 14px;
-    overflow-x:auto;
-    scrollbar-width:none;
-  }
-
-  .navbar::-webkit-scrollbar{
-    display:none;
-  }
-
-  .navbar-left{
-    display:flex;
-    align-items:center;
-    gap:16px;
-    min-width:max-content;
   }
 
   .navbar-right{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-left:16px;
+    gap:8px;
   }
 
-  .logo{
-    font-size:18px;
-    white-space:nowrap;
+  .icon-btn svg,
+  .notification svg{
+    width:18px;
+    height:18px;
   }
 
-  .nav-link{
-    font-size:13px;
-    white-space:nowrap;
-    gap:5px;
-  }
-
-  .nav-link svg{
-    width:15px;
-    height:15px;
-  }
-
-  .profile-avatar,
-  .contractor-avatar{
+  .contractor-profile-icon{
     width:34px;
     height:34px;
-    min-width:34px;
   }
 
-  /* DASHBOARD */
-  .dashboard-container{
-    padding:18px 14px;
+  .mobile-menu-dropdown{
+    width:220px;
+  }
+}
+
+@media (max-width:768px){
+
+  .desktop-profile{
+    display:none;
   }
 
-  .dashboard-title{
-    font-size:24px;
-    line-height:1.2;
-  }
-
-  .jobs-grid{
-    grid-template-columns:1fr;
-    gap:16px;
-  }
-
-  .job-card,
-  .grouped-card{
-    padding:16px;
-    border-radius:16px;
-  }
-
-  /* PROFILE */
-  .profile-page{
-    padding:18px 12px;
-  }
-
-  .profile-card{
-    padding:18px;
-    border-radius:16px;
-  }
-
-  .profile-header{
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    gap:14px;
-  }
-
-  .company-avatar{
-    width:80px;
-    height:80px;
-    min-width:80px;
-  }
-
-  .profile-header h1{
-    font-size:22px;
-  }
-
-  .profile-header p{
-    font-size:14px;
-  }
-
-  /* STATS */
-  .profile-stats{
-    flex-direction:column;
-    gap:12px;
-  }
-
-  .stat-box{
-    width:100%;
-    padding:16px;
-  }
-
-  /* FORM */
-  .form-section{
-    gap:14px;
-  }
-
-  .form-group input,
-  .form-group textarea,
-  .form-group select{
-    padding:13px;
-    font-size:14px;
-  }
-
-  textarea{
-    min-height:100px;
-  }
-
-  .save-btn{
-    width:100%;
-    padding:13px;
-    font-size:14px;
-  }
-
-  /* BUTTONS */
-  .job-actions{
-    flex-direction:column;
-    gap:10px;
-  }
-
-  .approve-btn,
-  .reject-btn,
-  .message-btn,
-  .view-btn{
-    width:100%;
-  }
 }

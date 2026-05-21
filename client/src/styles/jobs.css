@@ -21,7 +21,7 @@
 .job-card {
   background: linear-gradient(145deg, #1f2937, #111827);
   border-radius: 18px;
-  padding: 220px;
+  padding: 22px;
   transition: all 0.25s ease;
   cursor: pointer;
   border: 1px solid rgba(255,255,255,0.05);
@@ -305,4 +305,169 @@
   font-size: 12px;
   color: #facc15;
   font-weight: 600;
+}
+
+/* ========================= */
+/* RESPONSIVE FIXES */
+/* ========================= */
+
+@media (max-width:1024px){
+
+  .jobs-page{
+    padding:20px;
+  }
+
+  .jobs-grid{
+    grid-template-columns:
+      repeat(auto-fit,minmax(280px,1fr));
+  }
+
+}
+
+/* ========================= */
+/* TABLETS */
+/* ========================= */
+
+@media (max-width:768px){
+
+  .jobs-page{
+    padding:18px 14px;
+  }
+
+  .jobs-title{
+    font-size:24px;
+    margin-bottom:18px;
+  }
+
+  .jobs-grid{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  .job-card{
+    min-height:auto;
+    padding:18px;
+    border-radius:16px;
+  }
+
+  .job-card.featured{
+    transform:none;
+  }
+
+  .jobs-company-row,
+  .company-row{
+    gap:10px;
+    margin-top:0;
+  }
+
+  .company-logo{
+    width:40px;
+    height:40px;
+  }
+
+  .company-name{
+    font-size:13px;
+  }
+
+  .job-title{
+    font-size:18px;
+    line-height:1.4;
+  }
+
+  .job-desc{
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .job-footer{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .job-actions{
+    flex-direction:column;
+    width:100%;
+  }
+
+  .apply-btn,
+  .view-btn{
+    width:100%;
+    font-size:14px;
+    padding:12px;
+  }
+
+  .urgent-banner,
+  .closed-overlay{
+    font-size:12px;
+  }
+
+}
+
+/* ========================= */
+/* SMALL PHONES */
+/* ========================= */
+
+@media (max-width:480px){
+
+  .jobs-page{
+    padding:16px 12px;
+  }
+
+  .jobs-title{
+    font-size:22px;
+  }
+
+  .job-card{
+    padding:16px;
+    border-radius:14px;
+  }
+
+  .job-title{
+    font-size:17px;
+  }
+
+  .job-desc{
+    font-size:12.5px;
+  }
+
+  .job-location,
+  .job-salary,
+  .rating,
+  .rating-inline{
+    font-size:11px;
+  }
+
+  .featured-badge,
+  .closed-badge,
+  .urgent-badge,
+  .hiring-badge{
+    font-size:10px;
+    padding:4px 8px;
+  }
+
+  .apply-btn,
+  .view-btn{
+    font-size:13px;
+    padding:11px;
+    border-radius:10px;
+  }
+
+}
+
+/* ========================= */
+/* SAFETY FIXES */
+/* ========================= */
+
+img{
+  max-width:100%;
+}
+
+button{
+  min-height:44px;
+}
+
+html,
+body{
+  overflow-x:hidden;
 }

@@ -1228,5 +1228,298 @@
   }
 }
 
+/* ========================= */
+/* RESPONSIVE FIXES */
+/* ========================= */
 
+@media (max-width:1024px){
 
+  .worker-dashboard{
+    padding:30px 16px;
+  }
+
+  .worker-stats{
+    flex-wrap:wrap;
+  }
+
+  .worker-stat-card{
+    min-width:220px;
+  }
+
+  .worker-jobs-grid,
+  .featured-jobs{
+    grid-template-columns:
+      repeat(auto-fit,minmax(280px,1fr));
+  }
+
+}
+
+/* ========================= */
+/* TABLETS */
+/* ========================= */
+
+@media (max-width:768px){
+
+  .worker-dashboard{
+    padding:24px 14px;
+  }
+
+  .dashboard-title{
+    font-size:24px;
+    margin-bottom:20px;
+  }
+
+  /* STATS */
+  .worker-stats{
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .worker-stat-card{
+    width:100%;
+    padding:20px;
+  }
+
+  .worker-stat-card p{
+    font-size:22px;
+  }
+
+  /* SEARCH/FILTER */
+  .job-controls{
+    flex-direction:column;
+    padding:14px;
+  }
+
+  .job-search,
+  .job-filter{
+    width:100%;
+  }
+
+  /* GRID */
+  .worker-jobs-grid,
+  .featured-jobs{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  /* CARDS */
+  .worker-job-card,
+  .featured-job-card{
+    width:100%;
+    max-width:100%;
+    padding:18px;
+    border-radius:18px;
+  }
+
+  .worker-job-card h3,
+  .job-title{
+    font-size:20px;
+  }
+
+  .job-desc{
+    font-size:13px;
+  }
+
+  /* META */
+  .job-meta,
+  .worker-job-info{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+  }
+
+  /* ACTIONS */
+  .worker-job-actions,
+  .job-actions{
+    flex-direction:column;
+    width:100%;
+  }
+
+  .worker-view-btn,
+  .save-btn,
+  .apply-btn,
+  .btn{
+    width:100%;
+    justify-content:center;
+  }
+
+  /* COMPANY */
+  .company-row{
+    align-items:flex-start;
+  }
+
+  .company-logo{
+    width:40px;
+    height:40px;
+  }
+
+  /* FEATURED + URGENT */
+  .job-header-top{
+    flex-direction:column;
+    gap:14px;
+    align-items:flex-start;
+  }
+
+  .job-badges-right{
+    width:100%;
+    align-items:flex-start;
+  }
+
+  .featured-box,
+  .urgent-pill{
+    width:100%;
+    align-items:flex-start;
+    text-align:left;
+  }
+
+  /* DETAILS PAGE */
+  .job-details-card{
+    padding:22px 18px;
+    margin:20px auto;
+  }
+
+  .job-title{
+    font-size:24px;
+  }
+
+  /* MODAL */
+  .modal{
+    width:92%;
+    max-width:92%;
+    padding:20px;
+    border-radius:18px;
+  }
+
+  .modal-actions{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  /* NOTIFICATIONS */
+  .worker-notification-panel{
+    width:320px;
+    max-width:calc(100vw - 20px);
+    right:-10px;
+  }
+
+}
+
+/* ========================= */
+/* SMALL PHONES */
+/* ========================= */
+
+@media (max-width:480px){
+
+  .worker-dashboard{
+    padding:20px 12px;
+  }
+
+  .dashboard-title{
+    font-size:22px;
+  }
+
+  .worker-stat-card{
+    padding:18px;
+    border-radius:14px;
+  }
+
+  .worker-stat-card h3{
+    font-size:14px;
+  }
+
+  .worker-stat-card p{
+    font-size:20px;
+  }
+
+  .worker-job-card,
+  .featured-job-card{
+    padding:16px;
+    border-radius:16px;
+  }
+
+  .job-title{
+    font-size:20px;
+  }
+
+  .company-name{
+    font-size:13px;
+  }
+
+  .job-desc{
+    font-size:12.5px;
+    line-height:1.5;
+  }
+
+  .job-salary,
+  .salary-badge{
+    font-size:12px;
+  }
+
+  .worker-view-btn,
+  .save-btn,
+  .apply-btn,
+  .btn{
+    padding:12px;
+    font-size:13px;
+  }
+
+  .featured-box span,
+  .urgent-pill span{
+    font-size:12px;
+  }
+
+  .featured-box small,
+  .urgent-pill small{
+    font-size:11px;
+  }
+
+  .applied-badge,
+  .closed-badge,
+  .featured-tag,
+  .recommended-badge{
+    font-size:10px;
+    padding:4px 8px;
+  }
+
+  .worker-notification-panel{
+    width:100%;
+    right:0;
+    left:0;
+    margin:auto;
+    top:48px;
+  }
+
+  .job-details-card{
+    padding:18px 14px;
+    border-radius:14px;
+  }
+
+  .job-actions{
+    flex-direction:column;
+  }
+
+}
+
+/* ========================= */
+/* SAFETY FIXES */
+/* ========================= */
+
+img{
+  max-width:100%;
+}
+
+button{
+  min-height:44px;
+}
+
+input,
+textarea,
+select{
+  font-size:16px;
+}
+
+/* Prevent horizontal scrolling */
+html,
+body{
+  overflow-x:hidden;
+}

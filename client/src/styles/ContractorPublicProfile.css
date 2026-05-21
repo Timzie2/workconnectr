@@ -288,3 +288,147 @@
   padding:0;
 
 }
+
+/* ========================= */
+/* 📱 RESPONSIVE */
+/* ========================= */
+
+@media (max-width:900px){
+
+  .profile-header{
+    gap:20px;
+    padding:24px;
+  }
+
+  .contractor-avatar,
+  .profile-avatar{
+    width:130px;
+    height:130px;
+  }
+
+  .profile-avatar{
+    font-size:48px;
+  }
+
+  .profile-right h1{
+    font-size:34px;
+  }
+
+}
+
+@media (max-width:768px){
+
+  .contractor-profile{
+    padding:20px 14px;
+  }
+
+  .profile-header{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+
+    padding:24px 18px;
+
+    border-radius:20px;
+  }
+
+  .profile-right{
+    align-items:center;
+  }
+
+  .profile-right h1{
+    font-size:30px;
+  }
+
+  .profile-role{
+    font-size:15px;
+  }
+
+  .contractor-meta{
+    justify-content:center;
+    gap:12px;
+  }
+
+  .profile-section{
+    padding:20px;
+    border-radius:18px;
+  }
+
+  .profile-section h3{
+    font-size:22px;
+  }
+
+  .review-top{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
+
+}
+
+@media (max-width:480px){
+
+  .contractor-profile{
+    padding:16px 10px;
+  }
+
+  .profile-header{
+    padding:20px 14px;
+    gap:16px;
+  }
+
+  .contractor-avatar,
+  .profile-avatar{
+    width:105px;
+    height:105px;
+  }
+
+  .profile-avatar{
+    font-size:40px;
+  }
+
+  .profile-right h1{
+    font-size:24px;
+    line-height:1.2;
+  }
+
+  .profile-role{
+    font-size:14px;
+  }
+
+  .verified-badge{
+    font-size:12px;
+    padding:5px 10px;
+  }
+
+  .contractor-meta{
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+
+    font-size:14px;
+  }
+
+  .profile-section{
+    padding:16px;
+    border-radius:16px;
+  }
+
+  .profile-section h3{
+    font-size:20px;
+  }
+
+  .review-card{
+    padding:14px;
+    border-radius:12px;
+  }
+
+  .review-text{
+    font-size:14px;
+  }
+
+  .profile-back-btn button{
+    font-size:14px;
+  }
+
+}

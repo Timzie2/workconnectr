@@ -79,3 +79,126 @@
 .back-btn{
   margin-bottom:30px;
 }
+
+/* ========================= */
+/* WORKER PUBLIC PROFILE MOBILE */
+/* ========================= */
+
+@media (max-width:768px){
+
+  .worker-public-container{
+    padding:20px 14px;
+  }
+
+  .worker-public-card{
+    padding:22px;
+    border-radius:20px;
+  }
+
+  /* HEADER */
+  .worker-public-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:18px;
+    margin-bottom:28px;
+  }
+
+  /* AVATAR */
+  .worker-public-avatar{
+    width:92px;
+    height:92px;
+    border-width:3px;
+  }
+
+  /* TEXT */
+  .worker-public-header h1{
+    font-size:28px;
+    line-height:1.2;
+  }
+
+  .worker-public-headline{
+    font-size:15px;
+    margin-top:6px;
+    line-height:1.5;
+  }
+
+  .worker-public-rating{
+    font-size:14px;
+    margin-top:10px;
+  }
+
+  /* SECTION */
+  .worker-public-section{
+    margin-top:20px;
+    padding:18px;
+    border-radius:16px;
+  }
+
+  .worker-public-section h3{
+    font-size:18px;
+    margin-bottom:10px;
+  }
+
+  .worker-public-section p{
+    font-size:14px;
+    line-height:1.7;
+  }
+
+  /* BUTTON */
+  .back-btn{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:22px;
+  }
+
+}
+
+/* SMALLER PHONES */
+@media (max-width:480px){
+
+  .worker-public-container{
+    padding:14px 10px;
+  }
+
+  .worker-public-card{
+    padding:16px;
+    border-radius:18px;
+  }
+
+  .worker-public-header{
+    gap:14px;
+  }
+
+  .worker-public-avatar{
+    width:78px;
+    height:78px;
+  }
+
+  .worker-public-header h1{
+    font-size:24px;
+  }
+
+  .worker-public-headline{
+    font-size:14px;
+  }
+
+  .worker-public-rating{
+    font-size:13px;
+  }
+
+  .worker-public-section{
+    padding:14px;
+    border-radius:14px;
+  }
+
+  .worker-public-section h3{
+    font-size:16px;
+  }
+
+  .worker-public-section p{
+    font-size:13px;
+  }
+
+}

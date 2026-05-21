@@ -326,19 +326,67 @@ button:hover{
 }
 
 /* 🔥 BACK BUTTON */
-.back-btn {
-  background: rgba(30, 41, 59, 0.9);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 12px 18px;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-bottom: 25px;
-  transition: 0.2s ease;
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:12px 18px;
+
+  border-radius:14px;
+
+  border:1px solid var(--border-color);
+
+  background: var(--bg-card);
+  color: var(--text-main);
+
+  font-weight:600;
+  font-size:14px;
+
+  cursor:pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.back-btn:hover {
-  background: rgba(51, 65, 85, 1);
+.back-btn:hover{
+  transform:translateY(-2px);
+
+  background: var(--bg-input);
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* DARK MODE */
+.dark .back-btn{
+  background: rgba(30,41,59,0.95);
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  color:white;
+}
+
+.dark .back-btn:hover{
+  background: rgba(51,65,85,1);
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.35);
+}
+
+/* MOBILE */
+@media (max-width:768px){
+
+  .back-btn{
+    width:100%;
+    justify-content:center;
+
+    padding:14px;
+    border-radius:12px;
+  }
+
 }
 
 .new-request-badge {
@@ -433,3 +481,176 @@ button:hover{
   color: #3b82f6;
 }
 
+/* ========================= */
+/* CONTRACTOR APPLICATIONS MOBILE */
+/* ========================= */
+
+@media (max-width:768px){
+
+  /* PAGE */
+  .dashboard-container{
+    padding:20px 14px;
+  }
+
+  .dashboard-title{
+    font-size:28px;
+    line-height:1.2;
+    margin-bottom:22px;
+  }
+
+  /* GRID */
+  .jobs-grid{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  /* JOB CARD */
+  .job-card{
+    padding:18px;
+    border-radius:18px;
+  }
+
+  .job-card strong{
+    font-size:20px;
+    line-height:1.3;
+    margin-bottom:14px;
+  }
+
+  .job-card p{
+    font-size:14px;
+  }
+
+  /* GROUPED CARD */
+  .grouped-card{
+    padding:16px;
+    border-radius:18px;
+    gap:10px;
+  }
+
+  .group-header h3{
+    font-size:18px;
+    line-height:1.3;
+  }
+
+  /* APPLICANT ROW */
+  .applicant-row{
+    flex-direction:column;
+    gap:12px;
+    align-items:flex-start;
+  }
+
+  .applicant-meta{
+    width:100%;
+    align-items:flex-start;
+  }
+
+  /* WORKER */
+  .worker-info{
+    gap:12px;
+    align-items:center;
+  }
+
+  .worker-avatar{
+    width:46px;
+    height:46px;
+  }
+
+  .worker-name{
+    font-size:15px;
+  }
+
+  .worker-skill{
+    font-size:12px;
+  }
+
+  /* BADGES */
+  .status-badge,
+  .badge-new,
+  .app-count{
+    font-size:11px;
+  }
+
+  /* ACTIONS */
+  .job-actions{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .approve-btn,
+  .reject-btn,
+  .message-btn{
+    width:100%;
+    padding:12px;
+    font-size:14px;
+  }
+
+  .view-btn{
+    width:100%;
+    padding:10px;
+  }
+
+  /* BACK BUTTON */
+  .back-btn{
+    width:100%;
+    justify-content:center;
+    display:flex;
+    align-items:center;
+  }
+
+  /* STATUS */
+  .status{
+    font-size:13px;
+    padding:7px 14px;
+  }
+
+  /* NEW REQUEST BADGE */
+  .new-request-badge{
+    font-size:12px;
+    padding:7px 12px;
+  }
+
+}
+
+/* SMALLER PHONES */
+@media (max-width:480px){
+
+  .dashboard-container{
+    padding:16px 12px;
+  }
+
+  .dashboard-title{
+    font-size:24px;
+  }
+
+  .job-card,
+  .grouped-card{
+    padding:14px;
+    border-radius:16px;
+  }
+
+  .group-header h3{
+    font-size:16px;
+  }
+
+  .job-card strong{
+    font-size:18px;
+  }
+
+  .worker-avatar{
+    width:42px;
+    height:42px;
+  }
+
+  .approve-btn,
+  .reject-btn,
+  .message-btn,
+  .view-btn{
+    font-size:13px;
+  }
+
+  .new-request-badge{
+    width:100%;
+    justify-content:center;
+  }
+
+}

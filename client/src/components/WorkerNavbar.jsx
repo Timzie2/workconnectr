@@ -16,7 +16,9 @@ import {
   Sun,
   Moon,
   Search,
-  Settings
+  Settings,
+  Menu,
+  X
 } from "lucide-react"
 
 import "../styles/WorkerNavbar.css"
@@ -37,6 +39,7 @@ const navigate = useNavigate()
 const { user } = useAuth()
 
 const [menuOpen, setMenuOpen] = useState(false)
+const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 const [notifOpen, setNotifOpen] = useState(false)
 const [notifications, setNotifications] = useState([])
 const [profileData, setProfileData] = useState(null)
@@ -310,7 +313,26 @@ async function fetchProfile(){
 
       <div className="worker-navbar-left">
 
-        <h2 className="worker-logo">WorkConnectr</h2>
+  {/* MOBILE MENU BUTTON */}
+
+  <button
+    className="mobile-menu-btn"
+    onClick={() =>
+      setMobileMenuOpen(prev => !prev)
+    }
+  >
+
+    {mobileMenuOpen ? (
+      <X size={22} />
+    ) : (
+      <Menu size={22} />
+    )}
+
+  </button>
+
+  <h2 className="worker-logo">
+    WorkConnectr
+  </h2>
 
         <Link to="/worker-dashboard" className="worker-nav-link">
           <Home size={18}/> Dashboard
@@ -335,7 +357,10 @@ async function fetchProfile(){
         <div
   className="worker-icon-btn"
   onClick={(e) => {
-  e.stopPropagation() // ✅ VERY IMPORTANT
+  e.stopPropagation()
+
+  setMenuOpen(false)
+  setNotifOpen(false)
 
   if (searchOpen) {
     setClosing(true)
@@ -371,7 +396,9 @@ async function fetchProfile(){
     autoFocus
   />
 
-  <div className="custom-filter">
+  <div
+  className={`custom-filter ${filterOpen ? "active-filter" : ""}`}
+>
 
     <div
       className="filter-selected"
@@ -389,11 +416,13 @@ async function fetchProfile(){
 
         <div
           className="filter-option"
-          onClick={() => {
-            setSelectedCategory("")
-            handleSearch(searchQuery, "")
-            setFilterOpen(false)
-          }}
+          onClick={(e) => {
+  e.stopPropagation()
+
+  setSelectedCategory("")
+  handleSearch(searchQuery, "")
+  setFilterOpen(false)
+}}
         >
           All
         </div>
@@ -402,11 +431,13 @@ async function fetchProfile(){
           <div
             key={i}
             className="filter-option"
-            onClick={() => {
-              setSelectedCategory(cat)
-              handleSearch(searchQuery, cat)
-              setFilterOpen(false)
-            }}
+            onClick={(e) => {
+  e.stopPropagation()
+
+  setSelectedCategory(cat)
+  handleSearch(searchQuery, cat)
+  setFilterOpen(false)
+}}
           >
             {cat}
           </div>
@@ -475,13 +506,29 @@ async function fetchProfile(){
 
         <div
           className="worker-icon-btn"
-          onClick={() => navigate("/messages")}
+          onClick={() => {
+
+  setSearchOpen(false)
+  setNotifOpen(false)
+  setMenuOpen(false)
+
+  navigate("/messages")
+}}
         >
           <MessageSquare size={20}/>
         </div>
 
         <div className="worker-notification" ref={notifRef}>
-          <Bell size={20} onClick={openNotifications}/>
+          <Bell
+  size={20}
+  onClick={() => {
+
+    setSearchOpen(false)
+    setMenuOpen(false)
+
+    openNotifications()
+  }}
+/>
 
           {unreadCount > 0 && (
             <span className="worker-notification-count">
@@ -580,9 +627,15 @@ async function fetchProfile(){
         </div>
 
         <div
-  className="worker-profile-icon"
+  className="worker-profile-icon desktop-profile"
   ref={profileRef}
-  onClick={() => setMenuOpen(prev => !prev)}
+  onClick={() => {
+
+    setSearchOpen(false)
+    setNotifOpen(false)
+
+    setMenuOpen(prev => !prev)
+  }}
 >
 
   <img
@@ -664,6 +717,102 @@ async function fetchProfile(){
 )}
 
       </div>
+
+      {/* MOBILE MENU */}
+
+{mobileMenuOpen && (
+
+  <div className="mobile-menu">
+
+  <div className="mobile-menu-profile">
+
+  <img
+    src={
+      profileData?.avatar_url ||
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        profileData?.full_name || "User"
+      )}`
+    }
+    alt="profile"
+    className="mobile-profile-avatar"
+  />
+
+  <div>
+    <h3>{profileData?.full_name || "Worker"}</h3>
+    <p>Worker</p>
+  </div>
+
+</div>
+
+    <Link
+      to="/worker-dashboard"
+      className="mobile-menu-link"
+      onClick={() => setMobileMenuOpen(false)}
+    >
+      <Home size={18}/>
+      Dashboard
+    </Link>
+
+    <Link
+      to="/jobs"
+      className="mobile-menu-link"
+      onClick={() => setMobileMenuOpen(false)}
+    >
+      <Briefcase size={18}/>
+      Jobs
+    </Link>
+
+    <Link
+      to="/applications"
+      className="mobile-menu-link"
+      onClick={() => setMobileMenuOpen(false)}
+    >
+      <FileText size={18}/>
+      Applications
+    </Link>
+
+    <Link
+      to="/saved-jobs"
+      className="mobile-menu-link"
+      onClick={() => setMobileMenuOpen(false)}
+    >
+      <Star size={18}/>
+      Saved Jobs
+    </Link>
+
+    <Link
+  to="/worker-profile"
+  className="mobile-menu-link"
+  onClick={() => setMobileMenuOpen(false)}
+>
+  <User size={18}/>
+  Profile
+</Link>
+
+    <button className="mobile-menu-link">
+  <Settings size={18}/>
+  Account Settings
+</button>
+
+<button
+  className="mobile-menu-link"
+  onClick={() => setDarkMode(prev => !prev)}
+>
+  {darkMode ? <Sun size={18}/> : <Moon size={18}/>}
+  {darkMode ? "Light Mode" : "Dark Mode"}
+</button>
+
+<button
+  className="mobile-menu-link logout"
+  onClick={logout}
+>
+  <LogOut size={18}/>
+  Logout
+</button>
+
+  </div>
+
+)}
 
     </nav>
   )

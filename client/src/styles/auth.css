@@ -1,3 +1,187 @@
+/* ========================= */
+/* 📱 EXTRA RESPONSIVE FIXES */
+/* ========================= */
+
+/* TABLETS */
+@media (max-width:768px){
+
+  .login-page{
+    padding:24px 16px;
+    align-items:center;
+  }
+
+  .login-card{
+    max-width:100%;
+    padding:32px 24px;
+
+    border-radius:20px;
+  }
+
+  .app-title{
+    font-size:24px;
+  }
+
+  .login-card form{
+    gap:16px;
+  }
+
+  .input-group input{
+    font-size:15px;
+  }
+
+  .modal{
+    width:95%;
+    border-radius:18px;
+  }
+
+}
+
+/* MOBILE */
+@media (max-width:480px){
+
+  .login-page{
+    padding:16px 12px;
+
+    align-items:flex-start;
+
+    overflow-y:auto;
+  }
+
+  .login-card{
+    padding:24px 18px;
+
+    border-radius:18px;
+
+    margin-top:20px;
+    margin-bottom:20px;
+
+    backdrop-filter:blur(14px);
+  }
+
+  .app-title{
+    font-size:22px;
+    line-height:1.2;
+  }
+
+  .app-subtitle{
+    font-size:13px;
+  }
+
+  .login-card h3{
+    font-size:18px;
+  }
+
+  .input-group input{
+    padding:13px 12px;
+
+    border-radius:12px;
+
+    font-size:14px;
+  }
+
+  .input-group label{
+    font-size:13px;
+  }
+
+  .login-card button,
+  .modal button{
+    padding:13px;
+
+    border-radius:12px;
+
+    font-size:14px;
+  }
+
+  .google-btn{
+    margin-top:4px;
+  }
+
+  .toggle-password{
+    right:10px;
+    font-size:12px;
+  }
+
+  .forgot-password{
+    font-size:12px;
+  }
+
+  .login-footer{
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .modal{
+    width:100%;
+
+    padding:22px 18px;
+
+    border-radius:18px;
+  }
+
+  .modal-header h3{
+    font-size:18px;
+  }
+
+  .modal input{
+    padding:13px;
+    border-radius:12px;
+  }
+
+  .toast{
+    width:92%;
+
+    bottom:20px;
+
+    padding:12px 14px;
+
+    border-radius:14px;
+
+    font-size:13px;
+  }
+
+}
+
+/* SMALL PHONES */
+@media (max-width:360px){
+
+  .login-page{
+    padding:12px 10px;
+  }
+
+  .login-card{
+    padding:20px 14px;
+  }
+
+  .app-title{
+    font-size:20px;
+  }
+
+  .input-group input{
+    font-size:13px;
+  }
+
+  .login-card button{
+    font-size:13px;
+  }
+
+  .modal{
+    padding:18px 14px;
+  }
+
+}
+
+/* LANDSCAPE MOBILE */
+@media (max-height:700px){
+
+  .login-page{
+    align-items:flex-start;
+
+    padding-top:30px;
+    padding-bottom:30px;
+  }
+
+}
+
 /* 🔥 PAGE BACKGROUND */
 .login-page {
   min-height: 100vh; /* ✅ FIX */
