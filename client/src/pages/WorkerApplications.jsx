@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
-import WorkerNavbar from "../components/WorkerNavbar"
+import AppNavbar from "../components/AppNavbar"
 import { useAuth } from "../context/AuthContext"
 import "../styles/WorkerApplications.css"
 
@@ -201,7 +201,7 @@ await supabase
   if(authLoading){
     return (
       <>
-        <WorkerNavbar />
+        <AppNavbar />
         <div className="worker-dashboard">Loading...</div>
       </>
     )
@@ -214,7 +214,7 @@ await supabase
   if(loading){
     return (
       <>
-        <WorkerNavbar />
+        <AppNavbar />
         <div className="worker-dashboard">Loading...</div>
       </>
     )
@@ -222,14 +222,14 @@ await supabase
 
   return(
     <>
-      <WorkerNavbar />
+      <AppNavbar />
 
       <div className="worker-dashboard">
 
         <h1 className="dashboard-title">My Applications 📄</h1>
 
         {/* 🔍 SEARCH */}
-<div className="search-bar">
+<div className="applications-search-bar">
   <input
     type="text"
     placeholder="Search by job name..."
@@ -239,7 +239,7 @@ await supabase
 </div>
 
 {/* 🔥 TABS */}
-<div className="tabs">
+<div className="applications-tabs">
 
   <button
     className={activeTab === "all" ? "active" : ""}
@@ -271,28 +271,28 @@ await supabase
 
 </div>
 
-<div className="stats-grid">
+<div className="applications-stats-grid">
 
-  <div className="stat-card">
+  <div className="applications-stat-card">
     <h4>Total</h4>
     <p>{applications.length}</p>
   </div>
 
-  <div className="stat-card pending">
+  <div className="applications-stat-card pending">
     <h4>Pending</h4>
     <p>
       {applications.filter(a => a.status === "pending").length}
     </p>
   </div>
 
-  <div className="stat-card approved">
+  <div className="applications-stat-card approved">
     <h4>Approved</h4>
     <p>
       {applications.filter(a => a.status === "approved").length}
     </p>
   </div>
 
-  <div className="stat-card rejected">
+  <div className="applications-stat-card rejected">
     <h4>Rejected</h4>
     <p>
       {applications.filter(a => a.status === "rejected").length}
@@ -302,9 +302,9 @@ await supabase
 </div>
 
         {filteredApps.length === 0 && (
-          <div className="empty-state">
+          <div className="applications-empty-state">
 
-  <div className="empty-icon">
+  <div className="applications-empty-icon">
     📭
   </div>
 
@@ -322,8 +322,7 @@ await supabase
     : "Start applying to jobs and track them here."}
 </p>
 
-  <button
-    className="browse-btn"
+  <button className="applications-browse-btn"
     onClick={() => navigate("/jobs")}
   >
     Browse Jobs
@@ -332,7 +331,7 @@ await supabase
 </div>
         )}
 
-        <div className="applications-grid">
+        <div className="worker-applications-grid">
 
           {filteredApps.map((app)=> {
 
@@ -340,8 +339,7 @@ await supabase
 
             return(
 
-              <div
-  className={`application-card ${app.status}`}
+              <div className={`worker-application-card ${app.status}`}
   key={app.id}
 >
 
@@ -374,7 +372,7 @@ await supabase
 </div>
 
   {/* 🔥 STATUS BADGE */}
-  <div className={`status-badge ${app.status}`}>
+  <div className={`application-status-badge ${app.status}`}>
 
   {app.status === "pending" && "⏳ Pending"}
 
@@ -388,19 +386,19 @@ await supabase
     {job?.title || "Unknown Job"}
   </h3>
 
-  <div className="app-info">
+  <div className="application-info">
     <span>📍 {job?.location || "N/A"}</span>
     <span className="salary">₦{job?.salary?.toLocaleString() || "N/A"}/day</span>
   </div>
 
-  <p className="applied-time">
+  <p className="application-time">
   Applied {getAppliedTime(app.created_at)}
 </p>
 
-  <div className="app-actions">
+  <div className="application-actions">
 
     <button
-      className="view-btn"
+      className="application-view-btn"
       onClick={() => navigate(`/job/${job?.id}`)}
     >
       View Job
@@ -409,7 +407,7 @@ await supabase
     {app.status === "approved" && (
 
   <button
-    className="rate-btn"
+    className="application-rate-btn"
     onClick={() => openRatingModal(app)}
   >
     ⭐ Rate
@@ -418,7 +416,7 @@ await supabase
 )}
 
     <button
-      className="withdraw-btn"
+      className="application-withdraw-btn"
       onClick={() => {
         if (confirm("Are you sure you want to withdraw?")) {
           withdraw(job?.id)
@@ -439,9 +437,9 @@ await supabase
       </div>
     {showRatingModal && (
 
-  <div className="modal-overlay">
+  <div className="applications-modal-overlay">
 
-    <div className="modal">
+    <div className="applications-modal">
 
       <h3>Rate Contractor</h3>
 
@@ -464,7 +462,7 @@ await supabase
         onChange={(e)=>setComment(e.target.value)}
       />
 
-      <div className="modal-actions">
+      <div className="applications-modal-actions">
 
         <button
           className="btn secondary"

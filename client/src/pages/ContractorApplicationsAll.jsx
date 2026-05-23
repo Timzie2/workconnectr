@@ -2,7 +2,7 @@ import "../styles/contractorapplications.css"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 import { useAuth } from "../context/AuthContext"
 
 
@@ -94,7 +94,7 @@ setApplications(Object.entries(grouped))
   return (
     <div>
 
-      <ContractorNavbar />
+      <AppNavbar />
 
       <div className="dashboard-container">
 
@@ -137,7 +137,7 @@ setApplications(Object.entries(grouped))
         </div>
 
         {/* 🔥 APPLICANTS */}
-        {jobData.applicants.map(app => (
+        {jobData.applicants.slice(0, 2).map(app => (
 
           <div key={app.id} className="applicant-card">
 
@@ -191,6 +191,25 @@ setApplications(Object.entries(grouped))
           </div>
 
         ))}
+
+        {jobData.applicants.length > 2 && (
+  <div className="more-apps-box">
+    <p className="more-apps-text">
+      +{jobData.applicants.length - 2} more applicants
+    </p>
+
+    <button
+      className="view-btn more-btn"
+      onClick={() =>
+        navigate(`/contractor-applications/${jobId}`, {
+          state: { from: "all-applicants" }
+        })
+      }
+    >
+      View All
+    </button>
+  </div>
+)}
 
       </div>
     )

@@ -1,0 +1,607 @@
+/* ========================================
+   ACCOUNT SETTINGS PAGE
+======================================== */
+
+.account-settings-page{
+
+  min-height:100vh;
+
+  width:100%;
+
+  padding:
+    110px
+    clamp(14px, 3vw, 40px)
+    60px;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(34,197,94,.08),
+      transparent 28%
+    ),
+
+    radial-gradient(
+      circle at bottom right,
+      rgba(59,130,246,.08),
+      transparent 30%
+    ),
+
+    var(--bg-main);
+
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+
+  overflow-x:hidden;
+}
+
+/* ========================================
+   CARD
+======================================== */
+
+.account-settings-card{
+
+  width:100%;
+
+  max-width:1100px;
+
+  padding:38px;
+
+  border-radius:32px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,23,42,.88),
+      rgba(2,6,23,.94)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  backdrop-filter:blur(18px);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.26);
+
+  color:var(--text-main);
+
+  animation:settingsFade .4s ease;
+}
+
+/* ========================================
+   HEADER
+======================================== */
+
+.settings-header{
+
+  margin-bottom:34px;
+}
+
+.settings-header-icon{
+
+  width:62px;
+  height:62px;
+
+  border-radius:18px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  margin-bottom:18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(74,222,128,.18),
+      rgba(34,197,94,.08)
+    );
+
+  border:
+    1px solid rgba(74,222,128,.16);
+
+  font-size:24px;
+
+  color:#4ade80;
+}
+
+.settings-header h1{
+
+  font-size:42px;
+
+  font-weight:900;
+
+  letter-spacing:-1.5px;
+
+  margin-bottom:10px;
+
+  color:var(--text-main);
+
+  line-height:1.1;
+}
+
+.settings-header p{
+
+  color:var(--text-secondary);
+
+  font-size:15px;
+
+  line-height:1.7;
+
+  max-width:600px;
+}
+
+/* ========================================
+   FORM
+======================================== */
+
+.account-settings-card form{
+
+  display:flex;
+  flex-direction:column;
+
+  gap:28px;
+}
+
+/* ========================================
+   SECTION
+======================================== */
+
+.settings-section{
+
+  padding:28px;
+
+  border-radius:24px;
+
+  background:
+    rgba(255,255,255,.03);
+
+  border:
+    1px solid rgba(255,255,255,.05);
+
+  display:flex;
+  flex-direction:column;
+
+  gap:22px;
+}
+
+.settings-section-title{
+
+  font-size:20px;
+
+  font-weight:800;
+
+  color:var(--text-main);
+
+  margin-bottom:4px;
+}
+
+/* ========================================
+   GRID
+======================================== */
+
+.settings-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(280px,1fr));
+
+  gap:22px;
+}
+
+/* ========================================
+   GROUP
+======================================== */
+
+.settings-group{
+
+  display:flex;
+  flex-direction:column;
+
+  gap:10px;
+
+  width:100%;
+}
+
+.settings-group.full{
+
+  grid-column:1 / -1;
+}
+
+.settings-group label{
+
+  font-size:14px;
+
+  font-weight:700;
+
+  color:var(--text-main);
+}
+
+/* ========================================
+   INPUTS
+======================================== */
+
+.settings-group input,
+.settings-group textarea{
+
+  width:100%;
+
+  border-radius:18px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  background:
+    rgba(255,255,255,.04);
+
+  color:var(--text-main);
+
+  font-size:15px;
+
+  outline:none;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+/* INPUT */
+
+.settings-group input{
+
+  height:58px;
+
+  padding:0 18px;
+}
+
+/* TEXTAREA */
+
+.settings-group textarea{
+
+  min-height:140px;
+
+  resize:none;
+
+  padding:18px;
+
+  line-height:1.7;
+}
+
+/* FOCUS */
+
+.settings-group input:focus,
+.settings-group textarea:focus{
+
+  border-color:#4ade80;
+
+  background:
+    rgba(255,255,255,.06);
+
+  box-shadow:
+    0 0 0 4px rgba(74,222,128,.10);
+}
+
+/* DISABLED */
+
+.settings-group input:disabled{
+
+  opacity:.7;
+
+  cursor:not-allowed;
+}
+
+/* ========================================
+   BUTTON ROW
+======================================== */
+
+.settings-actions{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:16px;
+
+  margin-top:8px;
+}
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+.save-settings-btn,
+.secondary-settings-btn,
+.danger-settings-btn{
+
+  min-height:56px;
+
+  padding:0 26px;
+
+  border:none;
+
+  border-radius:18px;
+
+  font-size:15px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    opacity .2s ease;
+}
+
+/* SAVE */
+
+.save-settings-btn{
+
+  background:
+    linear-gradient(
+      135deg,
+      #4ade80,
+      #22c55e
+    );
+
+  color:#052e16;
+
+  box-shadow:
+    0 16px 30px rgba(34,197,94,.22);
+
+  flex:1;
+}
+
+.save-settings-btn:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 18px 34px rgba(34,197,94,.30);
+}
+
+/* SECONDARY */
+
+.secondary-settings-btn{
+
+  background:
+    rgba(255,255,255,.05);
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  color:var(--text-main);
+}
+
+.secondary-settings-btn:hover{
+
+  background:
+    rgba(255,255,255,.08);
+
+  transform:translateY(-2px);
+}
+
+/* DANGER */
+
+.danger-settings-btn{
+
+  background:
+    rgba(239,68,68,.12);
+
+  color:#ef4444;
+
+  border:
+    1px solid rgba(239,68,68,.18);
+}
+
+.danger-settings-btn:hover{
+
+  background:
+    rgba(239,68,68,.18);
+
+  transform:translateY(-2px);
+}
+
+/* ACTIVE */
+
+.save-settings-btn:active,
+.secondary-settings-btn:active,
+.danger-settings-btn:active{
+
+  transform:scale(.98);
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width:768px){
+
+  .account-settings-page{
+
+    padding:90px 14px 34px;
+  }
+
+  .account-settings-card{
+
+    padding:22px;
+
+    border-radius:24px;
+  }
+
+  .settings-header h1{
+
+    font-size:32px;
+  }
+
+  .settings-section{
+
+    padding:20px;
+
+    border-radius:20px;
+  }
+
+  .settings-grid{
+
+    grid-template-columns:1fr;
+
+    gap:18px;
+  }
+
+  .settings-actions{
+
+    flex-direction:column;
+  }
+
+  .save-settings-btn,
+  .secondary-settings-btn,
+  .danger-settings-btn{
+
+    width:100%;
+  }
+
+}
+
+@media (max-width:480px){
+
+  .account-settings-card{
+
+    padding:18px;
+  }
+
+  .settings-header h1{
+
+    font-size:26px;
+  }
+
+  .settings-header p{
+
+    font-size:13px;
+  }
+
+  .settings-section-title{
+
+    font-size:18px;
+  }
+
+  .settings-group input{
+
+    height:54px;
+
+    font-size:14px;
+
+    border-radius:14px;
+  }
+
+  .settings-group textarea{
+
+    font-size:14px;
+
+    border-radius:14px;
+  }
+
+  .save-settings-btn,
+  .secondary-settings-btn,
+  .danger-settings-btn{
+
+    min-height:52px;
+
+    border-radius:14px;
+
+    font-size:14px;
+  }
+
+}
+
+/* ========================================
+   LIGHT MODE
+======================================== */
+
+body:not(.dark) .account-settings-page{
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(34,197,94,.06),
+      transparent 30%
+    ),
+
+    radial-gradient(
+      circle at bottom right,
+      rgba(59,130,246,.06),
+      transparent 30%
+    ),
+
+    linear-gradient(
+      180deg,
+      #f8fafc,
+      #e2e8f0
+    );
+}
+
+body:not(.dark) .account-settings-card{
+
+  background:white;
+
+  border:
+    1px solid rgba(148,163,184,.18);
+
+  box-shadow:
+    0 20px 50px rgba(15,23,42,.08);
+}
+
+body:not(.dark) .settings-section{
+
+  background:#f8fafc;
+
+  border:
+    1px solid rgba(148,163,184,.12);
+}
+
+body:not(.dark) .settings-group input,
+body:not(.dark) .settings-group textarea{
+
+  background:white;
+
+  border:
+    1px solid rgba(148,163,184,.18);
+
+  color:#0f172a;
+}
+
+body:not(.dark) .settings-group input:focus,
+body:not(.dark) .settings-group textarea:focus{
+
+  background:white;
+}
+
+body:not(.dark) .secondary-settings-btn{
+
+  background:#f8fafc;
+
+  border:
+    1px solid rgba(148,163,184,.18);
+
+  color:#0f172a;
+}
+
+/* ========================================
+   ANIMATION
+======================================== */
+
+@keyframes settingsFade{
+
+  from{
+    opacity:0;
+    transform:translateY(18px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}

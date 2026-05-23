@@ -2,7 +2,7 @@ import { useAuth } from "../context/AuthContext"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
-import WorkerNavbar from "../components/WorkerNavbar"
+import AppNavbar from "../components/AppNavbar"
 import { useSaved } from "../context/SavedContext"
 import RatingModal from "../components/RatingModal"
 import StarRating from "../components/StarRating"
@@ -310,7 +310,7 @@ const finalRecommended =
   if (loading) {
     return (
       <>
-        <WorkerNavbar />
+        <AppNavbar />
         <div className="worker-dashboard">Loading...</div>
       </>
     )
@@ -318,23 +318,25 @@ const finalRecommended =
 
   return (
     <>
-      <WorkerNavbar />
+      <AppNavbar />
 
       <div className="worker-dashboard">
 
         <h1 className="dashboard-title">Worker Dashboard</h1>
 
-        <div className="worker-stats">
-          <div className="worker-stat-card">
-            <h3>Applications</h3>
-            <p>{applications.length}</p>
-          </div>
+        <div className="dashboard-stats-grid">
 
-          <div className="worker-stat-card">
-            <h3>Jobs</h3>
-            <p>{jobs.length}</p>
-          </div>
-        </div>
+  <div className="dashboard-stat-card">
+    <h3>Applications</h3>
+    <p>{applications.length}</p>
+  </div>
+
+  <div className="dashboard-stat-card">
+    <h3>Jobs</h3>
+    <p>{jobs.length}</p>
+  </div>
+
+</div>
 
         {unreadCount > 0 && (
           <div className="notif-banner">
@@ -342,7 +344,7 @@ const finalRecommended =
           </div>
         )}
 
-        <h2 className="section-title">💎 Featured Jobs</h2>
+        <h2 className="section-title">Featured Jobs</h2>
 
         <div className="featured-jobs">
 
@@ -375,7 +377,7 @@ const status = application?.status
 </span>
 )}
 
-                <span className="featured-tag">💎 Featured</span>
+                <span className="featured-tag">Featured</span>
 
                 <div className="company-row">
 
@@ -523,7 +525,7 @@ const status = application?.status
         </div>
 
         <div className="section-header">
-  <h2>🎯 Recommended for You</h2>
+  <h2>Recommended for You</h2>
 
   <button
     className="view-more-btn"
@@ -535,7 +537,7 @@ const status = application?.status
   </button>
 </div>
 
-<div className="worker-jobs-grid">
+<div className="recommended-jobs-grid">
   {finalRecommended.map((job) => {
 
     const application = applications.find(a => a.job_id === job.id)
@@ -546,7 +548,7 @@ const status = application?.status
 
     return (
       <div
-  className={`worker-job-card recommended ${isClosed ? "closed" : ""}`}
+  className={`recommended-job-card ${isClosed ? "closed" : ""}`}
   key={job.id}
 >
 
@@ -561,8 +563,8 @@ const status = application?.status
 </span>
 )}
 
-        {/* 🎯 MATCH BADGE */}
-        <span className="recommended-badge">🎯 Match</span>
+        {/* MATCH BADGE */}
+        <span className="recommended-badge">Match</span>
 
         <div className="company-row">
 
@@ -671,7 +673,7 @@ const status = application?.status
 </div>
 
         <div className="section-header">
-  <h2>🔥 New Jobs</h2>
+  <h2>New Jobs</h2>
 
   <button
     className="view-more-btn"

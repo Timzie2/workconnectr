@@ -11,7 +11,7 @@ function ProfileSetup() {
   const { user, loading: authLoading } = useAuth() // ✅ GLOBAL AUTH
 
   const [name, setName] = useState("")
-  const [skills, setSkills] = useState("")
+  const [skills, setSkills] = useState([])
   const [loading, setLoading] = useState(false)
   const [userRole, setUserRole] = useState("")
   const [location, setLocation] = useState("")
@@ -47,6 +47,31 @@ if (data?.role) {
 
 }, [user])
 
+const suggestedSkills = [
+  "Frontend Developer",
+  "UI/UX Designer",
+  "Electrician",
+  "Plumber",
+  "Graphic Designer",
+  "Video Editor",
+  "Mobile App Developer",
+  "Carpenter",
+  "Painter",
+  "Virtual Assistant"
+]
+
+const toggleSkill = (skill) => {
+
+  setSkills((prev) => {
+
+    if (prev.includes(skill)) {
+      return prev.filter((item) => item !== skill)
+    }
+
+    return [...prev, skill]
+  })
+}
+
   // ✅ HANDLE PROFILE SAVE
   const handleSaveProfile = async (e) => {
     e.preventDefault()
@@ -63,7 +88,7 @@ if (userRole === "worker") {
   updates = {
     ...updates,
     full_name: name,
-    skills,
+    skills: skills.join(", "),
     location
   }
 }
@@ -156,11 +181,21 @@ window.location.href =
         <span>🛠️</span>
 
         <input
-          type="text"
-          placeholder="Skills (e.g Graphic Designer, plumber)"
-          value={skills}
-          onChange={(e)=>setSkills(e.target.value)}
-        />
+  type="text"
+  placeholder="Skills (e.g Graphic Designer, Plumber)"
+  value={skills.join(", ")}
+  onChange={(e) => {
+
+    const value = e.target.value
+
+    const splitSkills = value
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill !== "")
+
+    setSkills([...new Set(splitSkills)])
+  }}
+/>
       </div>
 
       <div className="input-group">
@@ -176,31 +211,24 @@ window.location.href =
 
       <div className="skill-suggestions">
 
-        {[
-          "Frontend Developer",
-          "UI/UX Designer",
-          "Electrician",
-          "Plumber",
-          "Graphic Designer",
-          "Video Editor",
-          "Mobile App Developer",
-          "Carpenter",
-          "Painter",
-          "Virtual Assistant"
-        ].map((skill) => (
+  {suggestedSkills.map((skill) => (
 
-          <button
-            type="button"
-            key={skill}
-            className="skill-chip"
-            onClick={() => setSkills(skill)}
-          >
-            {skill}
-          </button>
+    <button
+      type="button"
+      key={skill}
+      className={`skill-chip ${
+        skills.includes(skill)
+          ? "active"
+          : ""
+      }`}
+      onClick={() => toggleSkill(skill)}
+    >
+      {skill}
+    </button>
 
-        ))}
+  ))}
 
-      </div>
+</div>
     </>
   )}
 

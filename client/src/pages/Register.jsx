@@ -86,7 +86,7 @@ const registerUser = async (e) => {
 }
 
     setErrorMsg("Registration successful 🎉")
-    setTimeout(() => navigate("/login"), 1500)
+    setTimeout(() => navigate("/home"), 1500)
   } catch (err) {
     console.error("REGISTER CATCH ERROR:", err)
     setErrorMsg("Registration failed")
@@ -155,18 +155,35 @@ return (
 </div>
 
         {/* ROLE */}
-        <div className="input-group">
-          <select
-            value={role}
-            onChange={(e)=>setRole(e.target.value)}
-          >
-            <option value="worker">Worker</option>
-            <option value="contractor">Contractor</option>
-          </select>
-        </div>
+<div className="select-group">
 
-        <button type="submit" disabled={loading}>
-  {loading ? <span className="spinner"></span> : "Register"}
+  <select
+    className="role-select"
+    value={role}
+    onChange={(e)=>setRole(e.target.value)}
+  >
+
+    <option value="worker">
+      Worker
+    </option>
+
+    <option value="contractor">
+      Contractor
+    </option>
+
+  </select>
+
+</div>
+
+        <button
+  type="submit"
+  disabled={loading}
+  className="register-btn"
+>
+  {loading
+    ? <span className="spinner"></span>
+    : "Register"
+  }
 </button>
 <p className="login-footer">
   Already have an account? <Link to="/login">Login</Link>

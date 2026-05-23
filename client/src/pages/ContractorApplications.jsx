@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import supabase from "../supabaseClient"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 import { useAuth } from "../context/AuthContext"
 
 
@@ -236,7 +236,7 @@ fetchApplications()
   return (
     <div>
 
-      <ContractorNavbar />
+      <AppNavbar />
 
       <div className="dashboard-container">
 

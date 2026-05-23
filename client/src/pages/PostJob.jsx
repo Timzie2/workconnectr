@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import { useAuth } from "../context/AuthContext"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 import toast from "react-hot-toast" // ✅ ADD THIS
 import "../styles/layout.css"
 import "../styles/components.css"
@@ -164,7 +164,7 @@ const payForUrgent = () => {
 
   return (
     <>
-      <ContractorNavbar />
+      <AppNavbar />
 
       <div className="post-job-container">
 
@@ -268,15 +268,18 @@ const payForUrgent = () => {
   </div>
 )}
 
-<div className="checkbox-row">
-  <input
-    type="checkbox"
-    checked={isUrgent}
-    onChange={(e) => setIsUrgent(e.target.checked)}
-  />
+<div className="urgent-row">
+
   <label>
-  🚨 Mark as Urgent (₦300 — lasts 48hrs)
-</label>
+    <input
+      type="checkbox"
+      checked={isUrgent}
+      onChange={(e) => setIsUrgent(e.target.checked)}
+    />
+
+    🚨 Mark as Urgent (₦300 — lasts 48hrs)
+  </label>
+
 </div>
 
             <button type="submit" className="post-job-btn" disabled={loading}>

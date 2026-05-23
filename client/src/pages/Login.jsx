@@ -57,12 +57,10 @@ useEffect(() => {
     console.log("REDIRECTING NOW:", role)
 
     if (role === "none") {
-      navigate("/profile-setup", { replace: true })
-    } else if (role === "worker") {
-      navigate("/worker-dashboard", { replace: true })
-    } else if (role === "contractor") {
-      navigate("/contractor-dashboard", { replace: true })
-    }
+  navigate("/profile-setup", { replace: true })
+} else {
+  navigate("/home", { replace: true })
+}
   }
 }, [authLoading, user, role, location.pathname, navigate])
 
@@ -158,7 +156,11 @@ const handleGoogleLogin = async () => {
   Forgot password?
 </p>
 
-        <button type="submit" disabled={loading}>
+        <button
+  type="submit"
+  disabled={loading}
+  className="login-btn"
+>
           {loading ? <span className="spinner"></span> : "Login"}
         </button>
 
@@ -166,7 +168,10 @@ const handleGoogleLogin = async () => {
 
       <div className="divider">or</div>
 
-      <button onClick={handleGoogleLogin} className="google-btn">
+      <button
+  onClick={handleGoogleLogin}
+  className="google-btn"
+>
   Continue with Google
 </button>
 

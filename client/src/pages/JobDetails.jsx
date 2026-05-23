@@ -2,9 +2,9 @@ import { useSaved } from "../context/SavedContext"
 import { useParams, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import supabase from "../supabaseClient"
-import WorkerNavbar from "../components/WorkerNavbar"
+import AppNavbar from "../components/AppNavbar"
 import { useAuth } from "../context/AuthContext" // ✅ NEW
-import "../styles/WorkerDashboard.css"
+import "../styles/JobsDetails.css"
 import toast from "react-hot-toast"
 
 function JobDetails() {
@@ -264,11 +264,11 @@ const isUrgentActive =
 
   return (
     <>
-      <WorkerNavbar />
+      <AppNavbar />
 
       <div className="worker-dashboard">
 
-        <div className="job-header">
+        <div className="job-details-header">
           <button 
             className="back-btn"
             onClick={() => navigate(-1)}
@@ -282,7 +282,7 @@ const isUrgentActive =
           <div className="job-header-top">
 
   {/* LEFT: COMPANY */}
-  <div className="company-row">
+  <div className="job-details-company-row">
     <img
       src={
         job.users?.avatar_url
@@ -292,11 +292,11 @@ const isUrgentActive =
             )}&background=0D8ABC&color=fff`
       }
       alt="logo"
-      className="company-logo"
+      className="job-details-company-logo"
     />
 
     <p
-      className="company-name"
+      className="job-details-company-name"
       onClick={() => navigate(`/contractor/${job.contractor_id}`)}
       style={{ cursor: "pointer" }}
     >
@@ -327,7 +327,7 @@ const isUrgentActive =
 
 </div>    
 
-<h1 className="job-title">{job.title}</h1>
+<h1 className="job-details-title">{job.title}</h1>
 
 {isExpired && (
   <div className="expired-banner">
@@ -336,9 +336,9 @@ const isUrgentActive =
 )}
 
 
-          <p className="job-description">{job.description}</p>
+          <p className="job-details-description">{job.description}</p>
 
-          <div className="job-info">
+          <div className="job-details-info">
             <p>📍 {job.location}</p>
             <div className="job-meta-row">
   <span className="salary-badge">
@@ -353,7 +353,7 @@ const isUrgentActive =
             <p>📅 {new Date(job.created_at).toDateString()}</p>
           </div>
 
-          <div className="job-actions">
+          <div className="job-details-actions">
 
             <button
   className={`apply-btn 

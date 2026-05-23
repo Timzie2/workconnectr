@@ -14,14 +14,24 @@ export function ThemeProvider({ children }) {
   })
 
   useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark")
-      localStorage.setItem("theme", "dark")
-    } else {
-      document.body.classList.remove("dark")
-      localStorage.setItem("theme", "light")
-    }
-  }, [darkMode])
+
+  if (darkMode) {
+
+    document.body.classList.add("dark")
+    document.body.classList.remove("light")
+
+    localStorage.setItem("theme", "dark")
+
+  } else {
+
+    document.body.classList.add("light")
+    document.body.classList.remove("dark")
+
+    localStorage.setItem("theme", "light")
+
+  }
+
+}, [darkMode])
 
   return (
     <ThemeContext.Provider value={{ darkMode, setDarkMode }}>

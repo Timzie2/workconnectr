@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 import "../styles/ContractorDashboard.css"
 import BoostModal from "../components/BoostModal"
 import "../styles/layout.css"
@@ -315,11 +315,11 @@ new Date(job.featured_until) <= now
 
   return (
     <>
-      <ContractorNavbar />
+      <AppNavbar />
 
-      <div className="dashboard-container">
+      <div className="contractor-dashboard-container">
 
-        <h1 className="dashboard-title">Contractor Dashboard</h1>
+        <h1 className="dashboard-title">Hiring Dashboard</h1>
 
         <div className="dashboard-actions">
 

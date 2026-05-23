@@ -1,772 +1,1064 @@
-/* PAGE CONTAINER */
-.worker-applications {
-  padding: 30px;
-  color: #fff;
-}
-
-/* HEADER */
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-}
-
-.app-header h1 {
-  font-size: 26px;
-  font-weight: 600;
-}
-
-/* GRID */
-.applications-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-/* CARD */
-.application-card {
-  background: linear-gradient(145deg, #0f172a, #1e293b);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  transition: 0.3s;
-  animation: fadeUp 0.35s ease;
-}
-
-@keyframes fadeUp {
-
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-}
-
-.application-card:hover {
-  transform: translateY(-5px);
-}
-
-/* TITLE */
-.application-card h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-/* INFO ROW */
-.app-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  opacity: 0.8;
-  margin-bottom: 10px;
-}
-
-/* STATUS */
-.status {
-  font-weight: 600;
-  margin: 10px 0;
-}
-
-.status.pending {
-  color: #facc15;
-}
-
-.status.approved {
-  color: #22c55e;
-}
-
-.status.rejected {
-  color: #ef4444;
-}
-
-/* BUTTONS */
-.app-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.view-btn {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  background: #3b82f6;
-  color: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.view-btn:hover {
-  background: #2563eb;
-}
-
-.withdraw-btn {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  background: #ef4444;
-  color: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.withdraw-btn:hover {
-  background: #dc2626;
-}
-
-/* COMPANY ROW */
-.applications-company-row{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  margin-top:-18px;
-}
-
-.company-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-}
-
-.company-name {
-  font-size: 14px;
-  font-weight: 500;
-  opacity: 0.85;
-}
+/* =========================================
+   WORKER APPLICATIONS — MODERN GLASS UI
+   ========================================= */
 
 /* PAGE */
-.worker-dashboard {
-  padding: 30px;
-  min-height: 100vh;
-  background: #020617;
-  color: white;
-}
 
-/* HEADER */
-.dashboard-title {
-  font-size: 42px;
-  font-weight: 800;
-  margin-bottom: 25px;
-}
+.worker-applications-page{
 
-/* SEARCH */
-.search-bar {
-  margin-bottom: 20px;
-}
+  width:min(1600px, calc(100% - 40px));
 
-.search-input {
-  width: 100%;
-  max-width: 420px;
-  padding: 14px 18px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.05);
-  color: white;
-  font-size: 15px;
-  outline: none;
-  transition: 0.3s ease;
-}
+  margin:auto;
 
-.search-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
-}
+  padding:34px 0 90px;
 
-/* TABS */
-.tabs {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-}
-
-.tabs button {
-  padding: 10px 18px;
-  border-radius: 12px;
-  border: none;
-  background: rgba(255,255,255,0.06);
-  color: #cbd5e1;
-  cursor: pointer;
-  transition: 0.25s ease;
-  font-weight: 600;
-}
-
-.tabs button:hover {
-  background: rgba(255,255,255,0.12);
-}
-
-.tabs .active-tab {
-  background: #2563eb;
-  color: white;
-}
-
-/* STATS */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-  margin-bottom: 35px;
-}
-
-.stat-card {
-  background: linear-gradient(
-    135deg,
-    rgba(30,41,59,0.95),
-    rgba(15,23,42,0.95)
-  );
-  border: 1px solid rgba(255,255,255,0.05);
-  padding: 24px;
-  border-radius: 22px;
-  backdrop-filter: blur(10px);
-}
-
-.stat-card h4 {
-  color: #94a3b8;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.stat-card p {
-  font-size: 34px;
-  font-weight: 800;
-}
-
-.stat-card.pending {
-  border-left: 4px solid #facc15;
-}
-
-.stat-card.approved {
-  border-left: 4px solid #22c55e;
-}
-
-.stat-card.rejected {
-  border-left: 4px solid #ef4444;
-}
-
-/* APPLICATION GRID */
-.applications-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-/* CARD */
-.application-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
-  padding: 22px;
-  position: relative;
-  overflow: hidden;
-  transition: 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
-
-.application-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(59,130,246,0.4);
-}
-
-/* COMPANY */
-.company-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.company-logo {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-}
-
-.company-name {
-  font-size: 15px;
-  color: #cbd5e1;
-  font-weight: 600;
-}
-
-/* STATUS */
-.status-badge {
-  display: inline-flex;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  text-transform: capitalize;
-}
-
-.status-badge.pending {
-  background: rgba(250,204,21,0.12);
-  color: #facc15;
-}
-
-.status-badge.approved {
-  background: rgba(34,197,94,0.12);
-  color: #22c55e;
-}
-
-.status-badge.rejected {
-  background: rgba(239,68,68,0.12);
-  color: #ef4444;
-}
-
-/* TITLE */
-.job-title {
-  font-size: 26px;
-  font-weight: 800;
-  margin-bottom: 15px;
-}
-
-/* INFO */
-.app-info {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  color: #cbd5e1;
-  font-size: 15px;
-}
-
-.salary {
-  color: #facc15;
-  font-weight: 700;
-}
-
-/* ACTIONS */
-.app-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.view-btn,
-.withdraw-btn {
-  flex: 1;
-  border: none;
-  padding: 13px;
-  border-radius: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.view-btn {
-  background: #2563eb;
-  color: white;
-}
-
-.view-btn:hover {
-  background: #1d4ed8;
-}
-
-.withdraw-btn {
-  background: rgba(239,68,68,0.15);
-  color: #ef4444;
-}
-
-.withdraw-btn:hover {
-  background: #ef4444;
-  color: white;
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-
-  .worker-dashboard {
-    padding: 20px;
-  }
-
-  .dashboard-title {
-    font-size: 32px;
-  }
-
-  .app-info {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .app-actions {
-    flex-direction: column;
-  }
-
-}
-
-/* APPLIED TIME */
-.applied-time {
-  margin-top: 12px;
-  font-size: 13px;
-  opacity: 0.7;
-}
-
-/* EMPTY STATE */
-.empty-state {
-  text-align: center;
-  margin-top: 80px;
-  opacity: 0.9;
-}
-
-.empty-icon {
-  font-size: 70px;
-  margin-bottom: 20px;
-}
-
-.empty-state h3 {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-
-.empty-state p {
-  opacity: 0.7;
-  margin-bottom: 20px;
-}
-
-.browse-btn {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 14px;
-  cursor: pointer;
-  font-weight: 700;
-  transition: 0.25s ease;
-}
-
-.browse-btn:hover {
-  background: #1d4ed8;
-}
-
-/* BETTER SEARCH */
-.search-bar input {
-  width: 100%;
-  max-width: 420px;
-  padding: 14px 18px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.05);
-  color: inherit;
-  font-size: 15px;
-  outline: none;
-}
-
-/* ACTIVE TAB */
-.tabs .active {
-  background: #2563eb;
-  color: white;
-}
-
-.company-logo:hover {
-  transform: scale(1.08);
-}
-
-.company-logo {
-  transition: 0.25s ease;
-}
-
-.application-card.pending {
-  border-top: 3px solid #facc15;
-}
-
-.application-card.approved {
-  border-top: 3px solid #22c55e;
-}
-
-.application-card.rejected {
-  border-top: 3px solid #ef4444;
-}
-
-@media (max-width: 768px) {
-
-  .stats-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-}
-
-.rate-btn{
-  background:linear-gradient(135deg,#facc15,#f59e0b);
-  color:#111827;
-  border:none;
-  padding:10px 14px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:700;
-  transition:0.2s;
-}
-
-.rate-btn:hover{
-  transform:scale(1.05);
-  box-shadow:0 8px 18px rgba(245,158,11,0.35);
-}
-
-/* MODAL */
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-  backdrop-filter:blur(4px);
-}
-
-.modal{
-  width:420px;
-  background:var(--bg-card);
   color:var(--text-main);
-  border-radius:20px;
-  padding:24px;
-  border:1px solid var(--border-color);
-  box-shadow:0 20px 50px rgba(0,0,0,0.35);
-  animation:modalPop 0.25s ease;
+
+  background:
+    radial-gradient(circle at top left,
+      rgba(34,197,94,.08),
+      transparent 26%),
+    radial-gradient(circle at bottom right,
+      rgba(59,130,246,.08),
+      transparent 30%),
+    var(--bg-main);
+
 }
 
-.modal h3{
-  margin-bottom:18px;
+/* =========================
+   TITLE
+========================= */
+
+.dashboard-title{
+
+  font-size:clamp(34px, 4vw, 52px);
+
+  font-weight:900;
+
+  letter-spacing:-2px;
+
+  line-height:1;
+
+  margin-bottom:28px;
+
+  color:var(--text-main);
+
 }
 
-.modal select,
-.modal textarea{
+/* =========================
+   SEARCH
+========================= */
+
+.applications-search-bar{
+
+  margin-bottom:22px;
+
+}
+
+.applications-search-bar input{
+
   width:100%;
-  border:none;
-  outline:none;
-  border-radius:12px;
-  background:var(--bg-main);
+
+  max-width:460px;
+
+  height:56px;
+
+  padding:0 18px;
+
+  border-radius:18px;
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  background:
+    rgba(255,255,255,.04);
+
+  backdrop-filter:blur(18px);
+
   color:var(--text-main);
-  padding:14px;
-  margin-bottom:14px;
-  border:1px solid var(--border-color);
+
+  font-size:15px;
+
+  outline:none;
+
+  transition:.22s ease;
+
 }
 
-.modal textarea{
-  min-height:110px;
-  resize:none;
+.applications-search-bar input:focus{
+
+  border-color:
+    rgba(74,222,128,.35);
+
+  box-shadow:
+    0 0 0 4px rgba(34,197,94,.12);
+
 }
 
-.modal-actions{
+/* =========================
+   TABS
+========================= */
+
+.applications-tabs{
+
   display:flex;
-  justify-content:flex-end;
+
   gap:12px;
+
+  flex-wrap:wrap;
+
+  margin-bottom:28px;
+
 }
+
+.applications-tabs button{
+
+  padding:12px 18px;
+
+  border:none;
+
+  border-radius:16px;
+
+  background:
+    rgba(255,255,255,.05);
+
+  color:#cbd5e1;
+
+  font-size:14px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.22s ease;
+
+}
+
+.applications-tabs button:hover{
+
+  background:
+    rgba(255,255,255,.10);
+
+  transform:translateY(-2px);
+
+}
+
+.applications-tabs .active{
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #2563eb
+    );
+
+  color:white;
+
+  box-shadow:
+    0 10px 22px rgba(37,99,235,.25);
+
+}
+
+/* =========================
+   STATS
+========================= */
+
+.applications-stats-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,minmax(0,1fr));
+
+  gap:18px;
+
+  margin-bottom:34px;
+
+}
+
+.applications-stat-card{
+
+  position:relative;
+
+  overflow:hidden;
+
+  padding:24px;
+
+  border-radius:24px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,23,42,.82),
+      rgba(2,6,23,.86)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  backdrop-filter:blur(20px);
+
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.18);
+
+}
+
+.applications-stat-card h4{
+
+  font-size:14px;
+
+  color:#94a3b8;
+
+  margin-bottom:12px;
+
+}
+
+.applications-stat-card p{
+
+  font-size:36px;
+
+  font-weight:900;
+
+  letter-spacing:-1px;
+
+}
+
+.applications-stat-card.pending{
+
+  border-top:3px solid #facc15;
+
+}
+
+.applications-stat-card.approved{
+
+  border-top:3px solid #22c55e;
+
+}
+
+.applications-stat-card.rejected{
+
+  border-top:3px solid #ef4444;
+
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.applications-empty-state{
+
+  text-align:center;
+
+  padding:70px 20px;
+
+}
+
+.applications-empty-icon{
+
+  font-size:72px;
+
+  margin-bottom:20px;
+
+}
+
+.applications-empty-state h3{
+
+  font-size:30px;
+
+  font-weight:800;
+
+  margin-bottom:12px;
+
+}
+
+.applications-empty-state p{
+
+  color:#94a3b8;
+
+  margin-bottom:24px;
+
+}
+
+.applications-browse-btn{
+
+  padding:14px 24px;
+
+  border:none;
+
+  border-radius:16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #2563eb
+    );
+
+  color:white;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.22s ease;
+
+}
+
+.applications-browse-btn:hover{
+
+  transform:translateY(-2px);
+
+}
+
+/* =========================
+   GRID
+========================= */
+
+.worker-applications-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fill,minmax(340px,1fr));
+
+  gap:22px;
+
+}
+
+/* =========================
+   CARD
+========================= */
+
+.worker-application-card{
+
+  position:relative;
+
+  overflow:hidden;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:16px;
+
+  padding:24px;
+
+  border-radius:28px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,23,42,.82),
+      rgba(2,6,23,.88)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  backdrop-filter:blur(20px);
+
+  box-shadow:
+    0 16px 40px rgba(0,0,0,.18);
+
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+
+}
+
+.worker-application-card::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(34,197,94,.08),
+      transparent
+    );
+
+  opacity:0;
+
+  transition:.25s;
+
+  pointer-events:none;
+
+}
+
+.worker-application-card:hover{
+
+  transform:translateY(-6px);
+
+}
+
+.worker-application-card:hover::before{
+
+  opacity:1;
+
+}
+
+.worker-application-card.pending{
+
+  border-top:3px solid #facc15;
+
+}
+
+.worker-application-card.approved{
+
+  border-top:3px solid #22c55e;
+
+}
+
+.worker-application-card.rejected{
+
+  border-top:3px solid #ef4444;
+
+}
+
+/* =========================
+   COMPANY
+========================= */
+
+.applications-company-row{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+}
+
+.company-logo{
+
+  width:52px;
+
+  height:52px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  cursor:pointer;
+
+  transition:.22s ease;
+
+}
+
+.company-logo:hover{
+
+  transform:scale(1.06);
+
+}
+
+.company-name{
+
+  font-size:15px;
+
+  font-weight:700;
+
+  color:#cbd5e1;
+
+}
+
+/* =========================
+   STATUS BADGE
+========================= */
+
+.application-status-badge{
+
+  width:fit-content;
+
+  padding:7px 14px;
+
+  border-radius:999px;
+
+  font-size:12px;
+
+  font-weight:800;
+
+}
+
+.application-status-badge.pending{
+
+  background:
+    rgba(250,204,21,.12);
+
+  color:#facc15;
+
+}
+
+.application-status-badge.approved{
+
+  background:
+    rgba(34,197,94,.12);
+
+  color:#22c55e;
+
+}
+
+.application-status-badge.rejected{
+
+  background:
+    rgba(239,68,68,.12);
+
+  color:#ef4444;
+
+}
+
+/* =========================
+   JOB TITLE
+========================= */
+
+.job-title{
+
+  font-size:28px;
+
+  font-weight:900;
+
+  line-height:1.1;
+
+  letter-spacing:-1px;
+
+}
+
+/* =========================
+   INFO
+========================= */
+
+.application-info{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:12px;
+
+  flex-wrap:wrap;
+
+  color:#cbd5e1;
+
+  font-size:14px;
+
+}
+
+.salary{
+
+  color:#4ade80;
+
+  font-weight:800;
+
+}
+
+/* =========================
+   TIME
+========================= */
+
+.application-time{
+
+  font-size:13px;
+
+  color:#94a3b8;
+
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.application-actions{
+
+  display:flex;
+
+  gap:12px;
+
+  margin-top:auto;
+
+  flex-wrap:wrap;
+
+}
+
+.application-view-btn,
+.application-rate-btn,
+.application-withdraw-btn{
+
+  flex:1;
+
+  min-height:50px;
+
+  border:none;
+
+  border-radius:16px;
+
+  font-size:14px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.22s ease;
+
+}
+
+/* VIEW */
+
+.application-view-btn{
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #2563eb
+    );
+
+  color:white;
+
+}
+
+.application-view-btn:hover{
+
+  transform:translateY(-2px);
+
+}
+
+/* RATE */
+
+.application-rate-btn{
+
+  background:
+    linear-gradient(
+      135deg,
+      #facc15,
+      #f59e0b
+    );
+
+  color:#111827;
+
+}
+
+.application-rate-btn:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 10px 22px rgba(245,158,11,.28);
+
+}
+
+/* WITHDRAW */
+
+.application-withdraw-btn{
+
+  background:
+    rgba(239,68,68,.12);
+
+  color:#ef4444;
+
+  border:
+    1px solid rgba(239,68,68,.22);
+
+}
+
+.application-withdraw-btn:hover{
+
+  background:#ef4444;
+
+  color:white;
+
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.applications-modal-overlay{
+
+  position:fixed;
+
+  inset:0;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  padding:20px;
+
+  background:
+    rgba(0,0,0,.7);
+
+  backdrop-filter:blur(8px);
+
+  z-index:9999;
+
+}
+
+.applications-modal{
+
+  width:100%;
+
+  max-width:460px;
+
+  padding:26px;
+
+  border-radius:26px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,23,42,.95),
+      rgba(2,6,23,.96)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    0 24px 50px rgba(0,0,0,.35);
+
+  animation:modalPop .25s ease;
+
+}
+
+.applications-modal h3{
+
+  font-size:24px;
+
+  font-weight:800;
+
+  margin-bottom:18px;
+
+}
+
+.applications-modal select,
+.applications-modal textarea{
+
+  width:100%;
+
+  border:none;
+
+  outline:none;
+
+  padding:14px;
+
+  border-radius:16px;
+
+  margin-bottom:14px;
+
+  background:
+    rgba(255,255,255,.05);
+
+  color:white;
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+}
+
+.applications-modal textarea{
+
+  min-height:120px;
+
+  resize:none;
+
+}
+
+.applications-modal-actions{
+
+  display:flex;
+
+  gap:12px;
+
+}
+
+.applications-modal-actions button{
+
+  flex:1;
+
+}
+
+/* =========================
+   ANIMATION
+========================= */
 
 @keyframes modalPop{
+
   from{
+
     opacity:0;
-    transform:scale(0.9) translateY(10px);
+
+    transform:
+      scale(.92)
+      translateY(12px);
+
   }
 
   to{
+
     opacity:1;
-    transform:scale(1) translateY(0);
+
+    transform:
+      scale(1)
+      translateY(0);
+
   }
+
 }
 
-/* ========================= */
-/* WORKER APPLICATIONS MOBILE */
-/* ========================= */
+/* =========================
+   LIGHT MODE
+========================= */
+
+body:not(.dark)
+.worker-application-card,
+
+body:not(.dark)
+.applications-stat-card,
+
+body:not(.dark)
+.applications-modal{
+
+  background:
+    rgba(255,255,255,.94);
+
+  border-color:#e2e8f0;
+
+  box-shadow:
+    0 12px 30px rgba(15,23,42,.06);
+
+}
+
+body:not(.dark)
+.job-title,
+
+body:not(.dark)
+.dashboard-title,
+
+body:not(.dark)
+.company-name{
+
+  color:#0f172a;
+
+}
+
+/* =========================
+   TABLETS
+========================= */
+
+@media (max-width:1024px){
+
+  .applications-stats-grid{
+
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width:768px){
 
-  /* PAGE */
-  .worker-applications,
+  .worker-applications-page,
   .worker-dashboard{
-    padding:20px 14px;
-  }
 
-  /* HEADER */
-  .app-header{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:12px;
-  }
+    width:min(100%, calc(100% - 20px));
 
-  .app-header h1{
-    font-size:24px;
+    padding:22px 0 60px;
+
   }
 
   .dashboard-title{
-    font-size:30px;
-    line-height:1.2;
+
+    font-size:34px;
+
+    line-height:1.1;
+
   }
 
-  /* SEARCH */
-  .search-input,
-  .search-bar input{
-    max-width:100%;
-    font-size:16px; /* prevents iphone zoom */
-  }
+  .applications-tabs{
 
-  /* TABS */
-  .tabs{
     gap:10px;
+
   }
 
-  .tabs button{
+  .applications-tabs button{
+
     flex:1;
+
     min-width:120px;
-    text-align:center;
+
   }
 
-  /* STATS */
-  .stats-grid{
+  .applications-stats-grid{
+
     grid-template-columns:1fr;
+
     gap:14px;
+
   }
 
-  .stat-card{
-    padding:20px;
-    border-radius:18px;
-  }
+  .worker-applications-grid{
 
-  .stat-card p{
-    font-size:28px;
-  }
-
-  /* APPLICATION GRID */
-  .applications-grid{
     grid-template-columns:1fr;
+
     gap:18px;
+
   }
 
-  /* CARD */
-  .application-card{
+  .worker-application-card{
+
     padding:18px;
-    border-radius:18px;
+
+    border-radius:22px;
+
   }
 
-  /* JOB TITLE */
   .job-title{
-    font-size:22px;
-    line-height:1.3;
-  }
 
-  /* INFO */
-  .app-info{
-    flex-direction:column;
-    gap:8px;
-    font-size:14px;
-  }
-
-  /* ACTION BUTTONS */
-  .app-actions{
-    flex-direction:column;
-    gap:10px;
-  }
-
-  .view-btn,
-  .withdraw-btn,
-  .rate-btn{
-    width:100%;
-  }
-
-  /* COMPANY */
-  .company-row,
-  .applications-company-row{
-    gap:10px;
-    align-items:center;
-  }
-
-  .company-logo{
-    width:46px;
-    height:46px;
-  }
-
-  .company-name{
-    font-size:14px;
-  }
-
-  /* EMPTY STATE */
-  .empty-state{
-    margin-top:50px;
-    padding:0 10px;
-  }
-
-  .empty-icon{
-    font-size:56px;
-  }
-
-  .empty-state h3{
     font-size:24px;
+
   }
 
-  .browse-btn{
-    width:100%;
-  }
+  .application-info{
 
-  /* MODAL */
-  .modal-overlay{
-    padding:16px;
-  }
-
-  .modal{
-    width:100%;
-    max-width:100%;
-    padding:20px;
-    border-radius:18px;
-  }
-
-  .modal select,
-  .modal textarea{
-    font-size:16px; /* prevents iphone zoom */
-  }
-
-  .modal-actions{
     flex-direction:column;
+
+    gap:8px;
+
   }
 
-  .modal-actions button{
+  .application-actions{
+
+    flex-direction:column;
+
+  }
+
+  .application-view-btn,
+  .application-rate-btn,
+  .application-withdraw-btn{
+
     width:100%;
+
+  }
+
+  .applications-modal{
+
+    padding:22px;
+
+    border-radius:22px;
+
+  }
+
+  .applications-modal-actions{
+
+    flex-direction:column;
+
   }
 
 }
 
-/* SMALLER PHONES */
+/* =========================
+   SMALL PHONES
+========================= */
+
 @media (max-width:480px){
 
-  .worker-applications,
-  .worker-dashboard{
-    padding:16px 12px;
-  }
-
   .dashboard-title{
-    font-size:26px;
+
+    font-size:28px;
+
   }
 
-  .application-card{
+  .worker-application-card{
+
     padding:16px;
+
   }
 
   .job-title{
-    font-size:20px;
+
+    font-size:22px;
+
   }
 
-  .tabs button{
-    width:100%;
+  .applications-empty-icon{
+
+    font-size:58px;
+
   }
 
-  .status-badge{
-    font-size:12px;
-    padding:5px 12px;
-  }
+  .applications-empty-state h3{
 
-  .stat-card p{
     font-size:24px;
+
   }
 
-  .modal{
-    padding:18px;
+}
+
+/* =========================
+   320px
+========================= */
+
+@media (max-width:320px){
+
+  .worker-applications-page,
+  .worker-dashboard{
+
+    width:calc(100% - 14px);
+
+    padding:18px 0 50px;
+
+  }
+
+  .dashboard-title{
+
+    font-size:24px;
+
+  }
+
+  .worker-application-card{
+
+    padding:14px;
+
+    border-radius:18px;
+
+  }
+
+  .job-title{
+
+    font-size:20px;
+
+  }
+
+  .company-logo{
+
+    width:44px;
+
+    height:44px;
+
+  }
+
+  .application-view-btn,
+  .application-rate-btn,
+  .application-withdraw-btn{
+
+    min-height:46px;
+
+    font-size:13px;
+
+    border-radius:14px;
+
   }
 
 }

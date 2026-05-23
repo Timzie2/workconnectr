@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
-import WorkerNavbar from "../components/WorkerNavbar"
+import AppNavbar from "../components/AppNavbar"
 import { useSaved } from "../context/SavedContext"
 import "../styles/SavedJobs.css"
 
@@ -51,32 +51,32 @@ function SavedJobs() {
 
   return (
     <>
-      <WorkerNavbar />
+      <AppNavbar />
 
-      <div className="worker-dashboard">
+      <div className="saved-jobs-page">
 
-        <h1 className="dashboard-title">Saved Jobs ⭐</h1>
+        <h1 className="saved-jobs-title">Saved Jobs ⭐</h1>
 
-        <div className="search-bar">
+        <div className="saved-jobs-search-bar">
 
   <input
     type="text"
     placeholder="Search saved jobs..."
     value={search}
     onChange={(e) => setSearch(e.target.value)}
-    className="search-input"
+    className="saved-search-input"
   />
 
 </div>
 
-<div className="stats-grid">
+<div className="saved-stats-grid">
 
-  <div className="stat-card">
+  <div className="saved-stat-card">
     <h4>Total Saved</h4>
     <p>{jobs.length}</p>
   </div>
 
-  <div className="stat-card">
+  <div className="saved-stat-card">
     <h4>Showing</h4>
     <p>{filteredJobs.length}</p>
   </div>
@@ -84,9 +84,9 @@ function SavedJobs() {
 </div>
 
         {filteredJobs.length === 0 && (
-  <div className="empty-state">
+  <div className="saved-empty-state">
 
-    <div className="empty-icon">
+    <div className="saved-empty-icon">
       ⭐
     </div>
 
@@ -103,7 +103,7 @@ function SavedJobs() {
     </p>
 
     <button
-      className="browse-btn"
+      className="saved-browse-btn"
       onClick={() => navigate("/jobs")}
     >
       Browse Jobs
@@ -112,14 +112,14 @@ function SavedJobs() {
   </div>
 )}
 
-        <div className="worker-jobs-grid">
+        <div className="saved-jobs-grid">
 
           {filteredJobs.map((job) => (
 
-  <div className="application-card" key={job.id}>
+  <div className="saved-job-card" key={job.id}>
 
     {/* COMPANY */}
-    <div className="company-row saved-company-row">
+    <div className="saved-job-company-row">
 
       <img
         src={
@@ -132,14 +132,14 @@ function SavedJobs() {
               )}&background=0D8ABC&color=fff`
         }
         alt="logo"
-        className="company-logo"
+        className="saved-company-logo"
         onClick={() => navigate(`/contractor/${job.contractor_id}`)}
       />
 
       <div>
 
         <p
-  className="company-name"
+  className="saved-company-name"
   onClick={() => navigate(`/contractor/${job.contractor_id}`)}
   style={{ cursor: "pointer" }}
 >
@@ -152,22 +152,22 @@ function SavedJobs() {
     </div>
 
     {/* CATEGORY */}
-    <div className="status-badge pending">
+    <div className="saved-status-badge saved-pending">
       🏷 {job.category || "General"}
     </div>
 
     {/* TITLE */}
-    <h3 className="job-title">
+    <h3 className="saved-job-title">
       {job.title}
     </h3>
 
     {/* DESCRIPTION */}
-    <p className="job-desc">
+    <p className="saved-job-desc">
       {job.description?.slice(0, 100)}...
     </p>
 
     {/* INFO */}
-    <div className="app-info">
+    <div className="saved-job-info">
 
       <span>
         📍 {job.location}
@@ -190,17 +190,17 @@ function SavedJobs() {
     </div>
 
     {/* ACTIONS */}
-    <div className="app-actions">
+    <div className="saved-job-actions">
 
       <button
-        className="view-btn"
+        className="saved-view-btn"
         onClick={() => navigate(`/job/${job.id}`)}
       >
         View Job
       </button>
 
       <button
-        className="withdraw-btn"
+        className="saved-remove-btn"
         onClick={() => toggleSave(job.id)}
       >
         Remove

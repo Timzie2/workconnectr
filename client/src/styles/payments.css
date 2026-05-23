@@ -1,184 +1,571 @@
-.payments-table{
-  margin-top:20px;
-  overflow-x:auto;
+/* =========================================
+   PAYMENT HISTORY — MODERN REDESIGN
+   ========================================= */
+
+.payments-wrapper{
+  width:min(1400px, calc(100% - 56px));
+  margin:0 auto;
 }
 
+/* =========================
+   SUMMARY CARDS
+   ========================= */
+
 .payment-summary{
-  display:flex;
-  gap:20px;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:18px;
+
+  margin:24px 0;
 }
 
 .summary-card{
-  padding:20px;
-  border-radius:12px;
-  background: var(--bg-card); /* 🔥 FIX */
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
+  position:relative;
+  overflow:hidden;
+
+  padding:22px;
+
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,23,42,0.82),
+      rgba(8,14,26,0.78)
+    );
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter:blur(14px);
+
+  box-shadow:
+    0 18px 40px rgba(2,6,23,0.22);
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
-/* filters */
+.summary-card::before{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(74,222,128,0.14),
+      transparent 45%
+    );
+
+  pointer-events:none;
+}
+
+.summary-card:hover{
+  transform:translateY(-4px);
+
+  border-color:rgba(74,222,128,0.25);
+
+  box-shadow:
+    0 22px 48px rgba(34,197,94,0.12);
+}
+
+.summary-card p{
+  position:relative;
+  z-index:1;
+
+  font-size:13px;
+  font-weight:700;
+
+  color:var(--text-secondary);
+
+  margin-bottom:8px;
+}
+
+.summary-card h2{
+  position:relative;
+  z-index:1;
+
+  font-size:clamp(24px, 2vw, 34px);
+
+  font-weight:900;
+
+  letter-spacing:-0.04em;
+
+  color:#4ade80;
+}
+
+/* =========================
+   CONTROLS
+   ========================= */
+
+.payment-controls{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+
+  margin:22px 0;
+
+  flex-wrap:wrap;
+}
+
+/* SEARCH */
+
+.search-bar input,
+.search-input{
+  background:
+    rgba(15,23,42,0.82) !important;
+
+  color:var(--text-main) !important;
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  border-radius:16px;
+
+  min-height:48px;
+
+  padding:14px 16px;
+
+  outline:none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.search-bar:focus,
+.search-input:focus,
+input:focus{
+  border-color:#22c55e;
+
+  box-shadow:
+    0 0 0 3px rgba(34,197,94,0.15);
+}
+
+.search-bar::placeholder,
+.search-input::placeholder,
+input::placeholder{
+  color:var(--text-secondary);
+}
+
+/* FILTERS */
+
+.filters{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
 .filters button{
-  background: var(--bg-card); /* 🔥 FIX */
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
+  min-height:46px;
+
+  padding:10px 16px;
+
+  border-radius:14px;
+
+  background:
+    rgba(255,255,255,0.04);
+
+  color:var(--text-main);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  font-size:13px;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.filters button:hover{
+  transform:translateY(-2px);
+
+  border-color:rgba(74,222,128,0.2);
 }
 
 .filters button.active{
-  background:#22c55e;
-  color:white;
+  background:
+    linear-gradient(
+      135deg,
+      #4ade80,
+      #22c55e
+    );
+
+  color:#052e16;
+
+  border-color:transparent;
+
+  box-shadow:
+    0 12px 24px rgba(34,197,94,0.18);
 }
 
-.payments-table table thead {
-  background: var(--bg-card);
-  color: var(--text-main);
+/* =========================
+   TABLE
+   ========================= */
+
+.payments-table{
+  overflow-x:auto;
+
+  margin-top:20px;
+
+  border-radius:22px;
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  background:
+    rgba(15,23,42,0.78);
+
+  backdrop-filter:blur(14px);
+
+  box-shadow:
+    0 18px 40px rgba(2,6,23,0.2);
 }
 
-.payments-table table tbody tr {
-  border-bottom: 1px solid var(--border-color);
+.payments-table table{
+  width:100%;
+  min-width:760px;
+
+  border-collapse:collapse;
 }
 
-input {
-  background: var(--bg-input) !important;
-  color: var(--text-main) !important;
-  border: 1px solid var(--border-color);
+/* HEADER */
+
+.payments-table thead tr{
+  background:
+    rgba(255,255,255,0.03) !important;
 }
 
-.payments-table table td {
-  color: var(--text-main);
+.payments-table thead th{
+  background:transparent !important;
+
+  color:var(--text-secondary) !important;
+
+  padding:16px 14px;
+
+  font-size:12px;
+
+  font-weight:800;
+
+  letter-spacing:0.06em;
+
+  text-transform:uppercase;
+
+  white-space:nowrap;
 }
 
-.pagination button {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
+/* BODY */
+
+.payments-table tbody tr{
+  border-bottom:
+    1px solid rgba(255,255,255,0.06);
+
+  transition:
+    background 0.2s ease;
 }
 
-.pagination button.active {
-  background: #22c55e;
-  color: white;
+.payments-table tbody tr:hover{
+  background:
+    rgba(74,222,128,0.06);
 }
 
-.search-bar {
-  background: var(--bg-input) !important;
-  color: var(--text-main);
+.payments-table table td{
+  padding:16px 14px;
+
+  color:var(--text-main);
+
+  font-size:14px;
+
+  white-space:nowrap;
 }
 
-/* 🔥 FORCE LIGHT/DARK HEADER FIX */
-.payments-table thead tr {
-  background: var(--bg-card) !important;
+/* STATUS */
+
+.payment-status{
+  display:inline-flex;
+  align-items:center;
+
+  padding:6px 12px;
+
+  border-radius:999px;
+
+  font-size:12px;
+  font-weight:800;
 }
 
-.payments-table thead th {
-  background: transparent !important;
-  color: var(--text-main) !important;
-  font-weight: 600;
+.payment-status.success{
+  background:
+    rgba(34,197,94,0.15);
+
+  color:#4ade80;
 }
 
-.payments-table thead th {
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  opacity: 0.8;
+.payment-status.pending{
+  background:
+    rgba(250,204,21,0.15);
+
+  color:#facc15;
 }
 
-/* ========================= */
-/* 📱 RESPONSIVE */
-/* ========================= */
+.payment-status.failed{
+  background:
+    rgba(239,68,68,0.15);
 
-@media (max-width:900px){
-
-  .payment-summary{
-    grid-template-columns:1fr;
-    display:grid;
-  }
-
+  color:#f87171;
 }
 
-/* TABLET */
+/* PLAN BADGES */
+
+.plan-badge{
+  display:inline-flex;
+  align-items:center;
+
+  padding:6px 12px;
+
+  border-radius:999px;
+
+  font-size:12px;
+  font-weight:800;
+}
+
+.plan-badge.basic{
+  background:
+    rgba(148,163,184,0.14);
+
+  color:#cbd5e1;
+}
+
+.plan-badge.standard{
+  background:
+    rgba(59,130,246,0.15);
+
+  color:#60a5fa;
+}
+
+.plan-badge.premium{
+  background:
+    rgba(245,158,11,0.16);
+
+  color:#fbbf24;
+}
+
+/* =========================
+   PAGINATION
+   ========================= */
+
+.pagination{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  flex-wrap:wrap;
+
+  gap:12px;
+
+  margin-top:24px;
+}
+
+.pagination button{
+  min-height:44px;
+
+  padding:10px 16px;
+
+  border-radius:14px;
+
+  background:
+    rgba(255,255,255,0.04);
+
+  color:var(--text-main);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  font-size:13px;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.pagination button:hover{
+  transform:translateY(-2px);
+
+  border-color:rgba(74,222,128,0.2);
+}
+
+.pagination button.active{
+  background:
+    linear-gradient(
+      135deg,
+      #4ade80,
+      #22c55e
+    );
+
+  color:#052e16;
+
+  border-color:transparent;
+}
+
+.pagination button:disabled{
+  opacity:0.45;
+
+  cursor:not-allowed;
+
+  transform:none;
+}
+
+/* =========================
+   EMPTY STATE
+   ========================= */
+
+.empty-payments{
+  text-align:center;
+
+  padding:50px 20px;
+
+  border-radius:22px;
+
+  background:
+    rgba(15,23,42,0.75);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  color:var(--text-secondary);
+}
+
+/* =========================
+   TABLET — 768px
+   ========================= */
+
 @media (max-width:768px){
 
-  .payments-table{
-    border-radius:16px;
-  }
-
   .payment-summary{
+    display:grid;
+    grid-template-columns:1fr;
     gap:14px;
   }
 
   .summary-card{
     padding:18px;
-    border-radius:16px;
+    border-radius:18px;
   }
 
-  .summary-card h2{
-    font-size:24px;
+  .payment-controls{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    align-items:stretch;
   }
 
-  .summary-card p{
+  /* SEARCH */
+
+  .search-bar{
+    width:100%;
+  }
+
+  .search-bar input,
+  .search-input{
+    width:100%;
+    height:48px;
+
+    padding:0 16px;
+
+    border-radius:14px;
+
     font-size:14px;
   }
 
   /* FILTERS */
+
   .filters{
     display:flex;
     flex-wrap:wrap;
     gap:10px;
-    margin-top:14px;
   }
 
   .filters button{
     flex:1;
-    min-width:110px;
+    min-width:120px;
 
-    padding:10px 14px;
+    height:44px;
+
+    padding:0 14px;
 
     border-radius:12px;
 
-    font-size:14px;
-  }
-
-  /* SEARCH */
-  .search-bar,
-  .search-input{
-    width:100%;
-  }
-
-  input{
-    width:100%;
-    padding:14px;
-    border-radius:12px;
-    font-size:15px;
+    font-size:13px;
   }
 
   /* TABLE */
+
+  .payments-table{
+    border-radius:18px;
+    overflow-x:auto;
+  }
+
   .payments-table table{
     min-width:700px;
   }
 
   .payments-table thead th,
-  .payments-table tbody td{
+  .payments-table table td{
     padding:14px 12px;
-    font-size:14px;
+    font-size:13px;
     white-space:nowrap;
   }
 
   /* PAGINATION */
+
   .pagination{
+    display:flex;
+    justify-content:center;
+    align-items:center;
     flex-wrap:wrap;
+
     gap:10px;
-    margin-top:20px;
+
+    margin-top:18px;
   }
 
   .pagination button{
-    padding:10px 14px;
-    border-radius:10px;
-    font-size:14px;
+    width:auto;
+    min-width:42px;
+    height:42px;
+
+    padding:0 14px;
+
+    border-radius:12px;
+
+    font-size:13px;
   }
 
 }
 
-/* MOBILE */
+/* =========================
+   MOBILE — 480px
+   ========================= */
+
 @media (max-width:480px){
+
+  .dashboard-container{
+    width:calc(100% - 20px);
+    padding:16px 0 44px;
+  }
 
   .payment-summary{
     gap:12px;
@@ -186,6 +573,159 @@ input {
 
   .summary-card{
     padding:16px;
+    border-radius:16px;
+  }
+
+  .summary-card h2{
+    font-size:22px;
+  }
+
+  .summary-card p{
+    font-size:12px;
+  }
+
+  /* SEARCH */
+
+  .payment-controls{
+    gap:12px;
+  }
+
+  .search-bar{
+    width:100%;
+  }
+
+  .search-bar input,
+  .search-input{
+    width:100%;
+    height:44px;
+
+    padding:0 14px;
+
+    border-radius:12px;
+
+    font-size:13px;
+  }
+
+  /* FILTERS */
+
+  .filters{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  .filters button{
+    width:100%;
+    height:40px;
+
+    padding:0 10px;
+
+    border-radius:12px;
+
+    font-size:12px;
+  }
+
+  /* TABLE */
+
+  .payments-table{
+    border-radius:16px;
+    overflow-x:auto;
+  }
+
+  .payments-table table{
+    min-width:620px;
+  }
+
+  .payments-table thead th,
+  .payments-table table td{
+    padding:12px 10px;
+    font-size:12px;
+  }
+
+  /* PAGINATION */
+
+  .pagination{
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+
+    justify-content:center;
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:16px;
+  }
+
+  .pagination button{
+    width:auto;
+    min-width:38px;
+    height:38px;
+
+    padding:0 12px;
+
+    border-radius:10px;
+
+    font-size:12px;
+  }
+
+}
+
+/* =========================
+   EXTRA SMALL — 375px
+   ========================= */
+
+@media (max-width:375px){
+
+  .search-bar input,
+  .search-input{
+    height:42px;
+    font-size:12px;
+    padding:0 12px;
+  }
+
+  .filters{
+    grid-template-columns:1fr;
+  }
+
+  .filters button{
+    height:40px;
+    font-size:12px;
+  }
+
+  .payments-table table{
+    min-width:560px;
+  }
+
+  .pagination{
+    gap:6px;
+  }
+
+  .pagination button{
+    min-width:36px;
+    height:36px;
+
+    padding:0 10px;
+
+    font-size:11px;
+  }
+
+}
+
+/* =========================
+   EXTRA SMALL — 320px
+   ========================= */
+
+@media (max-width:320px){
+
+  .dashboard-container{
+    width:calc(100% - 14px);
+    padding:14px 0 40px;
+  }
+
+  .summary-card{
+    padding:14px 12px;
+    border-radius:14px;
   }
 
   .summary-card h2{
@@ -193,38 +733,113 @@ input {
   }
 
   .summary-card p{
-    font-size:13px;
+    font-size:11px;
   }
 
+  /* SEARCH */
+
+  .search-bar input,
+  .search-input{
+    height:40px;
+
+    padding:0 12px;
+
+    border-radius:10px;
+
+    font-size:12px;
+  }
+
+  /* FILTERS */
+
   .filters{
-    flex-direction:column;
+    gap:8px;
   }
 
   .filters button{
-    width:100%;
+    height:38px;
+
+    font-size:11px;
+
+    border-radius:10px;
   }
 
-  input{
-    padding:13px;
-    font-size:14px;
-  }
+  /* TABLE */
 
   .payments-table{
+    margin-top:14px;
     border-radius:14px;
+  }
+
+  .payments-table table{
+    min-width:520px;
   }
 
   .payments-table thead th,
   .payments-table tbody td{
-    font-size:13px;
-    padding:12px 10px;
+    padding:10px 8px;
+    font-size:11px;
   }
 
+  /* PAGINATION */
+
   .pagination{
-    justify-content:center;
+    gap:6px;
   }
 
   .pagination button{
-    width:100%;
+    width:auto;
+
+    min-width:34px;
+    height:34px;
+
+    padding:0 8px;
+
+    border-radius:10px;
+
+    font-size:11px;
   }
 
 }
+
+/* =========================
+   LIGHT MODE
+   ========================= */
+
+body:not(.dark) .summary-card,
+body:not(.dark) .payments-table{
+  background:#ffffff;
+
+  border-color:#e2e8f0;
+
+  box-shadow:
+    0 14px 34px rgba(15,23,42,0.06);
+}
+
+body:not(.dark) .filters button,
+body:not(.dark) .pagination button{
+  background:#ffffff;
+
+  border-color:#e2e8f0;
+
+  color:#0f172a;
+}
+
+body:not(.dark) .search-bar,
+body:not(.dark) .search-input,
+body:not(.dark) input{
+  background:#f8fafc !important;
+
+  border-color:#e2e8f0;
+
+  color:#0f172a !important;
+}
+
+body:not(.dark) .payments-table thead tr{
+  background:#f8fafc !important;
+}
+
+body:not(.dark) .payments-table tbody tr:hover{
+  background:
+    rgba(74,222,128,0.06);
+}
+

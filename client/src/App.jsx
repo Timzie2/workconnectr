@@ -32,6 +32,9 @@ import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
 import WorkerPublicProfile from "./pages/WorkerPublicProfile"
 import Messages from "./pages/Messages"
+import LandingPage from "./pages/LandingPage"
+import HomePage from "./pages/HomePage"
+import AccountSettings from "./pages/AccountSettings"
 
 
 
@@ -39,10 +42,26 @@ function App(){
 
   const { networkError } = useAuth()
 
-if (networkError) {
-  return <OfflineScreen />
-}
+  const [darkMode, setDarkMode] =
+    useState(true)
 
+  useEffect(() => {
+
+    if (darkMode) {
+
+      document.body.classList.add("dark")
+
+    } else {
+
+      document.body.classList.remove("dark")
+
+    }
+
+  }, [darkMode])
+
+  if (networkError) {
+    return <OfflineScreen />
+  }
 
   return(
 
@@ -168,13 +187,13 @@ if (networkError) {
 
       {/* CHAT (BOTH USERS) */}
       <Route
-        path="/chat/:workerId"
-        element={
-          <ProtectedRoute>
-            <Chat />
-          </ProtectedRoute>
-        }
-      />
+  path="/chat/:conversationId"
+  element={
+    <ProtectedRoute>
+      <Chat />
+    </ProtectedRoute>
+  }
+/>
 
       <Route path="/worker/:id" element={<WorkerPublicProfile />} />
 
@@ -207,7 +226,7 @@ if (networkError) {
       />
 
       <Route
-  path="/messages"
+  path="/messages/:id?"
   element={
     <ProtectedRoute>
       <Messages />
@@ -216,13 +235,29 @@ if (networkError) {
 />
 
 <Route
-  path="/messages/:id?"
-  element={<Messages />}
+  path="home"
+  element={
+    <ProtectedRoute>
+      <HomePage
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/account-settings"
+  element={
+    <ProtectedRoute>
+      <AccountSettings />
+    </ProtectedRoute>
+  }
 />
 
 
 {/* DEFAULT */}
-<Route path="/" element={<Navigate to="/login" />} />
+<Route path="/" element={<LandingPage />} />
 
 <Route path="/payments" element={<PaymentHistory />} />
 <Route path="/contractor/edit-job/:id" element={<EditJob />} />
@@ -234,7 +269,7 @@ if (networkError) {
 <Route path="/contractor/:id" element={<ContractorPublicProfile />} />
 
 {/* ✅ ALWAYS LAST */}
-<Route path="*" element={<Navigate to="/login" />} />
+<Route path="*" element={<Navigate to="/" />} />
 
 
     </Routes>

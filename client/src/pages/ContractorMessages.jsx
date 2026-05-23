@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 
 function ContractorMessages() {
 
@@ -48,7 +48,7 @@ setConversations(Object.values(unique))
 
 return (
 
-<div><ContractorNavbar />
+<div><AppNavbar />
 
 <div style={{ padding: "40px" }}><h2>Messages</h2>{conversations.length === 0 && (
 

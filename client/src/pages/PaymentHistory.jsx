@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import supabase from "../supabaseClient"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 
 
 function PaymentHistory() {
@@ -146,7 +146,7 @@ function PaymentHistory() {
 
   return (
     <>
-      <ContractorNavbar />
+      <AppNavbar />
 
       <div className="dashboard-container">
 

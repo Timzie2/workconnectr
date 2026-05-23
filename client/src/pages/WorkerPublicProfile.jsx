@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import supabase from "../supabaseClient"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 import "../styles/WorkerPublicProfile.css"
 
 function WorkerPublicProfile() {
@@ -13,6 +13,8 @@ function WorkerPublicProfile() {
   const [loading, setLoading] = useState(true)
   const [avgRating, setAvgRating] = useState(0)
   const [ratingCount, setRatingCount] = useState(0)
+  const [showImageModal, setShowImageModal] = useState(false)
+  const [previewImage, setPreviewImage] = useState("")
 
   useEffect(() => {
     if (id) {
@@ -82,7 +84,7 @@ function WorkerPublicProfile() {
   return (
     <div>
 
-      <ContractorNavbar />
+      <AppNavbar />
 
       <div className="worker-public-container">
 
@@ -98,15 +100,26 @@ function WorkerPublicProfile() {
           <div className="worker-public-header">
 
             <img
-              src={
-                profile.avatar_url ||
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                  profile.full_name || "Worker"
-                )}&background=0f172a&color=fff`
-              }
-              alt="worker"
-              className="worker-public-avatar"
-            />
+  src={
+    profile.avatar_url ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      profile.full_name || "Worker"
+    )}&background=0f172a&color=fff`
+  }
+  alt="worker"
+  className="worker-public-avatar"
+  onClick={() => {
+
+    setPreviewImage(
+      profile.avatar_url ||
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        profile.full_name || "Worker"
+      )}&background=0f172a&color=fff`
+    )
+
+    setShowImageModal(true)
+  }}
+/>
 
             <div>
 
@@ -169,6 +182,31 @@ function WorkerPublicProfile() {
         </div>
 
       </div>
+
+      {showImageModal && (
+
+  <div
+    className="worker-public-image-modal"
+    onClick={() => setShowImageModal(false)}
+  >
+
+    <button
+      className="worker-public-image-close"
+      onClick={() => setShowImageModal(false)}
+    >
+      ×
+    </button>
+
+    <img
+      src={previewImage}
+      alt="preview"
+      className="worker-public-image-preview"
+      onClick={(e) => e.stopPropagation()}
+    />
+
+  </div>
+
+)}
 
     </div>
   )

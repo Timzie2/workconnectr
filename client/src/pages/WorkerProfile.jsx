@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
-import WorkerNavbar from "../components/WorkerNavbar"
+import AppNavbar from "../components/AppNavbar"
 import "../styles/WorkerProfile.css"
 
 function WorkerProfile(){
@@ -27,6 +27,8 @@ function WorkerProfile(){
   const [review,setReview] = useState("")
 
   const [loading,setLoading] = useState(true)
+  const [previewImage, setPreviewImage] = useState("")
+  const [showImageModal, setShowImageModal] = useState(false)
 
   // ✅ FIXED AUTH (NO LOGOUT 🔥)
   useEffect(()=>{
@@ -131,6 +133,18 @@ async function uploadAvatar(e){
 
   const file = e.target.files[0]
 
+  if(file){
+
+  const localPreview = URL.createObjectURL(file)
+
+  setPreviewImage(localPreview)
+
+  setProfile(prev => ({
+    ...prev,
+    avatar_url: localPreview
+  }))
+}
+
   if(!file || !user) return
 
   const fileExt = file.name.split(".").pop()
@@ -223,20 +237,21 @@ if(error){
 
   return(
     <>
-      <WorkerNavbar/>
+      <AppNavbar />
 
-      <div className="dashboard-container">
+      <div className="worker-profile-page">
 
         <h1>Your Profile</h1>
 
-        <div className="profile-layout">
+        <div className="worker-profile-layout">
 
-          <div className="worker-profile-sidebar">
+          <div className="worker-profile-sidebar-card">
 
             {profile.avatar_url ? (
   <img
     src={profile.avatar_url}
-    className="worker-avatar-img"
+    className="worker-profile-avatar"
+onClick={() => setShowImageModal(true)}
     alt="avatar"
     onError={(e)=>{
       e.target.onerror = null
@@ -253,31 +268,42 @@ if(error){
       encodeURIComponent(profile.full_name || "U") +
       "&background=2563eb&color=fff&size=128"
     }
-    className="avatar-img"
+    className="worker-profile-avatar"
+onClick={() => setShowImageModal(true)}
     alt="avatar"
   />
 )}
 
-            <label className="upload-btn">
-              Change Photo
-              <input type="file" onChange={uploadAvatar} hidden/>
-            </label>
+            <label
+  htmlFor="worker-avatar-upload"
+  className="worker-profile-upload-btn"
+>
+  Change Photo
+</label>
+
+<input
+  id="worker-avatar-upload"
+  type="file"
+  accept="image/*"
+  onChange={uploadAvatar}
+  hidden
+/>
 
             <h3>{profile.full_name || "No Name"}</h3>
 
-<p className="worker-headline">
+<p className="worker-profile-headline">
   {profile.headline || "No headline"}
 </p>
 
-<div className="worker-location">
+<div className="worker-profile-location">
   📍 {profile.location || "Location not set"}
 </div>
 
-<div className="availability-badge">
+<div className="worker-profile-availability">
   🟢 {profile.availability || "Available"}
 </div>
 
-<div className="worker-phone">
+<div className="worker-profile-phone">
   📞 {profile.phone || "No phone"}
 </div>
 
@@ -287,9 +313,34 @@ if(error){
 
           </div>
 
-          <form className="profile-card" onSubmit={updateProfile}>
+          {showImageModal && (
 
-            <div className="form-row">
+  <div
+    className="worker-profile-image-modal"
+    onClick={() => setShowImageModal(false)}
+  >
+
+    <button
+      className="worker-profile-image-close"
+      onClick={() => setShowImageModal(false)}
+    >
+      ✕
+    </button>
+
+    <img
+      src={profile.avatar_url}
+      alt="preview"
+      className="worker-profile-image-preview"
+      onClick={(e) => e.stopPropagation()}
+    />
+
+  </div>
+
+)}
+
+          <form className="worker-profile-form-card" onSubmit={updateProfile}>
+
+            <div className="worker-profile-form-row">
 
               <div>
                 <label>Full Name</label>
@@ -313,7 +364,7 @@ if(error){
 
             </div>
 
-            <div className="form-row">
+            <div className="worker-profile-form-row">
 
   <div>
     <label>Professional Headline</label>
@@ -381,7 +432,7 @@ if(error){
               }
             />
 
-            <button className="post-job-btn">
+            <button className="worker-profile-save-btn">
               Save Profile
             </button>
 

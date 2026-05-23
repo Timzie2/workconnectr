@@ -1,26 +1,21 @@
 import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import supabase from "../supabaseClient"
-import WorkerNavbar from "../components/WorkerNavbar"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 import "./chat.css"
 import { useAuth } from "../context/AuthContext"
 
 function Chat() {
 
-const { id } = useParams()
+const { conversationId } = useParams()
 
 const { user, role: userRole } = useAuth()
 
 const userId = user?.id
 
-const receiverId = Number(id)
-
 const [messages, setMessages] = useState([])
 const [text, setText] = useState("")
 const [receiverName, setReceiverName] = useState("User")
-
-const [conversationId, setConversationId] = useState(null)
 const [typing, setTyping] = useState(false)
 const [onlineUsers, setOnlineUsers] = useState([])
 
@@ -30,12 +25,12 @@ const bottomRef = useRef(null)
 
 useEffect(() => {
 
-  if (!userId || !receiverId) return
+  if (!userId || !conversationId) return
 
   let cleanup
 
   const startChat = async () => {
-    cleanup = await initializeChat()
+    cleanup = await loadConversation()
   }
 
   startChat()
@@ -44,7 +39,7 @@ useEffect(() => {
     if (cleanup) cleanup()
   }
 
-}, [userId, receiverId])
+}, [userId, conversationId])
 
 /* AUTO SCROLL */
 
@@ -52,81 +47,42 @@ useEffect(() => {
 bottomRef.current?.scrollIntoView({ behavior: "smooth" })
 }, [messages])
 
-const initializeChat = async () => {
+const loadConversation = async () => {
 
- const cleanup =
-  await fetchOrCreateConversation()
-
-fetchReceiver()
-
-return cleanup
-}
-
-/* GET RECEIVER NAME */
-
-const fetchReceiver = async () => {
-
-const { data } = await supabase
-.from("users")
-.select("full_name")
-.eq("id", receiverId)
-.single()
-
-if (data) {
-setReceiverName(data.full_name || "User")
-}
-
-}
-
-const fetchOrCreateConversation = async () => {
-
-  // CHECK EXISTING
-  const { data: existing } = await supabase
+  const { data: convo } = await supabase
     .from("conversations")
     .select("*")
-    .or(
-      `and(user_one.eq.${userId},user_two.eq.${receiverId}),
-       and(user_one.eq.${receiverId},user_two.eq.${userId})`
-    )
-    .maybeSingle()
+    .eq("id", conversationId)
+    .single()
 
-  let convoId = existing?.id
+  if (!convo) return
 
-  // CREATE IF NOT EXISTS
-  if (!convoId) {
+  const otherUserId =
+    convo.user_one === userId
+      ? convo.user_two
+      : convo.user_one
 
-    const { data: newConversation, error } =
-      await supabase
-        .from("conversations")
-        .insert({
-          user_one: userId,
-          user_two: receiverId
-        })
-        .select()
-        .single()
+  const { data: otherUser } = await supabase
+    .from("users")
+    .select("full_name")
+    .eq("id", otherUserId)
+    .single()
 
-    if (error) {
-      console.error(error)
-      return
-    }
+  setReceiverName(
+    otherUser?.full_name || "User"
+  )
 
-    convoId = newConversation.id
-  }
+  fetchMessages(conversationId)
 
-  setConversationId(convoId)
-
-  fetchMessages(convoId)
-
-  // REALTIME
   const channel = supabase
-    .channel(`chat-${convoId}`)
+    .channel(`chat-${conversationId}`)
     .on(
       "postgres_changes",
       {
         event: "INSERT",
         schema: "public",
         table: "messages",
-        filter: `conversation_id=eq.${convoId}`
+        filter: `conversation_id=eq.${conversationId}`
       },
       (payload) => {
 
@@ -150,6 +106,7 @@ const fetchOrCreateConversation = async () => {
   return () => {
     supabase.removeChannel(channel)
   }
+
 }
 
 /* GET MESSAGES */
@@ -185,6 +142,25 @@ const sendMessage = async () => {
   const messageText = text
 
   setText("")
+
+  // MARK READ
+
+const { data: convo } = await supabase
+  .from("conversations")
+  .select("user_one, user_two")
+  .eq("id", convoId)
+  .single()
+
+const receiverId =
+  convo.user_one === userId
+    ? convo.user_two
+    : convo.user_one
+
+await supabase
+  .from("messages")
+  .update({ is_read: true })
+  .eq("receiver_id", userId)
+  .eq("sender_id", receiverId)
 
   const { error } = await supabase
     .from("messages")
@@ -226,17 +202,13 @@ const sendMessage = async () => {
     })
 }
 
-if (!receiverId) {
+if (!conversationId) {
 
   return (
 
     <div>
 
-      {userRole === "worker" ? (
-        <WorkerNavbar />
-      ) : (
-        <ContractorNavbar />
-      )}
+      <AppNavbar />
 
       <div className="empty-chat-window">
 
@@ -272,11 +244,7 @@ if (!receiverId) {
 return (
 
 <div>{/* 🔥 ROLE BASED NAVBAR */}
-{userRole === "worker" ? (
-<WorkerNavbar />
-) : (
-<ContractorNavbar />
-)}
+<AppNavbar />
 
 <div className="chat-container"><h2 className="chat-title">
 Chat with {receiverName}

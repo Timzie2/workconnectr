@@ -1,49 +1,108 @@
-.contractor-profile{
-  max-width:800px;
-  margin:40px auto;
-  padding:20px;
+/* =========================================
+   CONTRACTOR PROFILE — MODERN REDESIGN
+   ========================================= */
+
+* {
+  box-sizing: border-box;
 }
+
+.contractor-profile {
+  width: min(100%, 900px);
+  margin: 0 auto;
+  padding: 24px 0 80px;
+  color: var(--text-main, #e5e7eb);
+}
+
+.profile-page {
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px 40px;
+  background:
+    radial-gradient(circle at top left, rgba(74, 222, 128, 0.08), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.06), transparent 30%),
+    var(--bg-main, #020617);
+}
+
+/* =========================
+   MAIN CARD
+   ========================= */
+
+.profile-card {
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.84),
+    rgba(8, 14, 26, 0.82)
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 28px;
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 20px 44px rgba(2, 6, 23, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: visible;
+}
+
+.profile-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   HEADER
+   ========================= */
 
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 30px;
-
-  padding: 30px;
-
-  margin-bottom: 25px;
-
-  border-radius: 24px;
-
+  gap: 22px;
+  padding: 26px;
+  margin-bottom: 24px;
+  border-radius: 22px;
   background:
-    linear-gradient(
-      135deg,
-      var(--bg-card),
-      var(--bg-input)
-    );
-
-  border: 1px solid var(--border-color);
+    linear-gradient(135deg, rgba(74, 222, 128, 0.08), rgba(255, 255, 255, 0.03)),
+    rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.profile-header h1,
-.profile-header p{
-  color: var(--text-main);
+.profile-header h1 {
+  margin: 0;
+  font-size: clamp(26px, 2.4vw, 38px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: var(--text-main, #f8fafc);
 }
 
-.profile-header .location-text{
-  color: var(--text-secondary);
+.profile-header p {
+  margin: 6px 0 0;
+  color: var(--text-secondary, #94a3b8);
+  line-height: 1.6;
 }
+
+.location-text {
+  color: var(--text-secondary, #94a3b8);
+  font-size: 14px;
+}
+
+/* =========================
+   AVATAR / LOGO
+   ========================= */
 
 .company-avatar {
-  width: 60px;
-  height: 60px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  background: var(--bg-input);
+  background: rgba(255, 255, 255, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 28px;
   overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(74, 222, 128, 0.18);
+  box-shadow: 0 12px 24px rgba(34, 197, 94, 0.12);
 }
 
 .company-avatar img {
@@ -52,130 +111,36 @@
   object-fit: cover;
 }
 
-.profile-rating{
-  margin-top:6px;
-  color:#facc15;
-}
-
-.profile-section{
-  margin-top:30px;
-}
-
-.review-card{
-  background:var(--bg-card);
-  padding:12px;
-  border-radius:8px;
-  margin-top:10px;
-  border:1px solid var(--border-color);
-}
-
-.review-name{
-  font-weight:600;
-}
-
-.review-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:6px;
-}
-
-.review-text{
-  font-size:14px;
-  color:var(--text-secondary);
-  margin:5px 0;
-}
-
-.review-date{
-  font-size:12px;
-  color:#94a3b8;
-}
-
-.profile-section{
-  margin-top:25px;
-}
-
-.verified-badge{
-  display:inline-block;
-  margin-top:8px;
-  font-size:12px;
-  color:#22c55e;
-}
-
-.form-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.form-group label {
-  font-size: 13px;
-  margin-bottom: 5px;
-  display: block;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background: var(--bg-input);
-  color: var(--text-main);
-  outline: none;
-  transition: 0.2s;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #22c55e;
-  box-shadow: 0 0 0 2px rgba(34,197,94,0.15);
-}
-
-.form-group textarea {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-
-  background-color: var(--bg-input) !important; /* 🔥 FORCE */
-  color: var(--text-main) !important;
-
-  outline: none;
-  transition: 0.2s;
-}
-
-.form-group textarea:focus{
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(34,197,94,0.2);
-}
-
-textarea {
-  background-color: var(--bg-input) !important;
-  color: var(--text-main) !important;
-}
-
-/* TEXTAREA */
-textarea{
-  min-height:100px;
-  resize:none;
-}
-
-/* LOGO */
 .logo-upload {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.logo-upload label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
 }
 
 .logo-box {
-  width: 80px;
-  height: 80px;
-  border: 2px dashed var(--border-color);
-  border-radius: 10px;
+  width: 92px;
+  height: 92px;
+  border-radius: 18px;
+  border: 2px dashed rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
   overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.logo-box:hover {
+  transform: translateY(-2px);
+  border-color: rgba(74, 222, 128, 0.32);
+  background: rgba(74, 222, 128, 0.06);
 }
 
 .logo-preview {
@@ -184,335 +149,766 @@ textarea{
   object-fit: cover;
 }
 
-.logo-box {
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.logo-box:hover {
-  transform: scale(1.05);
-  border-color: #22c55e;
-}
-
-/* BUTTON */
-.save-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.save-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(34,197,94,0.3);
-}
-
-.profile-page {
-  display: flex;
-  justify-content: center;
-  padding: 30px 15px;
-}
-
-.profile-card {
-  width: 100%;
-  max-width: 900px;
-  background: var(--bg-card); /* ✅ FIX */
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 25px;
-}
+/* =========================
+   STATS + PROGRESS
+   ========================= */
 
 .profile-stats {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 25px;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 24px;
 }
 
 .stat-box {
-  flex: 1;
-  background: var(--bg-input);
-  padding: 15px;
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 18px;
+  border-radius: 18px;
   text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.22s ease, border-color 0.22s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-3px);
+  border-color: rgba(74, 222, 128, 0.2);
 }
 
 .stat-box h3 {
-  font-size: 20px;
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #4ade80;
 }
 
 .stat-box p {
+  margin: 0;
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #94a3b8);
+  line-height: 1.5;
 }
 
 .profile-progress {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .progress-top {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
   font-size: 13px;
-  margin-bottom: 6px;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #94a3b8);
+  font-weight: 600;
 }
 
 .progress-bar {
   width: 100%;
-  height: 8px;
-  background: var(--bg-input);
-  border-radius: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #22c55e, #4ade80);
-  border-radius: 10px;
-  transition: 0.3s;
+  border-radius: 999px;
+  transition: width 0.3s ease;
 }
 
 .progress-warning {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 12px;
+  font-weight: 600;
   color: #facc15;
 }
 
-.form-group label,
-.logo-upload label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-main);
+/* =========================
+   CONTRACTOR PROGRESS SECTION
+   ========================= */
+
+.contractor-progress-section{
+  display:flex;
+  flex-direction:column;
+
+  position:relative;
+  z-index:1;
+
+  width:100%;
+
+  margin:32px 0 36px;
+
+  overflow:visible;
 }
 
-.form-group input,
-.form-group textarea {
-  font-size: 15px;
-  font-weight: 500;
+.progress-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  gap:12px;
+
+  margin-bottom:12px;
+
+  font-size:14px;
+  font-weight:700;
+
+  color:var(--text-main, #f8fafc);
 }
 
-.stat-box h3 {
-  font-size: 22px;
-  font-weight: 700;
+.progress-top span:last-child{
+  color:#4ade80;
 }
 
-.stat-box p {
-  font-size: 13px;
-  font-weight: 500;
+.progress-bar{
+  position:relative;
+
+  width:100%;
+  height:14px;
+
+  overflow:hidden;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  border:
+    1px solid rgba(255,255,255,0.06);
+
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.25);
 }
 
-.progress-top span {
-  font-size: 14px;
-  font-weight: 600;
+.progress-fill{
+  height:100%;
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #22c55e,
+      #4ade80
+    );
+
+  box-shadow:
+    0 0 18px rgba(34,197,94,0.35);
+
+  transition:
+    width 0.35s ease;
 }
 
-.progress-warning {
-  font-size: 13px;
-  font-weight: 500;
+.progress-warning{
+  margin-top:12px;
+
+  font-size:13px;
+  font-weight:600;
+
+  line-height:1.5;
+
+  color:#facc15;
 }
 
-.save-btn {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+/* LIGHT MODE */
+
+body:not(.dark) .progress-top{
+  color:#0f172a;
 }
 
-.profile-card {
-  background: var(--bg-card) !important;
+body:not(.dark) .progress-bar{
+  background:#e2e8f0;
+  border-color:#dbe2ea;
 }
 
-/* ========================= */
-/* CONTRACTOR PROFILE MOBILE */
-/* ========================= */
+body:not(.dark) .progress-top span:last-child{
+  color:#15803d;
+}
+
+/* TABLET */
 
 @media (max-width:768px){
 
-  .contractor-profile{
-    margin:20px auto;
-    padding:14px;
+  .contractor-progress-section{
+    margin:26px 0 30px;
   }
 
-  .profile-page{
-    padding:20px 12px;
-  }
-
-  .profile-card{
-    padding:18px;
-    border-radius:18px;
-  }
-
-  /* HEADER */
-  .profile-header{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:18px;
-
-    padding:22px;
-    border-radius:20px;
-  }
-
-  .profile-header h1{
-    font-size:26px;
-    line-height:1.2;
-  }
-
-  .profile-header p{
-    font-size:14px;
-  }
-
-  /* AVATAR */
-  .company-avatar{
-    width:72px;
-    height:72px;
-    font-size:28px;
-  }
-
-  /* STATS */
-  .profile-stats{
-    flex-direction:column;
-    gap:12px;
-  }
-
-  .stat-box{
-    padding:18px;
-  }
-
-  .stat-box h3{
-    font-size:22px;
-  }
-
-  .stat-box p{
-    font-size:13px;
-  }
-
-  /* FORM */
-  .form-section{
-    gap:14px;
-  }
-
-  .form-group label,
-  .logo-upload label{
-    font-size:13px;
-  }
-
-  .form-group input,
-  .form-group textarea{
-    padding:13px;
-    font-size:14px;
-    border-radius:12px;
-  }
-
-  textarea{
-    min-height:120px;
-  }
-
-  /* LOGO */
-  .logo-box{
-    width:90px;
-    height:90px;
-  }
-
-  /* REVIEWS */
-  .review-card{
-    padding:14px;
-    border-radius:14px;
-  }
-
-  .review-top{
-    gap:10px;
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .review-name{
-    font-size:14px;
-  }
-
-  .review-text{
-    font-size:13px;
-    line-height:1.5;
-  }
-
-  .review-date{
-    font-size:11px;
-  }
-
-  /* PROGRESS */
   .progress-top{
-    font-size:12px;
-    gap:10px;
+    font-size:13px;
+  }
+
+  .progress-bar{
+    height:12px;
   }
 
   .progress-warning{
     font-size:12px;
-    line-height:1.4;
-  }
-
-  /* BUTTON */
-  .save-btn{
-    padding:14px;
-    font-size:14px;
-    border-radius:12px;
   }
 
 }
 
-/* SMALLER PHONES */
+/* MOBILE */
+
 @media (max-width:480px){
 
-  .contractor-profile{
-    padding:10px;
+  .contractor-progress-section{
+    margin:22px 0 26px;
   }
 
-  .profile-page{
-    padding:14px 10px;
+  .progress-top{
+    font-size:12px;
   }
 
-  .profile-card{
-    padding:14px;
-    border-radius:16px;
+  .progress-bar{
+    height:10px;
   }
 
-  .profile-header{
-    padding:18px;
-    gap:14px;
+  .progress-warning{
+    font-size:11px;
+    line-height:1.4;
   }
 
-  .profile-header h1{
-    font-size:22px;
+}
+
+/* 320px DEVICES */
+
+@media (max-width:320px){
+
+  .contractor-progress-section{
+    margin:18px 0 22px;
   }
 
-  .company-avatar{
-    width:64px;
-    height:64px;
+  .progress-top{
+    font-size:11px;
   }
 
-  .stat-box{
-    padding:14px;
+  .progress-bar{
+    height:9px;
   }
 
-  .stat-box h3{
-    font-size:20px;
+}
+
+/* =========================
+   SECTIONS
+   ========================= */
+
+.profile-section {
+  margin-top: 24px;
+  padding-top: 2px;
+}
+
+.profile-section h2,
+.profile-section h3 {
+  margin: 0 0 12px;
+  color: var(--text-main, #f8fafc);
+  letter-spacing: -0.03em;
+}
+
+.profile-rating {
+  margin-top: 8px;
+  color: #facc15;
+  font-weight: 700;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.16);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+/* =========================
+   REVIEWS
+   ========================= */
+
+.review-card {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 16px;
+  border-radius: 16px;
+  margin-top: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(74, 222, 128, 0.2);
+}
+
+.review-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.review-name {
+  font-weight: 800;
+  color: var(--text-main, #f8fafc);
+  font-size: 14px;
+}
+
+.review-text {
+  font-size: 14px;
+  color: var(--text-secondary, #94a3b8);
+  margin: 6px 0 0;
+  line-height: 1.6;
+}
+
+.review-date {
+  font-size: 12px;
+  color: var(--text-secondary, #94a3b8);
+  white-space: nowrap;
+}
+
+/* =========================
+   FORM
+   ========================= */
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 15px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--text-main, #f8fafc) !important;
+  outline: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-secondary, #94a3b8);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: rgba(74, 222, 128, 0.35);
+  box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.12);
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.form-group textarea,
+textarea {
+  min-height: 120px;
+  resize: vertical;
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--text-main, #f8fafc) !important;
+}
+
+/* =========================
+   BUTTON
+   ========================= */
+
+.save-btn {
+  width: 100%;
+  min-height: 48px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #052e16;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+  box-shadow: 0 16px 34px rgba(34, 197, 94, 0.22);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(34, 197, 94, 0.28);
+  filter: brightness(1.03);
+}
+
+.save-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================
+   LIGHT MODE
+   ========================= */
+
+body:not(.dark) .profile-page {
+  background:
+    radial-gradient(circle at top left, rgba(74, 222, 128, 0.08), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.06), transparent 30%),
+    #f8fafc;
+}
+
+body:not(.dark) .profile-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.92)) !important;
+  border-color: #e2e8f0;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+body:not(.dark) .profile-header,
+body:not(.dark) .review-card,
+body:not(.dark) .stat-box,
+body:not(.dark) .form-group input,
+body:not(.dark) .form-group textarea,
+body:not(.dark) .logo-box,
+body:not(.dark) .company-avatar,
+body:not(.dark) .progress-bar {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+body:not(.dark) .profile-header h1,
+body:not(.dark) .profile-section h2,
+body:not(.dark) .profile-section h3,
+body:not(.dark) .form-group label,
+body:not(.dark) .review-name,
+body:not(.dark) .save-btn {
+  color: #0f172a;
+}
+
+body:not(.dark) .profile-header p,
+body:not(.dark) .location-text,
+body:not(.dark) .review-text,
+body:not(.dark) .review-date,
+body:not(.dark) .stat-box p,
+body:not(.dark) .progress-top {
+  color: #475569;
+}
+
+body:not(.dark) .form-group input,
+body:not(.dark) .form-group textarea,
+body:not(.dark) textarea {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0;
+}
+
+body:not(.dark) .review-card:hover,
+body:not(.dark) .stat-box:hover,
+body:not(.dark) .logo-box:hover {
+  border-color: #86efac;
+}
+
+body:not(.dark) .verified-badge {
+  color: #15803d;
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.16);
+}
+
+body:not(.dark) .progress-bar {
+  background: #e2e8f0;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 768px) {
+  .contractor-profile {
+    width: min(100%, calc(100% - 28px));
+    padding: 18px 0 64px;
+  }
+
+  .profile-page {
+    padding: 18px 12px 34px;
+  }
+
+  .profile-card {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .profile-header h1 {
+    font-size: 26px;
+  }
+
+  .company-avatar {
+    width: 68px;
+    height: 68px;
+    font-size: 26px;
+  }
+
+  .profile-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stat-box {
+    padding: 16px;
+  }
+
+  .stat-box h3 {
+    font-size: 22px;
+  }
+
+  .form-group label,
+  .logo-upload label {
+    font-size: 13px;
   }
 
   .form-group input,
-  .form-group textarea{
-    padding:12px;
-    font-size:14px;
+  .form-group textarea,
+  textarea {
+    padding: 13px;
+    font-size: 14px;
+    border-radius: 12px;
   }
 
-  .logo-box{
-    width:80px;
-    height:80px;
+  .logo-box {
+    width: 86px;
+    height: 86px;
   }
 
-  .save-btn{
-    width:100%;
+  .review-card {
+    padding: 14px;
+    border-radius: 14px;
   }
+
+  .review-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .save-btn {
+    min-height: 46px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contractor-profile {
+    width: min(100%, calc(100% - 20px));
+    padding: 14px 0 56px;
+  }
+
+  .profile-page {
+    padding: 14px 10px 28px;
+  }
+
+  .profile-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .profile-header {
+    padding: 18px;
+  }
+
+  .profile-header h1 {
+    font-size: 22px;
+  }
+
+  .profile-header p {
+    font-size: 13px;
+  }
+
+  .company-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .logo-box {
+    width: 78px;
+    height: 78px;
+  }
+
+  .stat-box {
+    padding: 14px;
+  }
+
+  .stat-box h3 {
+    font-size: 20px;
+  }
+
+  .review-text {
+    font-size: 13px;
+  }
+
+  .save-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 320px) {
+  .contractor-profile {
+    width: calc(100% - 16px);
+    padding: 12px 0 50px;
+  }
+
+  .profile-page {
+    padding: 12px 8px 24px;
+  }
+
+  .profile-card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .profile-header {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .profile-header h1 {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .company-avatar {
+    width: 54px;
+    height: 54px;
+    font-size: 22px;
+  }
+
+  .logo-box {
+    width: 72px;
+    height: 72px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  textarea {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .stat-box h3 {
+    font-size: 18px;
+  }
+
+  .save-btn {
+    min-height: 44px;
+    font-size: 13px;
+    padding: 12px 14px;
+  }
+}
+
+/* =========================
+   CONTRACTOR LOGO MODAL
+========================= */
+
+.company-avatar img{
+  cursor:pointer;
+}
+
+.contractor-logo-modal{
+
+  position:fixed;
+
+  inset:0;
+
+  background:rgba(0,0,0,.88);
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  z-index:99999;
+
+  padding:24px;
+
+  backdrop-filter:blur(12px);
+
+}
+
+.contractor-logo-preview{
+
+  display:block;
+
+  width:100%;
+
+  max-width:420px;
+
+  max-height:85vh;
+
+  object-fit:cover;
+
+  border-radius:28px;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.5);
+
+}
+
+.contractor-logo-close{
+
+  position:absolute;
+
+  top:24px;
+
+  right:24px;
+
+  width:58px;
+
+  height:58px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,.12);
+
+  color:white;
+
+  font-size:34px;
+
+  cursor:pointer;
+
+  backdrop-filter:blur(12px);
+
+}
+
+.contractor-logo-close:hover{
+
+  transform:scale(1.08);
+
+  background:
+    rgba(255,255,255,.2);
 
 }

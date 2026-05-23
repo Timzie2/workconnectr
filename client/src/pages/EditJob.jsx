@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 import "../styles/edit-job.css"
 
 function EditJob() {
@@ -138,7 +138,7 @@ setPayType(job.pay_type || "daily")
   if (loading) {
     return (
       <>
-        <ContractorNavbar />
+        <AppNavbar />
         <div className="edit-job-wrapper">
           <p>Loading job...</p>
         </div>
@@ -148,7 +148,7 @@ setPayType(job.pay_type || "daily")
 
   return (
     <>
-      <ContractorNavbar />
+      <AppNavbar />
 
       <div className="edit-job-wrapper">
 

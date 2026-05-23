@@ -1,13 +1,19 @@
 import toast from "react-hot-toast"
-import { Link, useNavigate } from "react-router-dom"
+import {
+  Link,
+  NavLink,
+  useNavigate
+} from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
 import supabase from "../supabaseClient"
 import { useAuth } from "../context/AuthContext" // ✅ USE GLOBAL AUTH
 import { useTheme } from "../context/ThemeContext"
+import logoIcon from "../assets/logo-icon.png"
 
 import {
   Home,
   Briefcase,
+  BriefcaseBusiness,
   Users,
   Bell,
   User,
@@ -16,15 +22,16 @@ import {
   MessageSquare,
   Menu,
   X,
-  LogOut
+  LogOut,
+  Settings
 } from "lucide-react"
 
-import "../styles/ContractorNavbar.css"
+import "../styles/AppNavbar.css"
 
-function ContractorNavbar() {
+function AppNavbar() {
 
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, role } = useAuth()
   const [profile, setProfile] = useState(null)
 
   const [menuOpen, setMenuOpen] = useState(false)
@@ -197,7 +204,7 @@ await supabase
     }
 
     toast.success("Logged out 👋")
-    navigate("/login")
+    navigate("/")
   }
 
   const getTimeAgo = (date) => {
@@ -265,19 +272,83 @@ const getNotificationIcon = (type) => {
 
   </button>
 
-  <h2 className="logo">WorkConnectr</h2>
+  <NavLink
+  to="/Home"
+  className="logo-wrapper"
+>
 
-        <Link to="/contractor-dashboard" className="nav-link">
-          <Home size={18}/> Dashboard
-        </Link>
+  <img
+    src={logoIcon}
+    alt="WorkConnectr Logo"
+    className="navbar-logo-icon"
+  />
 
-        <Link to="/post-job" className="nav-link">
-          <Briefcase size={18}/> Post Job
-        </Link>
+  <div className="logo">
 
-        <Link to="/contractor-applications" className="nav-link">
-          <Users size={18}/> Applicants
-        </Link>
+    <span className="logo-white">
+      Work
+    </span>
+
+    <span className="logo-green">
+      Connectr
+    </span>
+
+  </div>
+
+</NavLink>
+
+       <NavLink
+  to={
+    role === "worker"
+      ? "/worker-dashboard"
+      : "/contractor-dashboard"
+  }
+  className="nav-link"
+>
+  <Home size={18}/> Dashboard
+</NavLink>
+
+        <NavLink
+  to={
+    role === "worker"
+      ? "/jobs"
+      : "/post-job"
+  }
+  className="nav-link"
+>
+  <Briefcase size={18}/>
+
+  {role === "worker"
+    ? "Jobs"
+    : "Post Job"}
+
+</NavLink>
+
+{role === "worker" && (
+  <NavLink
+    to="/saved-jobs"
+    className="nav-link"
+  >
+    <BriefcaseBusiness size={18}/>
+    Saved Jobs
+  </NavLink>
+)}
+
+<NavLink
+  to={
+    role === "worker"
+      ? "/applications"
+      : "/contractor-applications"
+  }
+  className="nav-link"
+>
+  <Users size={18}/>
+
+  {role === "worker"
+    ? "Applications"
+    : "Applicants"}
+
+</NavLink>
 
       </div>
 
@@ -285,7 +356,7 @@ const getNotificationIcon = (type) => {
 
         {/* 💬 MESSAGES */}
 <div
-  className="icon-btn"
+  className="icon-btn desktop-message"
   onClick={() => {
     setMenuOpen(false)
     setNotifOpen(false)
@@ -402,11 +473,16 @@ const getNotificationIcon = (type) => {
   )
 
   if (notif.type === "application") {
-    navigate(`/applications/${notif.job_id}`)
-  }
+
+  navigate(
+    role === "worker"
+      ? "/applications"
+      : `/contractor-applications/${notif.job_id}`
+  )
+}
 
   if (notif.type === "message") {
-    navigate("/contractor-messages")
+    navigate("/messages")
   }
 
   if (notif.type === "payment") {
@@ -414,15 +490,23 @@ const getNotificationIcon = (type) => {
 }
 
 if (notif.type === "review") {
-  navigate("/contractor-profile")
+  navigate(
+  role === "worker"
+    ? "/worker-profile"
+    : "/contractor-profile"
+)
 }
 
-if (notif.type === "approved") {
-  navigate(`/applications/${notif.job_id}`)
-}
+if (
+  notif.type === "approved" ||
+  notif.type === "rejected"
+) {
 
-if (notif.type === "rejected") {
-  navigate(`/applications/${notif.job_id}`)
+  navigate(
+    role === "worker"
+      ? "/applications"
+      : `/contractor-applications/${notif.job_id}`
+  )
 }
 
 }}
@@ -462,17 +546,17 @@ if (notif.type === "rejected") {
 
 <div className="notif-actions">
 
-  {notif.sender_id && (
-    <button
-      className="notif-btn"
-      onClick={(e) => {
-        e.stopPropagation()
-        navigate(`/worker/${notif.sender_id}`)
-      }}
-    >
-      View Applicant
-    </button>
-  )}
+  {role === "contractor" && notif.sender_id && (
+  <button
+    className="notif-btn"
+    onClick={(e) => {
+      e.stopPropagation()
+      navigate(`/worker/${notif.sender_id}`)
+    }}
+  >
+    View Applicant
+  </button>
+)}
 
 </div>
 
@@ -503,7 +587,7 @@ if (notif.type === "rejected") {
   {profile?.avatar_url ? (
     <img
       src={profile.avatar_url}
-      alt="company logo"
+      alt="profile"
       className="contractor-nav-avatar"
     />
   ) : (
@@ -518,13 +602,17 @@ if (notif.type === "rejected") {
     {/* 🔥 USER HEADER */}
     <div 
   className="contractor-dropdown-user"
-  onClick={() => navigate("/contractor-profile")}
+  onClick={() => navigate(
+  role === "worker"
+    ? "/worker-profile"
+    : "/contractor-profile"
+)}
 >
   <div className="contractor-dropdown-avatar">
   {profile?.avatar_url ? (
   <img 
     src={profile.avatar_url} 
-    alt="company logo" 
+    alt="profile"
     className="contractor-avatar-img"
   />
 ) : (
@@ -537,7 +625,9 @@ if (notif.type === "rejected") {
   {profile?.full_name || user?.email}
 </span>
     <span className="contractor-user-email">
-  Contractor
+  {role === "worker"
+  ? "Worker"
+  : "Contractor"}
 </span>
   </div>
 </div>
@@ -545,13 +635,23 @@ if (notif.type === "rejected") {
 <div className="dropdown-divider"></div>
 
     {/* MENU ITEMS */}
-    <div onClick={() => navigate("/contractor-profile")}>
+    <div onClick={() => navigate(
+  role === "worker"
+    ? "/worker-profile"
+    : "/contractor-profile"
+)}>
   👤 Profile
 </div>
 
-    <div>
-      ⚙️ Account Settings
-    </div>
+    <div
+  onClick={() => {
+    setMenuOpen(false)
+    setMobileMenuOpen(false)
+    navigate("/account-settings")
+  }}
+>
+  ⚙️ Account Settings
+</div>
 
     <div onClick={() => setDarkMode(prev => !prev)}>
       {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
@@ -578,7 +678,10 @@ if (notif.type === "rejected") {
         src={
           profile?.avatar_url ||
           `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            profile?.full_name || "Contractor"
+            profile?.full_name ||
+(role === "worker"
+  ? "Worker"
+  : "Contractor")
           )}`
         }
         alt="profile"
@@ -586,47 +689,107 @@ if (notif.type === "rejected") {
       />
 
       <div>
-        <h3>{profile?.full_name || "Contractor"}</h3>
-        <p>Contractor</p>
+        <h3>{profile?.full_name ||
+(role === "worker"
+  ? "Worker"
+  : "Contractor")}</h3>
+        <p>
+  {role === "worker"
+    ? "Worker"
+    : "Contractor"}
+</p>
       </div>
 
     </div>
 
-    <Link
-      to="/contractor-dashboard"
+    <NavLink
+      to={
+  role === "worker"
+    ? "/worker-dashboard"
+    : "/contractor-dashboard"
+}
       className="mobile-menu-link"
       onClick={() => setMobileMenuOpen(false)}
     >
       <Home size={18}/>
       Dashboard
-    </Link>
+    </NavLink>
 
     <Link
-      to="/post-job"
+  to="/messages"
+  className="mobile-menu-link"
+  onClick={() => setMobileMenuOpen(false)}
+>
+  <MessageSquare size={18}/>
+  Messages
+</Link>
+
+    <NavLink
+      to={
+  role === "worker"
+    ? "/jobs"
+    : "/post-job"
+}
       className="mobile-menu-link"
       onClick={() => setMobileMenuOpen(false)}
     >
       <Briefcase size={18}/>
-      Post Job
-    </Link>
+{role === "worker"
+  ? "Jobs"
+  : "Post Job"}
+    </NavLink>
 
-    <Link
-      to="/contractor-applications"
+    {role === "worker" && (
+  <NavLink
+    to="/saved-jobs"
+    className="mobile-menu-link"
+    onClick={() => setMobileMenuOpen(false)}
+  >
+    <BriefcaseBusiness size={18}/>
+    Saved Jobs
+  </NavLink>
+)}
+
+    <NavLink
+      to={
+  role === "worker"
+    ? "/applications"
+    : "/contractor-applications"
+}
       className="mobile-menu-link"
       onClick={() => setMobileMenuOpen(false)}
     >
       <Users size={18}/>
-      Applicants
-    </Link>
+
+{role === "worker"
+  ? "Applications"
+  : "Applicants"}
+    </NavLink>
 
     <Link
-      to="/contractor-profile"
+      to={
+  role === "worker"
+    ? "/worker-profile"
+    : "/contractor-profile"
+}
       className="mobile-menu-link"
       onClick={() => setMobileMenuOpen(false)}
     >
       <User size={18}/>
       Profile
     </Link>
+
+    <Link
+  to="/account-settings"
+  className="mobile-menu-link"
+  onClick={() => {
+    setMenuOpen(false)
+    setMobileMenuOpen(false)
+  }}
+>
+  <Settings size={18}/>
+  Account Settings
+</Link>
 
     <button
       className="mobile-menu-link"
@@ -651,4 +814,4 @@ if (notif.type === "rejected") {
   )
 }
 
-export default ContractorNavbar
+export default AppNavbar

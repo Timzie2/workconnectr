@@ -8,7 +8,7 @@ import {
   useNavigate
 } from "react-router-dom"
 import supabase from "../supabaseClient"
-import WorkerNavbar from "../components/WorkerNavbar"
+import AppNavbar from "../components/AppNavbar"
 import StarRating from "../components/StarRating"
 import "../styles/ContractorPublicProfile.css"
 
@@ -21,6 +21,8 @@ function ContractorPublicProfile() {
   const [reviews, setReviews] = useState([])
   const [avgRating, setAvgRating] = useState("New")
   const [ratings, setRatings] = useState([])
+  const [showImageModal, setShowImageModal] = useState(false)
+  const [previewImage, setPreviewImage] = useState("")
 
   useEffect(() => {
     fetchContractor()
@@ -71,7 +73,7 @@ function ContractorPublicProfile() {
 
   return (
     <>
-      <WorkerNavbar />
+      <AppNavbar />
 
       <div className="contractor-profile">
 
@@ -96,10 +98,16 @@ function ContractorPublicProfile() {
     {contractor.avatar_url ? (
 
       <img
-        src={contractor.avatar_url}
-        alt="contractor"
-        className="contractor-avatar"
-      />
+  src={contractor.avatar_url}
+  alt="contractor"
+  className="contractor-avatar"
+  onClick={() => {
+
+    setPreviewImage(contractor.avatar_url)
+
+    setShowImageModal(true)
+  }}
+/>
 
     ) : (
 
@@ -220,6 +228,31 @@ function ContractorPublicProfile() {
         </div>
 
       </div>
+      {showImageModal && (
+
+  <div
+    className="contractor-public-image-modal"
+    onClick={() => setShowImageModal(false)}
+  >
+
+    <button
+      className="contractor-public-image-close"
+      onClick={() => setShowImageModal(false)}
+    >
+      ×
+    </button>
+
+    <img
+      src={previewImage}
+      alt="preview"
+      className="contractor-public-image-preview"
+      onClick={(e) => e.stopPropagation()}
+    />
+
+  </div>
+
+)}
+
     </>
   )
 }

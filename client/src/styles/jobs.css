@@ -1,463 +1,926 @@
-/* 🔥 PAGE WRAPPER */
-.jobs-page {
-  padding: 24px;
+/* =========================================
+   JOBS PAGE — MODERN GLASS UPGRADE
+   ========================================= */
+
+/* PAGE */
+
+.jobs-page{
+
+  width:min(1400px, calc(100% - 40px));
+
+  margin:auto;
+
+  padding:34px 0 90px;
+
+  color:var(--text-main);
+
+  background:
+    radial-gradient(circle at top left,
+      rgba(34,197,94,.08),
+      transparent 26%),
+    radial-gradient(circle at bottom right,
+      rgba(59,130,246,.08),
+      transparent 30%),
+    var(--bg-main);
+
 }
 
-/* 🔥 TITLE */
-.jobs-title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 20px;
+/* =========================
+   TITLE
+========================= */
+
+.jobs-title{
+
+  font-size:clamp(32px, 3vw, 48px);
+
+  font-weight:900;
+
+  letter-spacing:-2px;
+
+  line-height:1;
+
+  margin-bottom:28px;
+
+  color:var(--text-main);
+
 }
 
-/* 🔥 GRID */
-.jobs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 20px;
+/* =========================
+   GRID
+========================= */
+
+.jobs-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fill,minmax(340px,1fr));
+
+  gap:22px;
+
 }
 
-/* 🔥 CARD */
-.job-card {
-  background: linear-gradient(145deg, #1f2937, #111827);
-  border-radius: 18px;
-  padding: 22px;
-  transition: all 0.25s ease;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.05);
-  min-height: 320px;      /* 🔥 forces bigger cards */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* 🔥 spreads content nicely */
-  
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* =========================
+   CARD
+========================= */
+
+.job-card{
+
+  position:relative;
+
+  overflow:hidden;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:space-between;
+
+  gap:14px;
+
+  min-height:360px;
+
+  padding:22px;
+
+  border-radius:26px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,23,42,.82),
+      rgba(2,6,23,.86)
+    );
+
+  backdrop-filter:blur(20px);
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.18);
+
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+
 }
 
-.job-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+/* GLOW */
+
+.job-card::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(34,197,94,.08),
+      transparent
+    );
+
+  opacity:0;
+
+  transition:.25s;
+
 }
 
-.job-card.featured {
-  transform: scale(1.03);
-  border: 1px solid rgba(250, 204, 21, 0.4);
+.job-card:hover{
+
+  transform:translateY(-6px);
+
+  border-color:
+    rgba(74,222,128,.22);
+
+  box-shadow:
+    0 18px 40px rgba(34,197,94,.14);
+
 }
 
-/* 🔥 COMPANY */
-.jobs-company-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-  margin-top:-26px; /* 🔥 moves it upward */
+.job-card:hover::before{
+
+  opacity:1;
+
 }
 
-.company-logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+/* FEATURED */
+
+.job-card.featured{
+
+  border:
+    1px solid rgba(250,204,21,.26);
+
+  box-shadow:
+    0 18px 44px rgba(250,204,21,.10);
+
 }
 
-.company-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #d1d5db;
+/* CLOSED */
+
+.job-card.closed{
+
+  opacity:.72;
+
+  filter:grayscale(40%);
+
+  border:
+    1px solid rgba(239,68,68,.22);
+
 }
 
-.company-tag {
-  font-size: 11px;
-  color: #22c55e;
+/* =========================
+   COMPANY
+========================= */
+
+.jobs-company-row,
+.company-row{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
 }
 
-/* 🔥 JOB TITLE */
-.job-title {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
+.company-logo{
+
+  width:46px;
+  height:46px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  border:
+    2px solid rgba(255,255,255,.08);
+
+  transition:.2s;
+
 }
 
-/* 🔥 DESCRIPTION */
-.job-desc {
-  font-size: 14px;
-  color: #9ca3af;
-  margin-bottom: 14px;
-  line-height: 1.5;
+.company-logo:hover{
+
+  transform:scale(1.05);
+
 }
 
-/* 🔥 FOOTER */
-.job-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+.company-name{
+
+  font-size:14px;
+
+  font-weight:700;
+
+  color:var(--text-main);
+
+  transition:.2s;
+
 }
 
-.job-location {
-  font-size: 13px;
-  color: #9ca3af;
+.company-name:hover{
+
+  color:#4ade80;
+
 }
 
-.job-salary {
-  font-size: 13px;
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-weight: 600;
+.company-tag{
+
+  font-size:11px;
+
+  color:#4ade80;
+
 }
 
-/* 🔥 BUTTON */
-.apply-btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  background: linear-gradient(90deg, #22c55e, #16a34a);
-  color: white;
-  transition: all 0.2s ease;
-  font-size: 17px;
+/* =========================
+   TITLE / DESC
+========================= */
+
+.job-title{
+
+  font-size:24px;
+
+  font-weight:800;
+
+  letter-spacing:-1px;
+
+  line-height:1.2;
+
+  color:var(--text-main);
+
 }
 
-.apply-btn:hover {
-  transform: scale(1.03);
+.job-desc{
+
+  font-size:14px;
+
+  line-height:1.7;
+
+  color:var(--text-secondary);
+
 }
 
-.apply-btn.applied {
-  background: #374151;
-  color: #9ca3af;
+/* =========================
+   RATING
+========================= */
+
+.rating,
+.rating-inline{
+
+  font-size:12px;
+
+  color:#facc15;
+
+  font-weight:700;
+
 }
 
-.hiring-badge {
-  font-size: 12px;
-  font-weight: 600;
-  color: #22c55e;
-  background: rgba(34, 197, 94, 0.15);
-  padding: 3px 8px;
-  border-radius: 6px;
-  display: inline-block;
-  margin-top: 2px;
+/* =========================
+   FOOTER
+========================= */
+
+.job-footer{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:12px;
+
+  flex-wrap:wrap;
+
 }
 
-.job-badges {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
+.job-location{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  font-size:13px;
+
+  color:var(--text-secondary);
+
 }
 
-.featured-badge {
-  background: gold;
-  color: black;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
+.job-salary{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  width:fit-content;
+
+  padding:7px 14px;
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #22c55e,
+      #16a34a
+    );
+
+  color:white;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  box-shadow:
+    0 8px 18px rgba(34,197,94,.22);
+
 }
 
-.closed-badge {
-  background: linear-gradient(135deg, #ff4d4d, #cc0000);
-  color: white;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+/* =========================
+   BADGES
+========================= */
+
+.job-badges{
+
+  display:flex;
+
+  gap:8px;
+
+  flex-wrap:wrap;
+
 }
 
-.closed-overlay {
-  font-size: 13px;
-  font-weight: 600;
-  color: #facc15;
+.featured-badge,
+.closed-badge,
+.urgent-badge,
+.hiring-badge{
 
-  background: rgba(0, 0, 0, 0.4);
-  padding: 6px 10px;
-  border-radius: 8px;
+  display:inline-flex;
 
-  width: fit-content;
-  margin-bottom: 10px;
+  align-items:center;
+
+  justify-content:center;
+
+  width:fit-content;
+
+  padding:6px 12px;
+
+  border-radius:999px;
+
+  font-size:11px;
+
+  font-weight:800;
+
+  letter-spacing:.3px;
+
 }
 
-.urgent-badge {
-  background: #ef4444;
-  color: white;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  animation: pulse 1.5s infinite;
+.featured-badge{
+
+  background:
+    linear-gradient(
+      135deg,
+      gold,
+      orange
+    );
+
+  color:#111827;
+
 }
 
-@keyframes pulse {
-  0% { opacity: 1 }
-  50% { opacity: 0.6 }
-  100% { opacity: 1 }
+.closed-badge{
+
+  background:
+    linear-gradient(
+      135deg,
+      #ef4444,
+      #dc2626
+    );
+
+  color:white;
+
 }
 
-.apply-btn:disabled {
-  background: #374151;
-  color: #9ca3af;
-  cursor: not-allowed;
+.hiring-badge{
+
+  background:
+    rgba(34,197,94,.14);
+
+  color:#4ade80;
+
 }
 
-.job-card.closed {
-  opacity: 0.6;
-  filter: grayscale(40%);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 320px;
+.urgent-badge{
+
+  background:
+    linear-gradient(
+      135deg,
+      #ef4444,
+      #f97316
+    );
+
+  color:white;
+
+  animation:pulse 1.5s infinite;
+
 }
 
-.job-card.closed:hover {
-  transform: none;
-  box-shadow: none;
+@keyframes pulse{
+
+  0%{
+    opacity:1;
+  }
+
+  50%{
+    opacity:.65;
+  }
+
+  100%{
+    opacity:1;
+  }
+
 }
 
-.urgent-banner {
-  background: linear-gradient(90deg, #ff4d4d, #ff0000);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: 600;
-  display: inline-block;
-  margin-top: 10px;
+/* =========================
+   OVERLAYS
+========================= */
+
+.closed-overlay{
+
+  width:fit-content;
+
+  padding:8px 12px;
+
+  border-radius:12px;
+
+  background:
+    rgba(0,0,0,.34);
+
+  color:#facc15;
+
+  font-size:13px;
+
+  font-weight:700;
+
 }
 
-.urgent-timer {
-  display: block;
-  margin-top: 6px;
-  color: #ff4d4d;
-  font-size: 14px;
+.urgent-banner{
+
+  width:fit-content;
+
+  padding:10px 14px;
+
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ef4444,
+      #dc2626
+    );
+
+  color:white;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  box-shadow:
+    0 10px 24px rgba(239,68,68,.24);
+
 }
 
-.closed {
-  opacity: 0.5;
-  cursor: not-allowed;
+.urgent-timer{
+
+  display:block;
+
+  margin-top:6px;
+
+  font-size:12px;
+
+  opacity:.9;
+
 }
 
-.job-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
+/* =========================
+   ACTIONS
+========================= */
+
+.job-actions{
+
+  display:flex;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+  margin-top:auto;
+
 }
 
-.view-btn {
-  flex: 1;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: none;
-  background: #1e293b;
-  color: white;
-  cursor: pointer;
-  font-size: 17px;
+/* BUTTONS */
+
+.apply-btn,
+.view-btn{
+
+  flex:1;
+
+  min-height:48px;
+
+  padding:0 18px;
+
+  border:none;
+
+  border-radius:16px;
+
+  font-size:14px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+
 }
 
-.view-btn:hover {
-  background: #334155;
+/* VIEW */
+
+.view-btn{
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #2563eb
+    );
+
+  color:white;
+
 }
 
-/* BASE */
-.apply-btn.applied {
-  color: white;
-  font-weight: 500;
+.view-btn:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 10px 22px rgba(37,99,235,.35);
+
 }
 
-/* ⏳ Pending */
-.apply-btn.applied.pending {
-  background-color: #facc15; /* yellow */
-  color: #000;
+/* APPLY */
+
+.apply-btn{
+
+  background:
+    linear-gradient(
+      135deg,
+      #22c55e,
+      #16a34a
+    );
+
+  color:white;
+
+  box-shadow:
+    0 10px 22px rgba(34,197,94,.18);
+
 }
 
-/* ✅ Approved */
-.apply-btn.applied.approved {
-  background-color: #22c55e; /* green */
+.apply-btn:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 12px 24px rgba(34,197,94,.30);
+
 }
 
-/* ❌ Rejected */
-.apply-btn.applied.rejected {
-  background-color: #ef4444; /* red */
+/* STATES */
+
+.apply-btn.applied.pending{
+
+  background:#facc15;
+
+  color:#111827;
+
 }
 
-.company-row {
-  margin-bottom: 16px;
+.apply-btn.applied.approved{
+
+  background:#22c55e;
+
 }
 
-.job-title {
-  margin-bottom: 8px;
+.apply-btn.applied.rejected{
+
+  background:#ef4444;
+
 }
 
-.job-desc {
-  margin-bottom: 18px;
+.apply-btn:disabled{
+
+  opacity:.7;
+
+  cursor:not-allowed;
+
 }
 
-.job-footer {
-  margin-bottom: 18px;
+.apply-btn:disabled:hover{
+
+  transform:none;
+
+  box-shadow:none;
+
 }
 
-.rating {
-  display: block;
-  font-size: 12px;
-  color: #facc15;
-  font-weight: 600;
-  margin-top: 2px;
+/* =========================
+   LIGHT MODE
+========================= */
+
+body:not(.dark)
+.job-card{
+
+  background:
+    rgba(255,255,255,.94);
+
+  border-color:#e2e8f0;
+
+  box-shadow:
+    0 12px 28px rgba(15,23,42,.06);
+
 }
 
-.rating-inline {
-  margin-left: 6px;
-  font-size: 12px;
-  color: #facc15;
-  font-weight: 600;
+body:not(.dark)
+.jobs-title,
+
+body:not(.dark)
+.job-title,
+
+body:not(.dark)
+.company-name{
+
+  color:#0f172a;
+
 }
 
-/* ========================= */
-/* RESPONSIVE FIXES */
-/* ========================= */
+body:not(.dark)
+.job-desc,
+
+body:not(.dark)
+.job-location{
+
+  color:#475569;
+
+}
+
+/* =========================
+   TABLETS
+========================= */
 
 @media (max-width:1024px){
 
   .jobs-page{
-    padding:20px;
+
+    width:min(100%, calc(100% - 28px));
+
+    padding:28px 0 70px;
+
   }
 
   .jobs-grid{
+
     grid-template-columns:
-      repeat(auto-fit,minmax(280px,1fr));
+      repeat(auto-fit,minmax(300px,1fr));
+
   }
 
 }
 
-/* ========================= */
-/* TABLETS */
-/* ========================= */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width:768px){
 
   .jobs-page{
-    padding:18px 14px;
+
+    width:min(100%, calc(100% - 20px));
+
+    padding:22px 0 60px;
+
   }
 
   .jobs-title{
-    font-size:24px;
-    margin-bottom:18px;
+
+    font-size:34px;
+
+    margin-bottom:22px;
+
   }
 
   .jobs-grid{
+
     grid-template-columns:1fr;
+
     gap:18px;
+
   }
 
   .job-card{
+
     min-height:auto;
+
     padding:18px;
-    border-radius:16px;
+
+    border-radius:22px;
+
   }
 
   .job-card.featured{
-    transform:none;
-  }
 
-  .jobs-company-row,
-  .company-row{
-    gap:10px;
-    margin-top:0;
+    transform:none;
+
   }
 
   .company-logo{
-    width:40px;
-    height:40px;
-  }
 
-  .company-name{
-    font-size:13px;
+    width:42px;
+    height:42px;
+
   }
 
   .job-title{
-    font-size:18px;
-    line-height:1.4;
+
+    font-size:22px;
+
   }
 
   .job-desc{
+
     font-size:13px;
-    line-height:1.5;
+
   }
 
   .job-footer{
+
     flex-direction:column;
+
     align-items:flex-start;
-    gap:10px;
+
   }
 
   .job-actions{
+
     flex-direction:column;
-    width:100%;
+
   }
 
   .apply-btn,
   .view-btn{
-    width:100%;
-    font-size:14px;
-    padding:12px;
-  }
 
-  .urgent-banner,
-  .closed-overlay{
-    font-size:12px;
+    width:100%;
+
   }
 
 }
 
-/* ========================= */
-/* SMALL PHONES */
-/* ========================= */
+/* =========================
+   SMALL PHONES
+========================= */
 
 @media (max-width:480px){
 
-  .jobs-page{
-    padding:16px 12px;
-  }
-
   .jobs-title{
-    font-size:22px;
+
+    font-size:30px;
+
   }
 
   .job-card{
+
     padding:16px;
-    border-radius:14px;
+
+    border-radius:18px;
+
   }
 
   .job-title{
-    font-size:17px;
+
+    font-size:20px;
+
   }
 
   .job-desc{
-    font-size:12.5px;
+
+    font-size:12px;
+
+    line-height:1.6;
+
   }
 
-  .job-location,
-  .job-salary,
-  .rating,
-  .rating-inline{
-    font-size:11px;
+  .company-logo{
+
+    width:40px;
+    height:40px;
+
   }
 
   .featured-badge,
   .closed-badge,
   .urgent-badge,
   .hiring-badge{
+
     font-size:10px;
-    padding:4px 8px;
+
+    padding:5px 10px;
+
   }
 
   .apply-btn,
   .view-btn{
+
+    min-height:46px;
+
     font-size:13px;
-    padding:11px;
-    border-radius:10px;
+
+    border-radius:14px;
+
   }
 
 }
 
-/* ========================= */
-/* SAFETY FIXES */
-/* ========================= */
+/* =========================
+   320px DEVICES
+========================= */
+
+@media (max-width:320px){
+
+  .jobs-page{
+
+    width:calc(100% - 14px);
+
+    padding:18px 0 50px;
+
+  }
+
+  .jobs-title{
+
+    font-size:26px;
+
+  }
+
+  .job-card{
+
+    padding:14px;
+
+    border-radius:16px;
+
+  }
+
+  .job-title{
+
+    font-size:18px;
+
+  }
+
+  .job-desc{
+
+    font-size:11.5px;
+
+  }
+
+  .company-logo{
+
+    width:36px;
+    height:36px;
+
+  }
+
+  .apply-btn,
+  .view-btn{
+
+    min-height:44px;
+
+    font-size:12px;
+
+    border-radius:12px;
+
+  }
+
+}
+
+/* =========================
+   SAFETY
+========================= */
 
 img{
   max-width:100%;

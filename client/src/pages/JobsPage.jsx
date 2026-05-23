@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
-import WorkerNavbar from "../components/WorkerNavbar"
+import AppNavbar from "../components/AppNavbar"
 import { useAuth } from "../context/AuthContext"
 import "../styles/jobs.css"
 import toast from "react-hot-toast"
@@ -198,7 +198,7 @@ console.log(notificationError)
   if (authLoading) {
     return (
       <>
-        <WorkerNavbar />
+        <AppNavbar />
         <div className="worker-dashboard">Loading...</div>
       </>
     )
@@ -211,7 +211,7 @@ console.log(notificationError)
   if (loading) {
     return (
       <>
-        <WorkerNavbar />
+        <AppNavbar />
         <div className="worker-dashboard">Loading jobs...</div>
       </>
     )
@@ -307,7 +307,7 @@ tick
 
   return (
     <>
-      <WorkerNavbar />
+      <AppNavbar />
 
       <div className="jobs-page">
 
@@ -460,7 +460,7 @@ const avgRating =
       navigate(`/job/${job.id}`)
     }}
   >
-    👁 View
+     View
   </button>
 
   {/* APPLY / WITHDRAW / STATUS */}

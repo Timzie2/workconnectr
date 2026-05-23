@@ -175,7 +175,18 @@ const conversationsWithUsers =
   avatar_url
 `)
             .eq("id", otherUserId)
-            .single()
+            .maybeSingle()
+
+            if (!otherUser) {
+
+  return {
+    ...conversation,
+    otherUser: {
+      full_name: "Deleted User"
+    }
+  }
+
+}
 
         const { count } = await supabase
 
@@ -328,15 +339,13 @@ return {
 
                 unreadCount={conversation.unreadCount}
 
-                active={id === otherUser?.id}
+                active={id === conversation.id}
 
                 online={false}
 
                 onClick={() =>
-                  navigate(
-                    `/messages/${otherUser?.id}`
-                  )
-                }
+  navigate(`/messages/${conversation.id}`)
+}
               />
 
             )

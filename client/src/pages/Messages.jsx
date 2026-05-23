@@ -2,8 +2,7 @@ import { useParams } from "react-router-dom"
 
 import { useAuth } from "../context/AuthContext"
 
-import WorkerNavbar from "../components/WorkerNavbar"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 
 import ConversationList from "../components/ConversationList"
 import ChatWindow from "../components/ChatWindow"
@@ -22,15 +21,7 @@ function Messages() {
 
       {/* NAVBAR */}
 
-      {role === "worker" ? (
-
-        <WorkerNavbar />
-
-      ) : (
-
-        <ContractorNavbar />
-
-      )}
+      <AppNavbar />
 
       {/* MAIN */}
 
@@ -46,7 +37,7 @@ function Messages() {
 
         {/* RIGHT CHAT */}
         
-<ChatWindow receiverId={id} />
+<ChatWindow conversationId={id} />
 
       </div>
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import supabase from "../supabaseClient"
-import ContractorNavbar from "../components/ContractorNavbar"
+import AppNavbar from "../components/AppNavbar"
 import { useAuth } from "../context/AuthContext" // ✅ IMPORTANT
 import "../styles/ContractorProfile.css"
 
@@ -17,6 +17,8 @@ function ContractorProfile() {
   const [activeJobs, setActiveJobs] = useState(0)
   const [applications, setApplications] = useState(0)
   const [fullName, setFullName] = useState("")
+  const [previewLogo, setPreviewLogo] = useState("")
+  const [showLogoModal, setShowLogoModal] = useState(false)
 
   useEffect(() => {
 
@@ -79,6 +81,16 @@ if (error) {
   const uploadLogo = async (e) => {
 
     const file = e.target.files[0]
+
+    if(file){
+
+  const localPreview = URL.createObjectURL(file)
+
+  setPreviewLogo(localPreview)
+
+  setLogo(localPreview)
+}
+
     if (!file || !user) return
 
     const fileName = `${user.id}-${Date.now()}`
@@ -157,7 +169,7 @@ const missingFields = Object.entries(fields)
   return (
 
     <div>
-      <ContractorNavbar />
+      <AppNavbar />
 
       <div className="profile-page">
         <div className="profile-card">
@@ -166,15 +178,46 @@ const missingFields = Object.entries(fields)
           <div className="profile-header">
 
             <div className="company-avatar">
-              {logo ? <img src={logo} alt="logo" /> : "🏢"}
+              {logo ? <img
+  src={logo}
+  alt="logo"
+  onClick={() => setShowLogoModal(true)}
+/> : "🏢"}
             </div>
 
             <div>
-              <h2>{fullName || company || "Your Company"}</h2>
-              <p>📍 {location || "Add location"}</p>
+              <h1>{fullName || company || "Your Company"}</h1>
+              <p className="location-text">
+  📍 {location || "Add location"}
+</p>
             </div>
 
           </div>
+
+          {showLogoModal && (
+
+  <div
+    className="contractor-logo-modal"
+    onClick={() => setShowLogoModal(false)}
+  >
+
+    <button
+      className="contractor-logo-close"
+      onClick={() => setShowLogoModal(false)}
+    >
+      ×
+    </button>
+
+    <img
+      src={logo}
+      alt="preview"
+      className="contractor-logo-preview"
+      onClick={(e) => e.stopPropagation()}
+    />
+
+  </div>
+
+)}
 
           {/* STATS */}
           <div className="profile-stats">
@@ -194,7 +237,7 @@ const missingFields = Object.entries(fields)
             </div>
           </div>
 
-          <div className="profile-progress">
+          <div className="contractor-progress-section">
 
   <div className="progress-top">
     <span>Profile completion</span>

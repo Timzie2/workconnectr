@@ -19,7 +19,7 @@ import {
   FiArchive
 } from "react-icons/fi"
 
-function ChatWindow({ receiverId }) {
+function ChatWindow({ conversationId }) {
 
   const {
   user,
@@ -37,8 +37,8 @@ function ChatWindow({ receiverId }) {
   const [receiver, setReceiver] =
     useState(null)
 
-  const [conversationId, setConversationId] =
-    useState(null)
+  const [receiverId, setReceiverId] =
+  useState(null)
 
   const [isTyping, setIsTyping] =
   useState(false)
@@ -159,13 +159,13 @@ function ChatWindow({ receiverId }) {
 
   useEffect(() => {
 
-  if (!userId || !receiverId) return
+  if (!userId || !conversationId) return
 
   let cleanup
 
   const setupChat = async () => {
 
-    cleanup = await initializeChat()
+    cleanup = await loadConversation()
 
   }
 
@@ -177,7 +177,7 @@ function ChatWindow({ receiverId }) {
 
   }
 
-}, [userId, receiverId])
+}, [userId, conversationId])
 
   // AUTO SCROLL
 
@@ -290,6 +290,16 @@ useEffect(() => {
     .eq("receiver_id", userId)
     .eq("sender_id", receiverId)
     .eq("is_read", false)
+
+    // MARK CONVERSATION PREVIEW READ
+
+  await supabase
+  .from("conversations")
+  .update({
+    last_message_read: true
+  })
+  .eq("id", conversationId)
+  .neq("last_message_sender_id", userId)
 
   // MARK NOTIFICATIONS SEEN
 
@@ -463,16 +473,93 @@ useEffect(() => {
 
 }, [])
 
-  // INIT CHAT
+const loadConversation = async () => {
 
-  const initializeChat = async () => {
+  const { data: convo, error } = await supabase
+    .from("conversations")
+    .select("*")
+    .eq("id", conversationId)
+    .maybeSingle()
 
-  await fetchReceiver()
+  if (error) {
 
-  const cleanup =
-    await fetchOrCreateConversation()
+    console.error(error)
 
-  return cleanup
+    return
+
+  }
+
+  if (!convo) {
+
+    navigate("/messages")
+
+    return
+
+  }
+
+  const otherUserId =
+    convo.user_one === userId
+      ? convo.user_two
+      : convo.user_one
+
+      console.log("CONVO:", convo)
+
+console.log(
+  "OTHER USER ID:",
+  otherUserId
+)
+
+  setReceiverId(otherUserId)
+
+  const { data: otherUser } = await supabase
+  .from("users")
+  .select(`
+    id,
+    role,
+    full_name,
+    company_name,
+    avatar_url,
+    is_online,
+    last_seen,
+    last_active
+  `)
+  .eq("id", otherUserId)
+  .single()
+
+console.log("CONVO:", convo)
+
+console.log("OTHER USER ID:", otherUserId)
+
+console.log("OTHER USER:", otherUser)
+
+setReceiver(otherUser || {
+  full_name: "Deleted User"
+})
+
+  fetchMessages(conversationId)
+
+  const channel = supabase
+    .channel(`chat-${conversationId}`)
+
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "messages",
+        filter: `conversation_id=eq.${conversationId}`
+      },
+      () => {
+        fetchMessages(conversationId)
+      }
+    )
+
+    .subscribe()
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
+
 }
 
   // RECEIVER
@@ -552,8 +639,6 @@ useEffect(() => {
 
         convoId = newConversation.id
       }
-
-      setConversationId(convoId)
 
       fetchMessages(convoId)
 
@@ -1090,7 +1175,10 @@ setUploadProgress(100)
     last_message: "📷 Image",
 
     last_message_time:
-      new Date().toISOString()
+      new Date().toISOString(),
+
+    last_message_sender_id: userId,
+    last_message_read: false
 
   })
   .eq("id", conversationId)
@@ -1207,7 +1295,10 @@ const sendVideo = async () => {
     last_message: "🎥 Video",
 
     last_message_time:
-      new Date().toISOString()
+      new Date().toISOString(),
+
+    last_message_sender_id: userId,
+    last_message_read: false
 
   })
   .eq("id", conversationId)
@@ -1323,17 +1414,19 @@ const sendVoiceNote = async () => {
   }
 
   await supabase
-    .from("conversations")
-    .update({
+  .from("conversations")
+  .update({
 
-      last_message:
-        "🎤 Voice note",
+    last_message: "🎤 Voice note",
 
-      last_message_time:
-        new Date().toISOString()
+    last_message_time:
+      new Date().toISOString(),
 
-    })
-    .eq("id", conversationId)
+    last_message_sender_id: userId,
+    last_message_read: false
+
+  })
+  .eq("id", conversationId)
 
   // RESET
 
@@ -1443,7 +1536,10 @@ const sendDocument = async () => {
     last_message: "📎 File",
 
     last_message_time:
-      new Date().toISOString()
+      new Date().toISOString(),
+
+    last_message_sender_id: userId,
+    last_message_read: false
 
   })
   .eq("id", conversationId)
@@ -1643,7 +1739,8 @@ const clearMessages = async () => {
   .from("conversations")
   .update({
     last_message: "",
-    last_message_time: null
+    last_message_time: null,
+    last_message_sender_id: null
   })
   .eq("id", conversationId)
 
@@ -1928,7 +2025,9 @@ const capturePhoto = async () => {
   .from("conversations")
   .update({
     last_message: messageText,
-    last_message_time: new Date().toISOString()
+    last_message_time: new Date().toISOString(),
+    last_message_sender_id: userId,
+    last_message_read: false
   })
   .eq("id", conversationId)
 
