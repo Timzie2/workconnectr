@@ -14,6 +14,9 @@ function Messages() {
   const { role } = useAuth()
 
   const { id } = useParams()
+  console.log("CURRENT ID:", id)
+
+  console.log("CURRENT ID:", id)
 
   return (
 

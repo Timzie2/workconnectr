@@ -18,6 +18,8 @@ function WorkerProfile(){
   location:"",
   skills:"",
   experience:"",
+  bio:"",
+  resume_url:"",
   avatar_url:""
 })
 
@@ -201,6 +203,51 @@ async function uploadAvatar(e){
   alert("Photo updated ✅")
 }
 
+async function uploadResume(e) {
+
+  const file = e.target.files[0]
+
+  if (!file || !user) return
+
+  const fileExt = file.name.split(".").pop()
+
+  const fileName = `${user.id}.${fileExt}`
+
+  const { error: uploadError } = await supabase.storage
+    .from("resumes")
+    .upload(fileName, file, {
+      upsert: true
+    })
+
+  if (uploadError) {
+    alert(uploadError.message)
+    return
+  }
+
+  const { data } = supabase.storage
+    .from("resumes")
+    .getPublicUrl(fileName)
+
+  const { error } = await supabase
+    .from("users")
+    .update({
+      resume_url: data.publicUrl
+    })
+    .eq("id", user.id)
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  setProfile(prev => ({
+    ...prev,
+    resume_url: data.publicUrl
+  }))
+
+  alert("Resume uploaded successfully ✅")
+}
+
 
 // ✅ UPDATE PROFILE
 async function updateProfile(e){
@@ -307,9 +354,21 @@ onClick={() => setShowImageModal(true)}
   📞 {profile.phone || "No phone"}
 </div>
 
-            <p style={{ marginTop:"10px", fontWeight:"500" }}>
-              ⭐ {avgRating} / 5 ({ratingCount})
-            </p>
+<div className="worker-profile-bio">
+
+  <h4>About Me</h4>
+
+  <p>
+    {profile.bio || "No bio yet."}
+  </p>
+
+</div>
+
+            <div className="worker-profile-rating">
+  <h4>⭐ Rating</h4>
+  <span>{avgRating} / 5</span>
+  <p>{ratingCount} Reviews</p>
+</div>
 
           </div>
 
@@ -431,6 +490,63 @@ onClick={() => setShowImageModal(true)}
                 setProfile({...profile,experience:e.target.value})
               }
             />
+
+            <label>Bio</label>
+
+<textarea
+  rows={5}
+  placeholder="Tell employers about yourself..."
+  value={profile.bio || ""}
+  onChange={(e)=>
+    setProfile({
+      ...profile,
+      bio:e.target.value
+    })
+  }
+/>
+
+<label>Resume</label>
+
+<div className="resume-section">
+
+  <label
+    htmlFor="resume-upload"
+    className="resume-upload-btn"
+  >
+    📄 Upload Resume
+  </label>
+
+  <input
+    id="resume-upload"
+    type="file"
+    accept=".pdf,.doc,.docx"
+    hidden
+    onChange={uploadResume}
+  />
+
+  {profile.resume_url ? (
+  <>
+    <span className="resume-status">
+      ✅ Resume Uploaded
+    </span>
+
+    <a
+      href={profile.resume_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="resume-view-btn"
+    >
+      👁 View Resume
+    </a>
+  </>
+) : (
+  <span className="resume-status">
+    ❌ No Resume Uploaded
+  </span>
+)}
+
+</div>
+
 
             <button className="worker-profile-save-btn">
               Save Profile

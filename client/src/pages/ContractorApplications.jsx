@@ -14,6 +14,50 @@ function ContractorApplications() {
   const { user, loading: authLoading } = useAuth()
 
   const [applications, setApplications] = useState([])
+
+  const startChat = async (workerId) => {
+
+  // Find existing conversation
+  const { data: conversations, error } = await supabase
+  .from("conversations")
+  .select("*")
+  .or(
+    `and(user_one.eq.${user.id},user_two.eq.${workerId}),and(user_one.eq.${workerId},user_two.eq.${user.id})`
+  )
+
+  console.log("FOUND:", conversations)
+
+let conversation = conversations?.[0]
+
+console.log("FOUND:", conversations)
+console.log("CONVERSATION USED:", conversation)
+
+navigate(`/messages/${conversation.id}`)
+
+  // Create if it doesn't exist
+  if (!conversation) {
+
+    const { data: newConversation, error } =
+      await supabase
+        .from("conversations")
+        .insert({
+          user_one: user.id,
+          user_two: workerId
+        })
+        .select()
+        .single()
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    conversation = newConversation
+  }
+
+  navigate(`/messages/${conversation.id}`)
+}
+
   const [loading, setLoading] = useState(true)
   const [jobTitle, setJobTitle] = useState("")
   const location = useLocation()
@@ -327,11 +371,11 @@ fetchApplications()
 
                 {app.status === "approved" && (
                   <button
-                    className="message-btn"
-                    onClick={() => navigate(`/chat/${app.worker_id}`)}
-                  >
-                    💬 Message
-                  </button>
+  className="message-btn"
+  onClick={() => startChat(app.worker_id)}
+>
+  💬 Message
+</button>
                 )}
 
               </div>

@@ -10,8 +10,6 @@
   --text-main:#0f172a;
   --text-secondary:#475569;
 
-  --border-color:#e2e8f0;
-
   --button-primary:#2563eb;
   --button-success:#16a34a;
 
@@ -25,6 +23,19 @@
 
   --sidebar-border:rgba(255,255,255,.08);
   --sidebar-shadow:rgba(0,0,0,.22);
+
+  --sidebar-bg:#ffffff;
+--sidebar-text:#111827;
+--sidebar-hover:#f3f4f6;
+
+--table-header:#22c55e;
+
+--modal-bg:#ffffff;
+--modal-overlay:rgba(0,0,0,.5);
+
+--success:#22c55e;
+--warning:#f59e0b;
+--info:#3b82f6;
 
   /* 😀 EMOJI THEME */
   --emoji-bg:#ffffff;
@@ -49,6 +60,8 @@
   --hover-bg:#f3f4f6;
 
   --border-color:#e5e7eb;
+
+  
 }
 
 /* 🌙 DARK MODE */
@@ -101,6 +114,19 @@ body.dark {
   --hover-bg:rgba(255,255,255,.08);
 
   --border-color:#374151;
+
+  --sidebar-bg:#0f172a;
+--sidebar-text:#ffffff;
+--sidebar-hover:#1e293b;
+
+--table-header:#16a34a;
+
+--modal-bg:#1e293b;
+--modal-overlay:rgba(0,0,0,.75);
+
+--success:#22c55e;
+--warning:#fbbf24;
+--info:#60a5fa;
 }
 
 
@@ -125,7 +151,10 @@ body{
 /* 🧱 CARDS (UPGRADED) */
 .card,
 .stat-card,
-.job-card{
+.job-card,
+.admin-dashboard-card,
+.admin-users-table,
+.admin-user-modal{
   background:var(--bg-card);
   color:var(--text-main);
   border:1px solid var(--border-color);
@@ -174,6 +203,66 @@ body{
   cursor:pointer;
 }
 
+/* FORM CONTROLS */
+input,
+textarea,
+select{
+background:var(--bg-input);
+color:var(--text-main);
+border:1px solid var(--border-color);
+transition:.25s;
+}
+
+input::placeholder,
+textarea::placeholder{
+color:var(--text-secondary);
+}
+
+/* 📝 TABLES */
+table{
+background:var(--bg-card);
+color:var(--text-main);
+}
+
+th{
+background:var(--table-header);
+color:#fff;
+}
+
+td{
+border-color:var(--border-color);
+}
+
+/* MODAL */
+.modal-overlay{
+background:var(--modal-overlay);
+}
+
+.modal{
+background:var(--modal-bg);
+color:var(--text-main);
+border:1px solid var(--border-color);
+box-shadow:var(--shadow);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{
+width:8px;
+height:8px;
+}
+
+::-webkit-scrollbar-track{
+background:var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb{
+background:var(--border-color);
+border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+background:var(--primary);
+}
 
 /* 📝 TEXT */
 h1,h2,h3,h4{
@@ -197,15 +286,6 @@ p{
 /* 📊 DASHBOARD */
 .dashboard-container{
   padding:30px;
-}
-
-/* 🌍 GLOBAL */
-body{
-  margin:0;
-  font-family:"Inter", sans-serif;
-  background:var(--bg-main);
-  color:var(--text-main);
-  transition:background 0.25s ease,color 0.25s ease;
 }
 
 /* ALL YOUR OTHER CSS */

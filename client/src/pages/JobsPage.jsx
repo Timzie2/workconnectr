@@ -1,10 +1,19 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import AppNavbar from "../components/AppNavbar"
 import { useAuth } from "../context/AuthContext"
 import "../styles/jobs.css"
 import toast from "react-hot-toast"
+import {
+  FiSearch,
+  FiMapPin,
+  FiDollarSign,
+  FiFilter,
+  FiChevronLeft,
+  FiChevronRight
+} from "react-icons/fi"
+
 
 function JobsPage() {
 
@@ -17,6 +26,15 @@ function JobsPage() {
   const [tick, setTick] = useState(0)
   const [ratings, setRatings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState("")
+  const [locationFilter, setLocationFilter] = useState("")
+  const [salaryFilter, setSalaryFilter] = useState("")
+  const [sortBy, setSortBy] = useState("newest")
+  const [categoryFilter, setCategoryFilter] = useState("")
+  const [categories, setCategories] = useState([])
+  const categoryScrollRef = useRef(null)
+  const [showLeftArrow, setShowLeftArrow] = useState(false)
+  const [showRightArrow, setShowRightArrow] = useState(false)
 
   // ✅ REDIRECT SAFELY (NO FORCE RELOAD)
   useEffect(() => {
@@ -43,8 +61,9 @@ function JobsPage() {
         table: "jobs"
       },
       () => {
-        fetchJobs() // 🔥 refresh jobs automatically
-      }
+  fetchJobs()
+  fetchCategories()
+}
     )
     .subscribe()
 
@@ -63,7 +82,12 @@ useEffect(() => {
 
   const fetchAll = async () => {
     setLoading(true)
-    await Promise.all([fetchJobs(), fetchApplications(), fetchRatings()])
+    await Promise.all([
+  fetchJobs(),
+  fetchApplications(),
+  fetchRatings(),
+  fetchCategories()
+])
     setLoading(false)
   }
 
@@ -79,6 +103,31 @@ useEffect(() => {
 
   setRatings(data || [])
 }
+
+const scrollCategories = (direction) => {
+  if (!categoryScrollRef.current) return
+
+  categoryScrollRef.current.scrollBy({
+    left: direction === "left" ? -300 : 300,
+    behavior: "smooth"
+  })
+}
+
+const checkScrollButtons = () => {
+  const container = categoryScrollRef.current
+  if (!container) return
+
+  setShowLeftArrow(container.scrollLeft > 0)
+
+  setShowRightArrow(
+    container.scrollLeft <
+      container.scrollWidth - container.clientWidth - 5
+  )
+}
+
+useEffect(() => {
+  checkScrollButtons()
+}, [categories])
 
   // ✅ FETCH JOBS
   async function fetchJobs() {
@@ -100,6 +149,23 @@ useEffect(() => {
   }
 
   setJobs(data || [])
+}
+
+async function fetchCategories() {
+
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("is_active", true)
+    .order("name")
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  setCategories(data || [])
+
 }
 
   // ✅ FETCH APPLICATIONS
@@ -247,6 +313,83 @@ const activeJobs = sortedJobs.filter(job => {
   return job.status !== "closed" && !isExpired
 })
 
+const filteredJobs = activeJobs
+  .filter(job => {
+
+    const matchesSearch =
+
+  (job.title || "")
+    .toLowerCase()
+    .includes(search.toLowerCase()) ||
+
+  (job.description || "")
+    .toLowerCase()
+    .includes(search.toLowerCase()) ||
+
+  (job.location || "")
+    .toLowerCase()
+    .includes(search.toLowerCase()) ||
+
+  (job.users?.company_name || "")
+    .toLowerCase()
+    .includes(search.toLowerCase())
+
+    const matchesLocation =
+  locationFilter === "" ||
+
+  (job.location || "")
+    .toLowerCase()
+    .includes(locationFilter.toLowerCase())
+
+    const matchesSalary =
+      salaryFilter === "" ||
+
+      Number(job.salary) >= Number(salaryFilter)
+
+    const matchesCategory =
+  categoryFilter === "" ||
+  (job.category || "")
+    .trim()
+    .toLowerCase() ===
+  categoryFilter
+    .trim()
+    .toLowerCase()
+
+    return (
+  matchesSearch &&
+  matchesLocation &&
+  matchesSalary &&
+  matchesCategory
+)
+
+  })
+
+  if (sortBy === "salary-high") {
+
+  filteredJobs.sort(
+    (a, b) => Number(b.salary) - Number(a.salary)
+  )
+
+}
+
+if (sortBy === "salary-low") {
+
+  filteredJobs.sort(
+    (a, b) => Number(a.salary) - Number(b.salary)
+  )
+
+}
+
+if (sortBy === "newest") {
+
+  filteredJobs.sort(
+    (a, b) =>
+      new Date(b.created_at) -
+      new Date(a.created_at)
+  )
+
+}
+
 const recentlyClosedJobs = sortedJobs.filter(job => {
   const isExpired = job.expires_at
   ? new Date(job.expires_at) < new Date()
@@ -313,13 +456,138 @@ tick
 
         <h1>Available Jobs</h1>
 
+        <div className="jobs-filter-bar">
+
+  <div className="filter-input">
+
+    <FiSearch className="filter-icon" />
+
+    <input
+      type="text"
+      placeholder="Search jobs, companies or skills..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+
+  </div>
+
+  <div className="filter-input">
+
+    <FiMapPin className="filter-icon" />
+
+    <input
+      type="text"
+      placeholder="Location"
+      value={locationFilter}
+      onChange={(e) => setLocationFilter(e.target.value)}
+    />
+
+  </div>
+
+  <div className="filter-select">
+
+    <FiDollarSign className="filter-icon" />
+
+    <select
+      value={salaryFilter}
+      onChange={(e) => setSalaryFilter(e.target.value)}
+    >
+      <option value="">Any Salary</option>
+      <option value="50000">₦50k+</option>
+      <option value="100000">₦100k+</option>
+      <option value="250000">₦250k+</option>
+      <option value="500000">₦500k+</option>
+    </select>
+
+  </div>
+
+  <div className="filter-select">
+
+    <FiFilter className="filter-icon" />
+
+    <select
+      value={sortBy}
+      onChange={(e) => setSortBy(e.target.value)}
+    >
+      <option value="newest">Newest</option>
+      <option value="salary-high">
+        Highest Salary
+      </option>
+      <option value="salary-low">
+        Lowest Salary
+      </option>
+    </select>
+
+  </div>
+
+</div>
+
+<div className="category-wrapper">
+
+  {/* ◀ LEFT */}
+{showLeftArrow && (
+  <button
+    className="category-arrow"
+    onClick={() => scrollCategories("left")}
+  >
+    <FiChevronLeft />
+  </button>
+)}
+
+  {/* CATEGORY CHIPS */}
+  <div
+  className="category-filter"
+  ref={categoryScrollRef}
+  onScroll={checkScrollButtons}
+>
+
+    <button
+      className={categoryFilter === "" ? "active" : ""}
+      onClick={() => setCategoryFilter("")}
+    >
+      🌍 All
+    </button>
+
+    {categories.map((category) => (
+
+      <button
+        key={category.id}
+        className={
+          categoryFilter === category.name
+            ? "active"
+            : ""
+        }
+        onClick={() => setCategoryFilter(category.name)}
+      >
+        <span style={{ color: category.color }}>
+          {category.icon}
+        </span>{" "}
+        {category.name}
+      </button>
+
+    ))}
+
+  </div>
+
+  {/* ▶ RIGHT */}
+{showRightArrow && (
+  <button
+    className="category-arrow"
+    onClick={() => scrollCategories("right")}
+  >
+    <FiChevronRight />
+  </button>
+)}
+
+</div>
+
         {jobs.length === 0 && (
           <p style={{ opacity: 0.7 }}>No jobs available yet</p>
         )}
 
         <div className="jobs-grid">
 
-          {activeJobs.map((job) => {
+          {filteredJobs.map((job) => {
 
             const contractorRatings = ratings.filter(
   r => r.contractor_id === job.contractor_id

@@ -1,0 +1,237 @@
+/* ===========================
+   PAGE
+=========================== */
+
+.admin-category-title{
+    margin-bottom:25px;
+    color:var(--text-main);
+}
+
+/* ===========================
+   TOOLBAR
+=========================== */
+
+.admin-category-toolbar{
+    display:flex;
+    gap:15px;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+}
+
+.admin-category-toolbar input,
+.admin-category-toolbar select{
+    padding:12px 15px;
+    border:1px solid var(--border-color);
+    border-radius:10px;
+    background:var(--bg-input);
+    color:var(--text-main);
+    font-size:15px;
+}
+
+.admin-category-toolbar input{
+    flex:1;
+    min-width:260px;
+}
+
+.admin-category-toolbar select{
+    min-width:180px;
+}
+
+/* ===========================
+   TABLE
+=========================== */
+
+.admin-category-table-wrapper{
+    overflow-x:auto;
+    border-radius:18px;
+}
+
+.admin-category-table{
+    width:100%;
+    min-width:850px;
+    border-collapse:collapse;
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border-color);
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow);
+}
+
+.admin-category-table th{
+    background:var(--primary);
+    color:#fff;
+    padding:18px;
+    text-align:left;
+    font-weight:600;
+}
+
+.admin-category-table td{
+    padding:18px;
+    color:var(--text-main);
+    border-bottom:1px solid var(--border-color);
+}
+
+.admin-category-table tbody tr:hover{
+    background:var(--hover-bg);
+}
+
+/* ===========================
+   STATUS BADGES
+=========================== */
+
+.admin-badge.pending{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.admin-badge.approved{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.admin-badge.rejected{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+    .admin-category-toolbar{
+        flex-direction:column;
+    }
+
+    .admin-category-toolbar input,
+    .admin-category-toolbar select{
+        width:100%;
+    }
+
+}
+
+.admin-category-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.admin-search-box{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:0 15px;
+
+    border:1px solid var(--border-color);
+    border-radius:10px;
+
+    background:var(--bg-input);
+}
+
+.admin-search-box input{
+    flex:1;
+    border:none;
+    background:transparent;
+    outline:none;
+    padding:12px 0;
+}
+
+.admin-search-box svg{
+    color:var(--text-secondary);
+    font-size:18px;
+}
+
+.stat-icon{
+    font-size:30px;
+    color:var(--primary);
+}
+
+.stat-icon.success{
+    color:var(--success);
+}
+
+.stat-icon.warning{
+    color:var(--warning);
+}
+
+.stat-icon.danger{
+    color:var(--danger);
+}
+
+/* ===========================
+   CATEGORY REQUEST MODAL
+=========================== */
+
+.admin-modal-icon{
+    width:80px;
+    height:80px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin:0 auto 18px;
+
+    border-radius:50%;
+
+    background:rgba(34,197,94,.12);
+
+    color:var(--primary);
+
+    font-size:36px;
+}
+
+.admin-user-detail strong{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.admin-user-detail strong svg{
+    color:var(--primary);
+    font-size:18px;
+}
+
+.admin-user-actions{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:25px;
+}
+
+.admin-user-actions .admin-btn{
+    flex:1;
+    min-width:180px;
+}
+
+.admin-btn-success{
+    background:var(--success);
+    color:#fff;
+}
+
+.admin-btn-success:hover{
+    filter:brightness(.95);
+}
+
+.admin-description-card span{
+    display:block;
+    margin-top:10px;
+    line-height:1.8;
+    color:var(--text-secondary);
+}
+
+.admin-empty-state{
+    text-align:center;
+    padding:60px;
+    color:#94a3b8;
+    font-size:16px;
+    font-weight:500;
+}

@@ -1,6 +1,6 @@
 import "../styles/PostJob.css"
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import supabase from "../supabaseClient"
 import { useAuth } from "../context/AuthContext"
 import AppNavbar from "../components/AppNavbar"
@@ -8,6 +8,16 @@ import toast from "react-hot-toast" // ✅ ADD THIS
 import "../styles/layout.css"
 import "../styles/components.css"
 import "../styles/PostJob.css"
+import CustomSelect from "../components/CustomSelect"
+import RequestCategoryModal from "../components/RequestCategoryModal"
+import {
+  FiArrowLeft,
+  FiFileText,
+  FiMapPin,
+  FiDollarSign,
+  FiEdit,
+  FiAlertCircle
+} from "react-icons/fi"
 
 function PostJob() {
 
@@ -22,6 +32,9 @@ function PostJob() {
   const [customCategory, setCustomCategory] = useState("")
   const [payType, setPayType] = useState("daily")
   const [isUrgent, setIsUrgent] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const routerLocation = useLocation()
 
   const [loading, setLoading] = useState(false)
 
@@ -30,6 +43,43 @@ function PostJob() {
       navigate("/login")
     }
   }, [user, authLoading, navigate])
+
+  async function fetchCategories() {
+
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("is_active", true)
+    .order("name")
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  setCategories(data || [])
+
+}
+
+useEffect(() => {
+  fetchCategories()
+}, [])
+
+useEffect(() => {
+
+  if (routerLocation.state?.categoryApproved) {
+    toast.success(
+      "Your requested category has been approved! You can now select it."
+    )
+  }
+
+  if (routerLocation.state?.categoryRejected) {
+    toast.error(
+      "Your category request wasn't approved. Please choose an existing category or submit a different request."
+    )
+  }
+
+}, [routerLocation])
 
   const handlePostJob = (e) => {
   e.preventDefault()
@@ -109,10 +159,10 @@ const insertJob = async (urgent = false) => {
     if (error) throw error
 
     toast.success(
-      urgent
-        ? "🔥 Urgent job posted!"
-        : "Job posted successfully 🚀"
-    )
+  urgent
+    ? "Urgent job posted successfully."
+    : "Job posted successfully."
+)
 
     setTitle("")
 setDescription("")
@@ -149,7 +199,7 @@ const payForUrgent = () => {
     },
 
     onClose: function () {
-      toast.error("Payment cancelled")
+      toast.error("Payment was cancelled.")
     }
   })
 
@@ -175,7 +225,8 @@ const payForUrgent = () => {
             className="back-btn"
             onClick={() => navigate(-1)}
           >
-            ⬅ Back
+            <FiArrowLeft />
+Back
           </button>
 
           <h1>Post a Job</h1>
@@ -184,7 +235,7 @@ const payForUrgent = () => {
 
             {/* TITLE */}
             <div className="input-group">
-              <span>📝</span>
+              <span><FiFileText /></span>
               <input
                 placeholder="Job Title"
                 value={title}
@@ -203,7 +254,7 @@ const payForUrgent = () => {
 
             {/* LOCATION */}
 <div className="input-group">
-  <span>📍</span>
+  <span><FiMapPin /></span>
   <input
     placeholder="Location"
     value={location}
@@ -211,25 +262,30 @@ const payForUrgent = () => {
   />
 </div>
 
-{/* SALARY + PAY TYPE */}
-<div className="input-group salary-group">
-  <span>💰</span>
+{/* Salary + Pay Type */}
+<div className="salary-row">
 
-  <input
-    type="number"
-    placeholder="Enter amount (₦)"
-    value={salary}
-    onChange={(e) => {
-  const value = e.target.value.replace(/[^0-9]/g, "")
-  setSalary(value)
-}}
-    min="0"
-  />
+  <div className="input-group salary-input">
+
+    <span><FiDollarSign /></span>
+
+    <input
+      type="number"
+      placeholder="Enter amount (₦)"
+      value={salary}
+      onChange={(e) => {
+        const value = e.target.value.replace(/[^0-9]/g, "")
+        setSalary(value)
+      }}
+      min="0"
+    />
+
+  </div>
 
   <select
+    className="select-input pay-type-select"
     value={payType}
     onChange={(e) => setPayType(e.target.value)}
-    className="select-input"
   >
     <option value="daily">Per Day</option>
     <option value="hourly">Per Hour</option>
@@ -237,36 +293,26 @@ const payForUrgent = () => {
     <option value="monthly">Per Month</option>
     <option value="fixed">Fixed Price</option>
   </select>
+
 </div>
 
-            {/* CATEGORY DROPDOWN */}
-            <select
+{/* Category */}
+<CustomSelect
+  options={categories}
   value={category}
-  onChange={(e)=>setCategory(e.target.value)}
-  className="select-input"
->
-  <option value="">Select Category</option>
-  <option value="Construction">Construction</option>
-  <option value="Electrical">Electrical</option>
-  <option value="Cleaning">Cleaning</option>
-  <option value="IT">IT</option>
-  <option value="Accounting">Accounting</option>
-  <option value="Design">Design</option>
-  <option value="Marketing">Marketing</option>
-  <option value="Other">Other</option> {/* ✅ NEW */}
-</select>
+  placeholder="Select Category"
+  showRequestOption={true}
+  onChange={(value) => {
 
-{category === "Other" && (
-  <div className="input-group">
-    <span>✏️</span>
-    <input
-      placeholder="Enter your category (e.g. Cybersecurity)"
-      value={customCategory}
-      onChange={(e)=>setCustomCategory(e.target.value)}
-      required
-    />
-  </div>
-)}
+    if (value === "__request__") {
+      setShowCategoryModal(true)
+      return
+    }
+
+    setCategory(value)
+
+  }}
+/>
 
 <div className="urgent-row">
 
@@ -277,13 +323,14 @@ const payForUrgent = () => {
       onChange={(e) => setIsUrgent(e.target.checked)}
     />
 
-    🚨 Mark as Urgent (₦300 — lasts 48hrs)
+    <FiAlertCircle />
+Mark as Urgent (₦300 • 48 hours)
   </label>
 
 </div>
 
             <button type="submit" className="post-job-btn" disabled={loading}>
-              {loading ? "⏳ Posting..." : "🚀 Post Job"}
+              {loading ? "Posting..." : "Post Job"}
             </button>
 
           </form>
@@ -291,6 +338,10 @@ const payForUrgent = () => {
         </div>
 
       </div>
+      <RequestCategoryModal
+  isOpen={showCategoryModal}
+  onClose={() => setShowCategoryModal(false)}
+/>
     </>
   )
 }

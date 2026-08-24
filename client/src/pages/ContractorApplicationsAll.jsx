@@ -176,15 +176,15 @@ setApplications(Object.entries(grouped))
               </button>
 
               {app.status === "approved" && (
-                <button
-                  className="message-btn"
-                  onClick={() =>
+  <button
+    className="message-btn"
+    onClick={() =>
   navigate(`/messages/${app.worker_id}`)
 }
-                >
-                  💬 Message
-                </button>
-              )}
+  >
+    💬 Message
+  </button>
+)}
 
             </div>
 

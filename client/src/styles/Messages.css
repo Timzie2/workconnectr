@@ -778,6 +778,12 @@ body{
     0 4px 12px rgba(0,0,0,.08);
 }
 
+.typing-message{
+  display:flex;
+  justify-content:flex-start;
+  margin:8px 0 16px;
+}
+
 .typing-bubble span{
 
   width:8px;
@@ -4061,6 +4067,43 @@ body:not(.dark) .chat-header-user p{
     height:42px;
 
     font-size:12px;
+  }
+
+}
+
+
+@media (max-width:768px){
+
+  .chat-header{
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    background:
+      rgba(15,23,42,.95);
+
+    backdrop-filter: blur(18px);
+
+  }
+
+}
+
+@media (max-width:768px){
+
+  .chat-window{
+
+    display:none;
+
+  }
+
+  .messages-page.chat-open
+  .chat-window{
+
+    display:flex;
+
   }
 
 }

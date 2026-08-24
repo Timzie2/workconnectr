@@ -6,6 +6,13 @@ import {
 
 import { useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
+import MessageBubble from "./MessageBubble"
+import ChatInput from "./ChatInput"
+import ImageViewer from "./ImageViewer"
+import CameraModal from "./CameraModal"
+import MessageMenu from "./MessageMenu"
+import MediaViewer from "./MediaViewer"
+import UploadPreviewModal from "./UploadPreviewModal"
 
 import { useAuth } from "../context/AuthContext"
 import "../styles/Messages.css"
@@ -29,7 +36,7 @@ function ChatWindow({ conversationId }) {
   const userId = user?.id
 
   const navigate = useNavigate()
-
+  
   const [messages, setMessages] = useState([])
 
   const [text, setText] = useState("")
@@ -46,6 +53,8 @@ function ChatWindow({ conversationId }) {
   const bottomRef = useRef(null)
 
   const typingChannelRef = useRef(null)
+
+  const typingTimeoutRef = useRef(null)
 
   const [selectedImage, setSelectedImage] =
   useState(null)
@@ -183,11 +192,11 @@ function ChatWindow({ conversationId }) {
 
   useEffect(() => {
 
-    bottomRef.current?.scrollIntoView({
-      behavior: "auto"
-    })
+  bottomRef.current?.scrollIntoView({
+    behavior: "smooth"
+  })
 
-  }, [messages])
+}, [messages, isTyping])
 
   // REALTIME USER STATUS
 
@@ -1760,32 +1769,6 @@ const viewProfile = () => {
 
 }
 
-const handleTyping = async (value) => {
-
-  setText(value)
-
-  if (!typingChannelRef.current) return
-
-  typingChannelRef.current.send({
-
-    type: "broadcast",
-
-    event: "typing",
-
-    payload: {
-
-      conversationId,
-
-      userId,
-
-      isTyping: value.trim().length > 0
-
-    }
-
-  })
-
-}
-
 const startRecording = async () => {
 
   try {
@@ -2217,16 +2200,22 @@ const showPrevImage = () => {
   {/* MOBILE BACK */}
 
   <button
-    className="mobile-back-btn"
+  className="mobile-back-btn"
 
-    onClick={() =>
-      navigate("/messages")
-    }
-  >
+  onClick={() => {
 
-    ←
+    window.scrollTo(0, 0)
 
-  </button>
+    navigate("/messages", {
+      replace: true
+    })
+
+  }}
+>
+
+  ←
+
+</button>
 
   <div className="chat-header-user">
 
@@ -2367,388 +2356,41 @@ const showPrevImage = () => {
 
       <div className="chat-messages">
 
-        {messages.map((msg) => {
+  {messages.map(msg => (
 
-          const isMine =
-            msg.sender_id === userId
+  <MessageBubble
+    key={msg.id}
+    msg={msg}
+    userId={userId}
 
-          return (
+    hoveredMessage={hoveredMessage}
+    setHoveredMessage={setHoveredMessage}
 
-            <div
-              key={msg.id}
-              className={`
-                chat-message
-                ${isMine ? "mine" : ""}
-              `}
-            >
+    selectedMessage={selectedMessage}
+    setSelectedMessage={setSelectedMessage}
 
-              <div
-  className="message-bubble"
+    setMenuPosition={setMenuPosition}
+    setShowMessageMenu={setShowMessageMenu}
 
-  onMouseEnter={() =>
-    setHoveredMessage(msg.id)
-  }
+    reactionPickerFor={reactionPickerFor}
+    setReactionPickerFor={setReactionPickerFor}
 
-  onMouseLeave={() =>
-    setHoveredMessage(null)
-  }
+    mediaMessages={mediaMessages}
 
-  onContextMenu={(e) => {
+    setCurrentImageIndex={setCurrentImageIndex}
+    setViewImage={setViewImage}
+    setShowImageViewer={setShowImageViewer}
 
-    e.preventDefault()
+    setMessages={setMessages}
 
-    setSelectedMessage(msg)
-
-    setMenuPosition({
-      x: e.clientX,
-      y: e.clientY
-    })
-
-    setShowMessageMenu(true)
-
-  }}
-
-  onClick={(e) => {
-
-    if (window.innerWidth < 768) {
-
-      setSelectedMessage(msg)
-
-      setMenuPosition({
-        x: e.clientX,
-        y: e.clientY
-      })
-
-      setShowMessageMenu(true)
-
-    }
-
-  }}
->
-
-  {hoveredMessage === msg.id && (
-
-    <button
-      className="message-hover-btn"
-
-      onClick={(e) => {
-
-        e.stopPropagation()
-
-        setSelectedMessage(msg)
-
-        setMenuPosition({
-          x: e.clientX,
-          y: e.clientY
-        })
-
-        setShowMessageMenu(true)
-
-      }}
-    >
-
-      ⋮
-
-    </button>
-
-  )}
-
-  {msg.image_url && (
-
-    <img
-      src={msg.image_url}
-      className="chat-image"
-
-      onClick={() => {
-
-  const images =
-    mediaMessages.filter(
-      m => m.image_url
-    )
-
-  const index =
-    images.findIndex(
-      m =>
-        m.image_url ===
-        msg.image_url
-    )
-
-  setCurrentImageIndex(index)
-
-  setViewImage(msg.image_url)
-
-  setShowImageViewer(true)
-
-}}
-    />
-
-  )}
-
-  {msg.audio_url && (
-
-  <div className="audio-message">
-
-    <audio
-      controls
-      src={msg.audio_url}
-      className="chat-audio"
-    />
-
-  </div>
-
-)}
-
-  {msg.video_url && (
-
-  <video
-    src={msg.video_url}
-    controls
-    className="chat-video"
+    getFileIcon={getFileIcon}
   />
 
-)}
-
-  {msg.file_url &&
- !msg.file_name?.match(
-   /\.(png|jpg|jpeg|gif|mp4|mov|avi)$/i
- ) && (
-
-  <a
-    href={msg.file_url}
-    target="_blank"
-    rel="noreferrer"
-    className="chat-file"
-  >
-
-    <div className="chat-file-icon">
-
-      {getFileIcon(msg.file_name)}
-
-    </div>
-
-    <div className="chat-file-info">
-
-      <span className="chat-file-name">
-
-        {msg.file_name || "File"}
-
-      </span>
-
-      <span className="chat-file-type">
-
-        File
-
-      </span>
-
-    </div>
-
-  </a>
-
-)}
-
-  {msg.replied_text && (
-
-  <div className="reply-message-box">
-
-    <small>
-      {msg.replied_sender}
-    </small>
-
-    <p>
-      {msg.replied_text}
-    </p>
-
-  </div>
-
-)}
-
-  {msg.message && (
-  <p>{msg.message}</p>
-)}
-
-{reactionPickerFor === msg.id && (
-
-  <div
-  className="reaction-picker"
-
-  onClick={(e) =>
-    e.stopPropagation()
-  }
->
-
-    {["❤️","😂","🔥","👍","😭","😮"].map(
-      emoji => (
-
-      <span
-        key={emoji}
-
-        onClick={async () => {
-
-          const existingReaction =
-  msg.reactions?.find(
-    reaction =>
-      reaction.user_id === userId
-  )
-
-let updatedReactions = [
-  ...(msg.reactions || [])
-]
-
-// USER ALREADY REACTED
-
-if (existingReaction) {
-
-  // SAME EMOJI = REMOVE REACTION
-
-  if (
-    existingReaction.emoji === emoji
-  ) {
-
-    updatedReactions =
-      updatedReactions.filter(
-        reaction =>
-          reaction.user_id !== userId
-      )
-
-  }
-
-  // DIFFERENT EMOJI = REPLACE
-
-  else {
-
-    updatedReactions =
-      updatedReactions.map(
-        reaction =>
-
-          reaction.user_id === userId
-
-            ? {
-                ...reaction,
-                emoji
-              }
-
-            : reaction
-      )
-
-  }
-
-}
-
-// NO REACTION YET
-
-else {
-
-  updatedReactions.push({
-    emoji,
-    user_id: userId
-  })
-
-}
-
-const { error } = await supabase
-  .from("messages")
-  .update({
-    reactions: updatedReactions
-  })
-  .eq("id", msg.id)
-
-if (error) {
-  console.error(error)
-  return
-}
-
-// INSTANT UI UPDATE
-
-setMessages(prev =>
-
-  prev.map(message =>
-
-    message.id === msg.id
-
-      ? {
-          ...message,
-          reactions: updatedReactions
-        }
-
-      : message
-
-  )
-
-)
-
-setReactionPickerFor(null)
-
-        }}
-      >
-
-        {emoji}
-
-      </span>
-
-    ))}
-
-  </div>
-
-)}
-
-  <div className="message-meta">
-
-    <span>
-
-      {new Date(
-        msg.created_at
-      ).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-      })}
-
-    </span>
-
-    {isMine && (
-
-      <small
-        className={`
-          read-status
-          ${msg.is_read ? "seen" : ""}
-        `}
-      >
-
-        {msg.is_read ? "✓✓" : "✓"}
-
-      </small>
-
-    )}
-
-  </div>
-
-  {msg.reactions?.length > 0 && (
-
-  <div className="message-reactions">
-
-    {msg.reactions.map(
-      (reaction, index) => (
-
-      <span key={index}>
-
-        {reaction.emoji}
-
-      </span>
-
-    ))}
-
-  </div>
-
-)}
-
-</div>
-
-            </div>
-          )
-        })}
+))}
 
         {isTyping && (
 
-  <div className="chat-message">
+  <div className="typing-message">
 
     <div className="typing-bubble">
 
@@ -2766,459 +2408,63 @@ setReactionPickerFor(null)
 
       </div>
 
-      {imagePreview && (
-
-  <div className="image-preview-overlay">
-
-    <div className="image-preview-box">
-
-      <img
-        src={imagePreview}
-        className="preview-image"
-      />
-
-      <div className="preview-caption-area">
-
-  <input
-    type="text"
-
-    value={imageCaption}
-
-    onChange={(e) =>
-      setImageCaption(
-        e.target.value
-      )
-    }
-
-    placeholder="Add a caption..."
-  />
-
-</div>
-
-      <div className="preview-actions">
-
-  <div className="preview-image-info">
-
-    <p>
-      Ready to send
-    </p>
-
-  </div>
-
-        <button
-          className="cancel-preview-btn"
-
-          onClick={() => {
-
-            setSelectedImage(null)
-            setImagePreview("")
-
-          }}
-        >
-          Cancel
-        </button>
-
-        <button
-          className="send-preview-btn"
-
-          onClick={sendImage}
-        >
-          Send
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-)}
-
-{videoPreview && (
-
-  <div className="image-preview-overlay">
-
-    <div className="image-preview-box">
-
-      <video
-        src={videoPreview}
-        controls
-        className="preview-video"
-      />
-
-      <div className="image-preview-actions">
-
-        <button
-          onClick={() => {
-
-            setSelectedVideo(null)
-
-            setVideoPreview("")
-
-          }}
-        >
-          Cancel
-        </button>
-
-        <button
-          onClick={sendVideo}
-        >
-          Send
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-)}
-
-{documentPreview && (
-
-  <div className="image-preview-overlay">
-
-    <div className="document-preview-box">
-
-      <div className="document-preview-icon">
-
-        {getFileIcon(
-          documentPreview.name
-        )}
-
-      </div>
-
-      <h3>
-        {documentPreview.name}
-      </h3>
-
-      <p>
-        {documentPreview.size} MB
-      </p>
-
-      <div className="image-preview-actions">
-
-        <button
-          onClick={() => {
-
-            setSelectedDocument(null)
-
-            setDocumentPreview(null)
-
-          }}
-        >
-          Cancel
-        </button>
-
-        <button
-          onClick={sendDocument}
-        >
-          Send
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-)}
-
-{audioPreview && (
-
-  <div className="image-preview-overlay">
-
-    <div className="document-preview-box">
-
-      <h3>
-        Voice Note
-      </h3>
-
-      <div className="audio-message">
-
-        <audio
-          controls
-          src={audioPreview}
-          className="chat-audio"
-        />
-
-      </div>
-
-      <div className="voice-preview-actions">
-
-        <button
-          className="voice-cancel-btn"
-
-          onClick={() => {
-
-            setAudioBlob(null)
-
-            setAudioPreview("")
-
-          }}
-        >
-          Cancel
-        </button>
-
-        <button
-          className="voice-send-btn"
-
-          onClick={sendVoiceNote}
-        >
-          Send
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-)}
-
-{showImageViewer && (
-
-  <div
-    className="image-preview-overlay"
-
-    onClick={() =>
-      setShowImageViewer(false)
-    }
-  >
-
-    <div
-  className="fullscreen-image-wrapper"
-
-  onClick={(e) =>
-    e.stopPropagation()
-  }
->
-
-  <button
-  className="image-nav prev"
-
-  onClick={showPrevImage}
->
-
-  ←
-
-</button>
-
-  <img
-    src={viewImage}
-    className="fullscreen-chat-image"
-  />
-
-  <button
-  className="image-nav next"
-
-  onClick={showNextImage}
->
-
-  →
-
-</button>
-
-  <a
-    href={viewImage}
-    download
-    target="_blank"
-    rel="noopener noreferrer"
-
-    className="download-image-btn"
-  >
-
-    Download
-
-  </a>
-
-</div>
-
-  </div>
-
-)}
+      <UploadPreviewModal
+
+  imagePreview={imagePreview}
+  imageCaption={imageCaption}
+  setImageCaption={setImageCaption}
+  setSelectedImage={setSelectedImage}
+  setImagePreview={setImagePreview}
+  sendImage={sendImage}
+
+  videoPreview={videoPreview}
+  setSelectedVideo={setSelectedVideo}
+  setVideoPreview={setVideoPreview}
+  sendVideo={sendVideo}
+
+  documentPreview={documentPreview}
+  setSelectedDocument={setSelectedDocument}
+  setDocumentPreview={setDocumentPreview}
+  sendDocument={sendDocument}
+
+  audioPreview={audioPreview}
+  setAudioBlob={setAudioBlob}
+  setAudioPreview={setAudioPreview}
+  sendVoiceNote={sendVoiceNote}
+
+  getFileIcon={getFileIcon}
+
+/>
 
 {showMessageMenu && (
 
-  <div
-    className="message-options-menu"
+  <MessageMenu
 
-    style={{
+    menuPosition={menuPosition}
 
-  top:
-    window.innerHeight -
-      menuPosition.y < 320
+    selectedMessage={selectedMessage}
 
-      ? menuPosition.y - 260
+    setReplyingTo={setReplyingTo}
 
-      : menuPosition.y,
-
-  left:
-    window.innerWidth -
-      menuPosition.x < 240
-
-      ? menuPosition.x - 220
-
-      : menuPosition.x
-
-}}
-  >
-
-    <button
-  onClick={() => {
-
-    setReplyingTo(selectedMessage)
-
-    setShowMessageMenu(false)
-
-  }}
->
-  Reply
-</button>
-
-    <button
-      onClick={() => {
-
-        navigator.clipboard.writeText(
-          selectedMessage?.message || ""
-        )
-
-        setShowMessageMenu(false)
-
-      }}
-    >
-      Copy
-    </button>
-
-    <button
-  onClick={(e) => {
-
-  e.stopPropagation()
-
-  setReactionPickerFor(selectedMessage.id)
-
-  setShowMessageMenu(false)
-
-}}
->
-  React
-</button>
-
-    <button
-  onClick={async () => {
-
-  console.log("DELETE FOR ME CLICKED")
-
-  const updatedDeletedBy = [
-    ...(selectedMessage.deleted_by || []),
-    userId
-  ]
-
-  const { data, error } = await supabase
-    .from("messages")
-    .update({
-      deleted_by: updatedDeletedBy
-    })
-    .eq("id", selectedMessage.id)
-    .select()
-
-  console.log(data)
-  console.log(error)
-
-  await fetchMessages(conversationId)
-
-  setShowMessageMenu(false)
-
-}}
->
-
-  Delete For Me
-
-</button>
-
-{selectedMessage?.sender_id === userId && (
-
-  <button
-  onClick={async () => {
-
-    const confirmDelete =
-      window.confirm(
-        "Delete for everyone?"
-      )
-
-    if (!confirmDelete) return
-
-    const { error } = await supabase
-  .from("messages")
-  .delete()
-  .eq("id", selectedMessage.id)
-
-setMessages(prev =>
-
-  prev.filter(
-    msg => msg.id !== selectedMessage.id
-  )
-
-)
-
-await fetchMessages(conversationId)
-
-const { data: latestMessage } =
-  await supabase
-    .from("messages")
-    .select("message, created_at")
-    .eq("conversation_id", conversationId)
-    .order("created_at", {
-      ascending: false
-    })
-    .limit(1)
-    .single()
-
-await supabase
-  .from("conversations")
-  .update({
-    last_message:
-      latestMessage?.message || "",
-    last_message_time:
-      latestMessage?.created_at || null
-  })
-  .eq("id", conversationId)
-
-    if (error) {
-      console.error(error)
-      return
+    setShowMessageMenu={
+      setShowMessageMenu
     }
 
-    setMessages(prev =>
+    setReactionPickerFor={
+      setReactionPickerFor
+    }
 
-      prev.filter(
-        m => m.id !== selectedMessage.id
-      )
+    userId={userId}
 
-    )
+    fetchMessages={fetchMessages}
 
-    setShowMessageMenu(false)
+    conversationId={
+      conversationId
+    }
 
-  }}
->
+    setMessages={setMessages}
 
-  Delete For All
-
-</button>
-
-)}
-
-    <button
-      onClick={() => {
-
-        setShowMessageMenu(false)
-
-      }}
-    >
-      Cancel
-    </button>
-
-  </div>
+  />
 
 )}
 
@@ -3279,709 +2525,85 @@ await supabase
 
       {/* INPUT */}
 
-      <div className="chat-input-area">
+      <ChatInput
+  text={text}
+  setText={setText}
+  sendMessage={sendMessage}
+  inputRef={inputRef}
 
-        <div className="emoji-wrapper">
+  showEmojiPicker={showEmojiPicker}
+  setShowEmojiPicker={setShowEmojiPicker}
 
-  <button
-  type="button"
-  className="emoji-btn"
+  showAttachMenu={showAttachMenu}
+  setShowAttachMenu={setShowAttachMenu}
 
-    onClick={() =>
-      setShowEmojiPicker(
-        !showEmojiPicker
-      )
-    }
-  >
+  recording={recording}
+  startRecording={startRecording}
+  stopRecording={stopRecording}
 
-    <span className="emoji-icon">😀</span>
+  handleEmojiClick={handleEmojiClick}
+  handleImageUpload={handleImageUpload}
+  handleDocumentUpload={handleDocumentUpload}
+  handleVideoUpload={handleVideoUpload}
+  openCamera={openCamera}
 
-  </button>
+  typingChannelRef={typingChannelRef}
+  typingTimeoutRef={typingTimeoutRef}
 
-  {showEmojiPicker && (
-
-    <div className="emoji-picker-container">
-
-      <EmojiPicker
-  onEmojiClick={handleEmojiClick}
-  theme="dark"
-  width={340}
-  height={400}
-  searchPlaceholder="Search emoji..."
-  previewConfig={{
-    showPreview: false
-  }}
-  lazyLoadEmojis={true}
-  skinTonesDisabled
+  userId={userId}
+  conversationId={conversationId}
 />
-
-    </div>
-
-  )}
-
-</div>
-
-        <div className="attach-menu-wrapper">
-
- {/* PLUS BUTTON */}
-
-<button
-  type="button"
-  className={`attach-toggle-btn ${
-  showAttachMenu ? "open" : ""
-}`}
-
-  onClick={() =>
-    setShowAttachMenu(prev => !prev)
-  }
->
-
-  <span className="attach-plus-icon">
-  +
-</span>
-
-</button>
-
-  {/* ATTACH MENU */}
-
-  {showAttachMenu && (
-
-    <div className="attach-menu">
-
-      {/* PHOTOS */}
-
-      <label className="attach-option">
-
-  <span className="attach-icon">
-
-    <FiImage />
-
-  </span>
-
-  <span>Photos</span>
-
-  <input
-    type="file"
-    accept="image/*"
-    hidden
-    onChange={handleImageUpload}
-  />
-
-</label>
-
-      {/* CAMERA */}
-
-<div
-  className="attach-option"
-
-  onClick={openCamera}
->
-
-  <span className="attach-icon">
-    📷
-  </span>
-
-  <span>Camera</span>
-
-</div>
-
-      {/* FILES */}
-
-<label className="attach-option">
-
-  <span className="attach-icon">
-    📎
-  </span>
-
-  <span>Files</span>
-
-  <input
-    type="file"
-    hidden
-    accept="
-audio/*,
-.pdf,
-.doc,
-.docx,
-.xls,
-.xlsx,
-.ppt,
-.pptx,
-.zip,
-.rar
-"
-    onChange={handleDocumentUpload}
-  />
-
-</label>
-
-      {/* VIDEOS */}
-
-      <label className="attach-option">
-
-  <span className="attach-icon">
-    🎥
-  </span>
-
-  <span>Videos</span>
-
-  <input
-    type="file"
-    accept="video/*"
-    hidden
-    onChange={handleVideoUpload}
-  />
-
-</label>
-
-    </div>
-
-  )}
-
-</div>
-
-        <input
-  ref={inputRef}
-  value={text}
-          onChange={(e) => {
-
-  setText(e.target.value)
-
-  typingChannelRef.current?.send({
-
-    type: "broadcast",
-
-    event: "typing",
-
-    payload: {
-      userId,
-      conversationId,
-      isTyping:
-        e.target.value.length > 0
-    }
-
-  })
-
-  clearTimeout(window.typingTimeout)
-
-  window.typingTimeout = setTimeout(() => {
-
-    typingChannelRef.current?.send({
-
-      type:"broadcast",
-
-      event:"typing",
-
-      payload:{
-        userId,
-        conversationId,
-        isTyping:false
-      }
-
-    })
-
-  }, 1200)
-
-}}
-          onKeyDown={(e) =>
-            e.key === "Enter" &&
-            sendMessage()
-          }
-          placeholder="Type a message..."
-        />
-
-        {text.trim() ? (
-
-  <button
-    className="send-btn"
-    onClick={sendMessage}
-  >
-
-    Send
-
-  </button>
-
-) : (
-
-  recording ? (
-
-    <div className="recording-ui">
-
-      <div className="recording-dot"></div>
-
-      <div className="voice-wave">
-
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-
-      </div>
-
-      <button
-        type="button"
-        className="voice-btn recording"
-
-        onClick={stopRecording}
-      >
-
-        ⏹️
-
-      </button>
-
-    </div>
-
-  ) : (
-
-    <button
-      type="button"
-      className="voice-btn"
-
-      onClick={startRecording}
-    >
-
-      🎤
-
-    </button>
-
-  )
-
-)}
-
-      </div>
 
       {showCamera && (
 
-  <div className="camera-modal">
+  <CameraModal
 
-    <video
-      ref={videoRef}
-      autoPlay
-      playsInline
-      className="camera-preview"
-    />
+    videoRef={videoRef}
+    canvasRef={canvasRef}
 
-    <canvas
-      ref={canvasRef}
-      style={{ display:"none" }}
-    />
+    capturePhoto={capturePhoto}
 
-    <div className="camera-actions">
+    cameraStream={cameraStream}
 
-      <button
-        onClick={capturePhoto}
-      >
-        Capture
-      </button>
+    setShowCamera={setShowCamera}
 
-      <button
-        onClick={() => {
-
-          cameraStream?.getTracks()
-            .forEach(track =>
-              track.stop()
-            )
-
-          setShowCamera(false)
-
-        }}
-      >
-        Cancel
-      </button>
-
-    </div>
-
-  </div>
+  />
 
 )}
 
-{showMediaViewer && (
+<MediaViewer
 
-  <div className="media-viewer-overlay">
+  showMediaViewer={showMediaViewer}
+  setShowMediaViewer={setShowMediaViewer}
 
-    <div className="media-viewer-box">
+  mediaTab={mediaTab}
+  setMediaTab={setMediaTab}
 
-      {/* HEADER */}
+  mediaMessages={mediaMessages}
+  fileMessages={fileMessages}
+  audioMessages={audioMessages}
 
-      <div className="media-viewer-header">
+  getFileIcon={getFileIcon}
 
-        <h3>
+  setCurrentImageIndex={setCurrentImageIndex}
+  setViewImage={setViewImage}
+  setShowImageViewer={setShowImageViewer}
 
-  Chat Media
-
-  {" "}
-  (
-
-  {mediaMessages.length +
-   fileMessages.length +
-   audioMessages.length}
-
-  )
-
-</h3>
-
-        <button
-          onClick={() =>
-            setShowMediaViewer(false)
-          }
-        >
-
-          ✕
-
-        </button>
-
-      </div>
-
-      {/* TABS */}
-
-      <div className="media-tabs">
-
-        <button
-          className={
-            mediaTab === "media"
-              ? "active"
-              : ""
-          }
-
-          onClick={() =>
-            setMediaTab("media")
-          }
-        >
-
-          Media
-
-        </button>
-
-        <button
-          className={
-            mediaTab === "files"
-              ? "active"
-              : ""
-          }
-
-          onClick={() =>
-            setMediaTab("files")
-          }
-        >
-
-          Files
-
-        </button>
-
-        <button
-          className={
-            mediaTab === "audio"
-              ? "active"
-              : ""
-          }
-
-          onClick={() =>
-            setMediaTab("audio")
-          }
-        >
-
-          Voice Notes
-
-        </button>
-
-      </div>
-
-      {/* MEDIA */}
-
-      {mediaTab === "media" && (
-
-        <div className="media-grid">
-
-          {mediaMessages.map((msg, index) => {
-
-  const currentDate =
-    new Date(
-      msg.created_at
-    ).toLocaleDateString()
-
-  const previousDate =
-    index > 0
-
-      ? new Date(
-          mediaMessages[index - 1]
-            .created_at
-        ).toLocaleDateString()
-
-      : null
-
-  return (
-
-    <div key={msg.id}>
-
-      {currentDate !== previousDate && (
-
-        <div className="media-group-date">
-
-          {currentDate}
-
-        </div>
-
-      )}
-
-      <div className="media-item">
-
-  
-
-              {msg.image_url && (
-
-    <img
-      src={msg.image_url}
-      alt=""
-
-      onClick={() => {
-
-        const images =
-          mediaMessages.filter(
-            m => m.image_url
-          )
-
-        const index =
-          images.findIndex(
-            m =>
-              m.image_url ===
-              msg.image_url
-          )
-
-        setCurrentImageIndex(index)
-
-        setViewImage(msg.image_url)
-
-        setShowImageViewer(true)
-
-      }}
-    />
-
-  )}
-
-  {msg.video_url && (
-
-    <video
-      src={msg.video_url}
-      controls
-    />
-
-  )}
-
-  <a
-    href={
-      msg.image_url ||
-      msg.video_url
-    }
-
-    download
-
-    target="_blank"
-
-    rel="noreferrer"
-
-    className="media-download-btn"
-  >
-
-    Download
-
-  </a>
-
-</div>
-
-</div>
-
-  )
-
-})}
-
-        </div>
-
-      )}
-
-      {/* FILES */}
-
-      {mediaTab === "files" && (
-
-        <div className="media-files-list">
-
-          {fileMessages.map(msg => (
-
-            <a
-              key={msg.id}
-
-              href={msg.file_url}
-
-              target="_blank"
-
-              rel="noreferrer"
-
-              className="media-file-item"
-            >
-
-              <span>
-
-                {getFileIcon(
-                  msg.file_name
-                )}
-
-              </span>
-
-              <div>
-
-  <p>
-    {msg.file_name}
-  </p>
-
-  <small>
-
-    {new Date(
-      msg.created_at
-    ).toLocaleDateString()}
-
-  </small>
-
-</div>
-
-            </a>
-
-          ))}
-
-        </div>
-
-      )}
-
-      {/* AUDIO */}
-
-{mediaTab === "audio" && (
-
-  <div className="audio-list">
-
-    {audioMessages.map(msg => (
-
-      <div
-        key={msg.id}
-        className="audio-item"
-      >
-
-        <audio
-          controls
-          src={msg.audio_url}
-          className="chat-audio"
-        />
-
-        <small>
-
-          {new Date(
-            msg.created_at
-          ).toLocaleDateString()}
-
-        </small>
-
-        <a
-          href={msg.audio_url}
-
-          download
-
-          target="_blank"
-
-          rel="noreferrer"
-
-          className="media-download-btn"
-        >
-
-          Download
-
-        </a>
-
-      </div>
-
-    ))}
-
-  </div>
-
-)}
-
-    </div>
-
-  </div>
-
-)}
-
+/>
 {showImageViewer && (
 
-  <div
-    className="image-viewer-overlay"
+  <ImageViewer
 
-    onClick={() => {
+    viewImage={viewImage}
 
-      setShowImageViewer(false)
+    zoomLevel={zoomLevel}
+    setZoomLevel={setZoomLevel}
 
-      setZoomLevel(1)
+    setShowImageViewer={
+      setShowImageViewer
+    }
 
-    }}
-  >
-
-    <div
-      className="image-viewer-content"
-
-      onClick={(e) =>
-        e.stopPropagation()
-      }
-    >
-
-      <img
-        src={viewImage}
-
-        className="fullscreen-image"
-
-        style={{
-          transform:
-            `scale(${zoomLevel})`
-        }}
-      />
-
-      <div className="image-viewer-controls">
-
-        <button
-          onClick={() =>
-            setZoomLevel(prev =>
-              prev + 0.2
-            )
-          }
-        >
-          ＋
-        </button>
-
-        <button
-          onClick={() =>
-            setZoomLevel(prev =>
-              Math.max(1, prev - 0.2)
-            )
-          }
-        >
-          －
-        </button>
-
-        <button
-          onClick={() => {
-
-            setShowImageViewer(false)
-
-            setZoomLevel(1)
-
-          }}
-        >
-          ✕
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
+  />
 
 )}
 

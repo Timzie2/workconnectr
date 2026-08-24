@@ -1,0 +1,273 @@
+/* ===========================
+   DASHBOARD
+=========================== */
+
+.admin-dashboard-layout{
+display:flex;
+min-height:100vh;
+background:var(--bg-main);
+}
+
+.admin-dashboard-content{
+flex:1;
+padding:35px;
+overflow:auto;
+}
+
+.admin-dashboard-title{
+margin-bottom:30px;
+color:var(--text-main);
+font-size:32px;
+font-weight:700;
+}
+
+.admin-dashboard-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.admin-dashboard-card{
+background:var(--bg-card);
+border:1px solid var(--border-color);
+border-radius:18px;
+padding:25px;
+box-shadow:var(--shadow);
+transition:.25s;
+cursor:pointer;
+}
+
+.admin-dashboard-card:hover{
+transform:translateY(-6px);
+}
+
+.admin-dashboard-card h2{
+margin:0;
+font-size:36px;
+color:var(--primary);
+}
+
+.admin-dashboard-card p{
+margin-top:10px;
+color:var(--text-secondary);
+font-weight:600;
+}
+
+.admin-dashboard-sections{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:30px;
+margin-top:40px;
+margin-bottom:35px;
+}
+
+.admin-dashboard-panel{
+background:var(--bg-card);
+border:1px solid var(--border-color);
+border-radius:20px;
+padding:28px;
+box-shadow:var(--shadow);
+margin-bottom:30px;
+min-height:220px;
+}
+
+.admin-dashboard-chart{
+margin-top:35px;
+padding-top:25px;
+}
+
+.recharts-responsive-container{
+margin-top:25px;
+}
+
+.recharts-wrapper{
+margin-bottom:20px;
+}
+
+.admin-dashboard-panel h2{
+margin:0 0 18px;
+}
+
+.admin-dashboard-panel p{
+margin:0;
+color:var(--text-secondary);
+}
+
+.recent-user{
+display:flex;
+align-items:center;
+gap:15px;
+padding:14px 0;
+border-bottom:1px solid var(--border-color);
+}
+
+.recent-user:last-child{
+border-bottom:none;
+}
+
+.recent-user img{
+width:48px;
+height:48px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.recent-user h4{
+margin:0;
+font-size:16px;
+color:var(--text-main);
+}
+
+.recent-user p{
+margin:4px 0 0;
+font-size:14px;
+color:var(--text-secondary);
+}
+
+.recent-job{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 0;
+border-bottom:1px solid var(--border-color);
+gap:15px;
+}
+
+.recent-job:last-child{
+border-bottom:none;
+}
+
+.recent-job h4{
+margin:0;
+font-size:16px;
+color:var(--text-main);
+}
+
+.recent-job p{
+margin-top:5px;
+font-size:14px;
+color:var(--text-secondary);
+}
+
+.job-status{
+padding:6px 12px;
+border-radius:999px;
+font-size:13px;
+font-weight:600;
+text-transform:capitalize;
+}
+
+.job-status.active{
+background:#dcfce7;
+color:#15803d;
+}
+
+.job-status.closed{
+background:#fee2e2;
+color:#dc2626;
+}
+
+.recent-payment{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 0;
+border-bottom:1px solid var(--border-color);
+}
+
+.recent-payment:last-child{
+border-bottom:none;
+}
+
+.recent-payment h4{
+margin:0;
+font-size:17px;
+color:var(--text-main);
+}
+
+.recent-payment p{
+margin-top:5px;
+font-size:14px;
+color:var(--text-secondary);
+}
+
+.payment-status{
+padding:6px 12px;
+border-radius:999px;
+font-size:13px;
+font-weight:600;
+text-transform:capitalize;
+}
+
+.payment-status.success{
+background:#dcfce7;
+color:#15803d;
+}
+
+.payment-status.failed{
+background:#fee2e2;
+color:#dc2626;
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:900px){
+
+.admin-dashboard-layout{
+flex-direction:column;
+}
+
+.admin-dashboard-content{
+padding:20px;
+}
+
+.admin-dashboard-grid{
+grid-template-columns:1fr;
+}
+
+}
+
+.admin-dashboard-sections{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+margin-top:35px;
+}
+
+.admin-dashboard-panel{
+background:var(--bg-card);
+border:1px solid var(--border-color);
+border-radius:18px;
+padding:25px;
+box-shadow:var(--shadow);
+}
+
+.admin-dashboard-panel h2{
+margin-bottom:15px;
+color:var(--text-main);
+}
+
+.admin-dashboard-panel p{
+color:var(--text-secondary);
+}
+
+@media(max-width:900px){
+
+.admin-dashboard-sections{
+grid-template-columns:1fr;
+}
+
+}
+
+.admin-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.admin-btn svg{
+    font-size:18px;
+}

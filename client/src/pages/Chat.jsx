@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import supabase from "../supabaseClient"
 import AppNavbar from "../components/AppNavbar"
-import "./chat.css"
+import "../styles/chat.css"
 import { useAuth } from "../context/AuthContext"
 
 function Chat() {
@@ -16,6 +16,7 @@ const userId = user?.id
 const [messages, setMessages] = useState([])
 const [text, setText] = useState("")
 const [receiverName, setReceiverName] = useState("User")
+const [receiverId, setReceiverId] = useState(null)
 const [typing, setTyping] = useState(false)
 const [onlineUsers, setOnlineUsers] = useState([])
 
@@ -61,6 +62,8 @@ const loadConversation = async () => {
     convo.user_one === userId
       ? convo.user_two
       : convo.user_one
+
+  setReceiverId(otherUserId)
 
   const { data: otherUser } = await supabase
     .from("users")
@@ -126,11 +129,13 @@ const fetchMessages = async (convoId) => {
   }
 
   // MARK READ
+  if (receiverId) {
   await supabase
     .from("messages")
     .update({ is_read: true })
     .eq("receiver_id", userId)
     .eq("sender_id", receiverId)
+}
 }
 
 /* SEND MESSAGE + 🔔 NOTIFICATION */
@@ -148,7 +153,7 @@ const sendMessage = async () => {
 const { data: convo } = await supabase
   .from("conversations")
   .select("user_one, user_two")
-  .eq("id", convoId)
+  .eq("id", conversationId)
   .single()
 
 const receiverId =

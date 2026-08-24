@@ -1,0 +1,50 @@
+.account-suspended{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+background:var(--bg-main);
+}
+
+.account-suspended-card{
+width:100%;
+max-width:520px;
+background:var(--bg-card);
+border:1px solid var(--border-color);
+border-radius:20px;
+padding:40px;
+text-align:center;
+box-shadow:var(--shadow);
+}
+
+.account-suspended-icon{
+font-size:70px;
+margin-bottom:15px;
+}
+
+.account-suspended h1{
+margin-bottom:15px;
+color:var(--text-main);
+}
+
+.account-suspended p{
+margin:10px 0;
+color:var(--text-secondary);
+}
+
+.account-suspended-small{
+font-size:14px;
+}
+
+.account-suspended-buttons{
+display:flex;
+gap:15px;
+margin-top:30px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.account-suspended-buttons button{
+min-width:170px;
+}

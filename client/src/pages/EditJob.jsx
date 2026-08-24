@@ -3,6 +3,10 @@ import { useParams, useNavigate } from "react-router-dom"
 import supabase from "../supabaseClient"
 import AppNavbar from "../components/AppNavbar"
 import "../styles/edit-job.css"
+import CustomSelect from "../components/CustomSelect"
+import {
+  FiSave
+} from "react-icons/fi"
 
 function EditJob() {
 
@@ -15,8 +19,8 @@ function EditJob() {
   const [salary, setSalary] = useState("")
   const [loading, setLoading] = useState(true)
   const [category, setCategory] = useState("")
-const [customCategory, setCustomCategory] = useState("")
-const [payType, setPayType] = useState("daily")
+  const [payType, setPayType] = useState("daily")
+  const [categories, setCategories] = useState([])
 
   const [saving, setSaving] = useState(false)
   const [showToast, setShowToast] = useState(false)
@@ -25,8 +29,9 @@ const [payType, setPayType] = useState("daily")
   const [isDirty, setIsDirty] = useState(false)
 
   useEffect(() => {
-    checkAccessAndFetch()
-  }, [])
+  checkAccessAndFetch()
+  fetchCategories()
+}, [])
 
   // 🔥 WARN BEFORE LEAVING PAGE
   useEffect(() => {
@@ -88,11 +93,27 @@ const [payType, setPayType] = useState("daily")
     setLocation(job.location || "")
     setSalary(job.salary || "")
 setCategory(job.category || "")
-setCustomCategory(job.custom_category || "")
 setPayType(job.pay_type || "daily")
 
     setLoading(false)
   }
+
+  async function fetchCategories() {
+
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("is_active", true)
+    .order("name")
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  setCategories(data || [])
+
+}
 
   const updateJob = async (e) => {
     e.preventDefault()
@@ -112,7 +133,7 @@ setPayType(job.pay_type || "daily")
   location,
   salary: salary ? Number(salary) : null,
   category,
-  custom_category: category === "Other" ? customCategory : null,
+  custom_category: null,
   pay_type: payType
 })
       .eq("id", id)
@@ -145,6 +166,14 @@ setPayType(job.pay_type || "daily")
       </>
     )
   }
+
+  const payTypeOptions = [
+  { id: 1, name: "Per Day" },
+  { id: 2, name: "Per Hour" },
+  { id: 3, name: "Per Week" },
+  { id: 4, name: "Per Month" },
+  { id: 5, name: "Fixed Price" }
+]
 
   return (
     <>
@@ -188,62 +217,73 @@ setPayType(job.pay_type || "daily")
               required
             />
 
-            <input
-              type="number"
-              value={salary}
-              onChange={(e) => {
-                setSalary(e.target.value)
-                setIsDirty(true)
-              }}
-              placeholder="Salary (₦)"
-            />
+            {/* Salary + Pay Type */}
 
-            {/* CATEGORY */}
-<select
-  value={category}
-  onChange={(e) => {
-    setCategory(e.target.value)
-    setIsDirty(true)
-  }}
->
-  <option value="">Select Category</option>
-  <option value="Construction">Construction</option>
-  <option value="Electrical">Electrical</option>
-  <option value="Cleaning">Cleaning</option>
-  <option value="IT">IT</option>
-  <option value="Accounting">Accounting</option>
-  <option value="Design">Design</option>
-  <option value="Marketing">Marketing</option>
-  <option value="Other">Other</option>
-</select>
+<div className="salary-row">
 
-{/* OTHER CATEGORY INPUT */}
-{category === "Other" && (
   <input
-    placeholder="Enter custom category"
-    value={customCategory}
+    type="number"
+    value={salary}
     onChange={(e) => {
-      setCustomCategory(e.target.value)
+      setSalary(e.target.value)
       setIsDirty(true)
     }}
-    required
+    placeholder="Salary (₦)"
   />
-)}
 
-{/* PAY TYPE */}
-<select
-  value={payType}
-  onChange={(e) => {
-    setPayType(e.target.value)
+ <div className="pay-type-wrapper">
+  <CustomSelect
+  options={payTypeOptions}
+  value={
+    payType === "daily"
+      ? "Per Day"
+      : payType === "hourly"
+      ? "Per Hour"
+      : payType === "weekly"
+      ? "Per Week"
+      : payType === "monthly"
+      ? "Per Month"
+      : "Fixed Price"
+  }
+  placeholder="Pay Type"
+
+  showIcons={false}
+  allowRequest={false}
+
+  onChange={(value) => {
+    const map = {
+      "Per Day": "daily",
+      "Per Hour": "hourly",
+      "Per Week": "weekly",
+      "Per Month": "monthly",
+      "Fixed Price": "fixed"
+    }
+
+    setPayType(map[value])
     setIsDirty(true)
   }}
->
-  <option value="daily">Per Day</option>
-  <option value="hourly">Per Hour</option>
-  <option value="weekly">Per Week</option>
-  <option value="monthly">Per Month</option>
-  <option value="fixed">Fixed Price</option>
-</select>
+/>
+</div>
+
+</div>
+
+{/* Category */}
+
+<div className="category-wrapper">
+  <CustomSelect
+  options={categories}
+  value={category}
+  placeholder="Select Category"
+
+  showIcons={true}
+  allowRequest={true}
+
+  onChange={(value) => {
+    setCategory(value)
+    setIsDirty(true)
+  }}
+/>
+</div>
 
             <div className="form-actions">
 
@@ -252,7 +292,10 @@ setPayType(job.pay_type || "daily")
                 className="save-btn"
                 disabled={saving}
               >
-                {saving ? <span className="spinner"></span> : "💾 Save Changes"}
+                <>
+  <FiSave />
+  Save Changes
+</>
               </button>
 
               <button

@@ -83,20 +83,40 @@ useEffect(() => {
 
     ({ payload }) => {
 
-      setTypingUsers(prev => ({
+  console.log(
+    "SIDEBAR TYPING:",
+    payload
+  )
 
-        ...prev,
+  setTypingUsers(prev => ({
 
-        [payload.conversationId]:
-          payload.isTyping
+    ...prev,
 
-      }))
+    [payload.conversationId]:
+      payload.isTyping
 
-    }
+  }))
+
+}
 
   )
 
-  typingChannel.subscribe()
+  typingChannel.subscribe((status) => {
+
+  console.log(
+    "SIDEBAR CHANNEL:",
+    status
+  )
+
+  if (status === "CLOSED") {
+
+    console.log(
+      "Reconnecting typing channel..."
+    )
+
+  }
+
+})
 
   return () => {
     supabase.removeChannel(

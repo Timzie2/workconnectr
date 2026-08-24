@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import supabase from "../supabaseClient"
+import toast from "react-hot-toast"
 
 const AuthContext = createContext()
 
@@ -7,10 +8,10 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(undefined)
   const [role, setRole] = useState(null)
-const [loading, setLoading] = useState(true)
-const [networkError, setNetworkError] = useState(false)
-
-const [profileCompleted, setProfileCompleted] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [networkError, setNetworkError] = useState(false)
+  
+  const [profileCompleted, setProfileCompleted] = useState(null)
 
   useEffect(() => {
 
@@ -29,38 +30,51 @@ const [profileCompleted, setProfileCompleted] = useState(null)
       return
     }
 
-    setUser(sessionUser)
-
     const { data, error } = await supabase
-      .from("users")
-      .select(`
-        role,
-        profile_completed
-      `)
-      .eq("id", sessionUser.id)
-      .single()
+  .from("users")
+  .select(`
+    role,
+    profile_completed,
+    is_admin,
+    is_suspended
+  `)
+  .eq("id", sessionUser.id)
+  .single()
 
-    console.log("USER DATA:", data)
+console.log("USER DATA:", data)
 
-    if (error) {
+if (error) {
+  console.error("ROLE FETCH ERROR:", error)
+  setNetworkError(true)
+  return
+}
 
-      console.error(
-        "ROLE FETCH ERROR:",
-        error
-      )
+setNetworkError(false)
 
-      setNetworkError(true)
+setUser({
+  ...sessionUser,
+  is_admin: data.is_admin ?? false,
+  is_suspended: data.is_suspended ?? false
+})
 
-      return
-    }
+if (data.is_suspended) {
 
-    setNetworkError(false)
+  await supabase.auth.signOut()
 
-    setRole(data.role || "worker")
+setUser(null)
+setRole(null)
+setProfileCompleted(null)
 
-    setProfileCompleted(
-      data.profile_completed ?? false
-    )
+window.location.href = "/account-suspended"
+
+return
+}
+
+setRole(data.role || "worker")
+
+setProfileCompleted(
+  data.profile_completed ?? false
+)
 
   } catch (err) {
 

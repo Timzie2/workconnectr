@@ -35,7 +35,13 @@ import Messages from "./pages/Messages"
 import LandingPage from "./pages/LandingPage"
 import HomePage from "./pages/HomePage"
 import AccountSettings from "./pages/AccountSettings"
-
+import AdminRoute from "./components/AdminRoute";
+import AdminDashboard from "./pages/AdminDashboard"
+import AdminUsers from "./pages/AdminUsers"
+import AccountSuspended from "./pages/AccountSuspended"
+import AdminJobs from "./pages/AdminJobs"
+import AdminCategoryRequests from "./pages/AdminCategoryRequests"
+import AdminCategories from "./pages/AdminCategories"
 
 
 function App(){
@@ -185,35 +191,16 @@ function App(){
         }
       />
 
-      {/* CHAT (BOTH USERS) */}
-      <Route
-  path="/chat/:conversationId"
-  element={
-    <ProtectedRoute>
-      <Chat />
-    </ProtectedRoute>
-  }
-/>
-
       <Route path="/worker/:id" element={<WorkerPublicProfile />} />
 
       <Route
-        path="/worker/chat/:id"
-        element={
-          <ProtectedRoute>
-            <Chat />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/contractor/chat/:id"
-        element={
-          <ProtectedRoute>
-            <Chat />
-          </ProtectedRoute>
-        }
-      />
+  path="/admin"
+  element={
+    <AdminRoute>
+      <AdminDashboard />
+    </AdminRoute>
+  }
+/>
 
       {/* PROFILE SETUP */}
       <Route
@@ -244,6 +231,35 @@ function App(){
       />
     </ProtectedRoute>
   }
+/>
+
+<Route
+  path="/admin/users"
+  element={<AdminUsers />}
+/>
+
+<Route
+  path="/admin/jobs"
+  element={
+    <AdminRoute>
+      <AdminJobs />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/account-suspended"
+  element={<AccountSuspended />}
+/>
+
+<Route
+  path="/admin/category-requests"
+  element={<AdminCategoryRequests />}
+/>
+
+<Route
+  path="/admin/categories"
+  element={<AdminCategories />}
 />
 
 <Route

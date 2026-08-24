@@ -477,6 +477,94 @@
 
 }
 
+.resume-section{
+display:flex;
+align-items:center;
+gap:12px;
+margin:15px 0;
+flex-wrap:wrap;
+}
+
+.resume-upload-btn{
+background:#2563eb;
+color:white;
+padding:10px 18px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+transition:.3s;
+}
+
+.resume-upload-btn:hover{
+background:#1d4ed8;
+}
+
+.resume-view-btn{
+text-decoration:none;
+background:#16a34a;
+color:white;
+padding:10px 18px;
+border-radius:8px;
+font-weight:600;
+transition:.3s;
+}
+
+.resume-view-btn:hover{
+background:#15803d;
+}
+
+.resume-status{
+  font-size:14px;
+  font-weight:600;
+  color:#374151;
+}
+
+.worker-profile-bio{
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.worker-profile-bio h4{
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.worker-profile-bio p{
+    color: #9ca3af;
+    line-height: 1.6;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.worker-profile-rating{
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 18px;
+    text-align:center;
+}
+
+.worker-profile-rating h4{
+    margin-bottom:8px;
+    color:#fff;
+}
+
+.worker-profile-rating span{
+    color:#fbbf24;
+    font-size:18px;
+    font-weight:700;
+}
+
+.worker-profile-form-card label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:600;
+}
+
+.worker-profile-form-card label:not(:first-child){
+    margin-top:24px;
+}
+
 /* =========================
    LIGHT MODE
 ========================= */

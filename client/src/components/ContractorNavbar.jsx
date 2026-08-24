@@ -1,47 +1,37 @@
 import toast from "react-hot-toast"
-import {
-  Link,
-  NavLink,
-  useNavigate
-} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
 import supabase from "../supabaseClient"
 import { useAuth } from "../context/AuthContext" // ✅ USE GLOBAL AUTH
 import { useTheme } from "../context/ThemeContext"
-import logoIcon from "../assets/logo-icon.png"
 
 import {
   Home,
   Briefcase,
-  BriefcaseBusiness,
   Users,
   Bell,
   User,
   Sun,
   Moon,
-  MessageSquare,
-  Menu,
-  X,
-  LogOut,
-  Settings
+  MessageSquare
 } from "lucide-react"
 
-import "../styles/AppNavbar.css"
+import "../styles/ContractorNavbar.css"
 
-function AppNavbar() {
+function ContractorNavbar() {
 
   const navigate = useNavigate()
-  const { user, role } = useAuth()
-  const [profile, setProfile] = useState(null)
+  const { user } = useAuth()
+const [profile, setProfile] = useState(null)
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const notifRef = useRef(null)
   const profileRef = useRef(null)
-  const { darkMode, toggleTheme } = useTheme()
+  const { darkMode, setDarkMode } = useTheme()
+
   // ✅ CLOSE DROPDOWNS
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -203,7 +193,7 @@ await supabase
     }
 
     toast.success("Logged out 👋")
-    navigate("/")
+    navigate("/login")
   }
 
   const getTimeAgo = (date) => {
@@ -255,99 +245,19 @@ const getNotificationIcon = (type) => {
 
       <div className="navbar-left">
 
-  {/* MOBILE MENU BUTTON */}
-  <button
-    className="mobile-menu-btn"
-    onClick={() =>
-      setMobileMenuOpen(prev => !prev)
-    }
-  >
+        <h2 className="logo">WorkConnectr</h2>
 
-    {mobileMenuOpen ? (
-      <X size={22} />
-    ) : (
-      <Menu size={22} />
-    )}
+        <Link to="/contractor-dashboard" className="nav-link">
+          <Home size={18}/> Dashboard
+        </Link>
 
-  </button>
+        <Link to="/post-job" className="nav-link">
+          <Briefcase size={18}/> Post Job
+        </Link>
 
-  <NavLink
-  to="/Home"
-  className="logo-wrapper"
->
-
-  <img
-    src={logoIcon}
-    alt="WorkConnectr Logo"
-    className="navbar-logo-icon"
-  />
-
-  <div className="logo">
-
-    <span className="logo-white">
-      Work
-    </span>
-
-    <span className="logo-green">
-      Connectr
-    </span>
-
-  </div>
-
-</NavLink>
-
-       <NavLink
-  to={
-    role === "worker"
-      ? "/worker-dashboard"
-      : "/contractor-dashboard"
-  }
-  className="nav-link"
->
-  <Home size={18}/> Dashboard
-</NavLink>
-
-        <NavLink
-  to={
-    role === "worker"
-      ? "/jobs"
-      : "/post-job"
-  }
-  className="nav-link"
->
-  <Briefcase size={18}/>
-
-  {role === "worker"
-    ? "Jobs"
-    : "Post Job"}
-
-</NavLink>
-
-{role === "worker" && (
-  <NavLink
-    to="/saved-jobs"
-    className="nav-link"
-  >
-    <BriefcaseBusiness size={18}/>
-    Saved Jobs
-  </NavLink>
-)}
-
-<NavLink
-  to={
-    role === "worker"
-      ? "/applications"
-      : "/contractor-applications"
-  }
-  className="nav-link"
->
-  <Users size={18}/>
-
-  {role === "worker"
-    ? "Applications"
-    : "Applicants"}
-
-</NavLink>
+        <Link to="/contractor-applications" className="nav-link">
+          <Users size={18}/> Applicants
+        </Link>
 
       </div>
 
@@ -355,7 +265,7 @@ const getNotificationIcon = (type) => {
 
         {/* 💬 MESSAGES */}
 <div
-  className="icon-btn desktop-message"
+  className="icon-btn"
   onClick={() => {
     setMenuOpen(false)
     setNotifOpen(false)
@@ -472,16 +382,11 @@ const getNotificationIcon = (type) => {
   )
 
   if (notif.type === "application") {
-
-  navigate(
-    role === "worker"
-      ? "/applications"
-      : `/contractor-applications/${notif.job_id}`
-  )
-}
+    navigate(`/applications/${notif.job_id}`)
+  }
 
   if (notif.type === "message") {
-    navigate("/messages")
+    navigate("/contractor-messages")
   }
 
   if (notif.type === "payment") {
@@ -489,45 +394,15 @@ const getNotificationIcon = (type) => {
 }
 
 if (notif.type === "review") {
-  navigate(
-  role === "worker"
-    ? "/worker-profile"
-    : "/contractor-profile"
-)
+  navigate("/contractor-profile")
 }
 
-if (
-  notif.type === "approved" ||
-  notif.type === "rejected"
-) {
-
-  navigate(
-    role === "worker"
-      ? "/applications"
-      : `/contractor-applications/${notif.job_id}`
-  )
+if (notif.type === "approved") {
+  navigate(`/applications/${notif.job_id}`)
 }
 
-if (notif.type === "category") {
-
-  if (notif.title === "Category Request Approved") {
-
-    navigate("/post-job", {
-      state: {
-        categoryApproved: true
-      }
-    })
-
-  } else {
-
-    navigate("/post-job", {
-      state: {
-        categoryRejected: true
-      }
-    })
-
-  }
-
+if (notif.type === "rejected") {
+  navigate(`/applications/${notif.job_id}`)
 }
 
 }}
@@ -567,17 +442,17 @@ if (notif.type === "category") {
 
 <div className="notif-actions">
 
-  {role === "contractor" && notif.sender_id && (
-  <button
-    className="notif-btn"
-    onClick={(e) => {
-      e.stopPropagation()
-      navigate(`/worker/${notif.sender_id}`)
-    }}
-  >
-    View Applicant
-  </button>
-)}
+  {notif.sender_id && (
+    <button
+      className="notif-btn"
+      onClick={(e) => {
+        e.stopPropagation()
+        navigate(`/worker/${notif.sender_id}`)
+      }}
+    >
+      View Applicant
+    </button>
+  )}
 
 </div>
 
@@ -598,17 +473,17 @@ if (notif.type === "category") {
 
 {/* 👤 PROFILE */}
 <div
-  className="contractor-profile-icon desktop-profile"
+  className="contractor-profile-icon"
   ref={profileRef}
   onClick={() => {
-    setNotifOpen(false)
+    setNotifOpen(false) // ✅ close notifications
     setMenuOpen(prev => !prev)
   }}
 >
   {profile?.avatar_url ? (
     <img
       src={profile.avatar_url}
-      alt="profile"
+      alt="company logo"
       className="contractor-nav-avatar"
     />
   ) : (
@@ -622,18 +497,14 @@ if (notif.type === "category") {
 
     {/* 🔥 USER HEADER */}
     <div 
-  className="contractor-dropdown-user"
-  onClick={() => navigate(
-  role === "worker"
-    ? "/worker-profile"
-    : "/contractor-profile"
-)}
+  className="dropdown-user"
+  onClick={() => navigate("/contractor-profile")}
 >
   <div className="contractor-dropdown-avatar">
   {profile?.avatar_url ? (
   <img 
     src={profile.avatar_url} 
-    alt="profile"
+    alt="company logo" 
     className="contractor-avatar-img"
   />
 ) : (
@@ -641,14 +512,12 @@ if (notif.type === "category") {
   )}
 </div>
 
-  <div className="contractor-user-info">
-    <span className="contractor-user-name">
+  <div className="user-info">
+    <span className="user-name">
   {profile?.full_name || user?.email}
 </span>
-    <span className="contractor-user-email">
-  {role === "worker"
-  ? "Worker"
-  : "Contractor"}
+    <span className="user-email">
+  Contractor
 </span>
   </div>
 </div>
@@ -656,27 +525,17 @@ if (notif.type === "category") {
 <div className="dropdown-divider"></div>
 
     {/* MENU ITEMS */}
-    <div onClick={() => navigate(
-  role === "worker"
-    ? "/worker-profile"
-    : "/contractor-profile"
-)}>
+    <div onClick={() => navigate("/contractor-profile")}>
   👤 Profile
 </div>
 
-    <div
-  onClick={() => {
-    setMenuOpen(false)
-    setMobileMenuOpen(false)
-    navigate("/account-settings")
-  }}
->
-  ⚙️ Account Settings
-</div>
+    <div>
+      ⚙️ Account Settings
+    </div>
 
-    <div onClick={toggleTheme}>
-  {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-</div>
+    <div onClick={() => setDarkMode(prev => !prev)}>
+      {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+    </div>
 
     <div className="dropdown-divider"></div>
 
@@ -689,150 +548,8 @@ if (notif.type === "category") {
 
       </div>
 
-      {/* MOBILE MENU */}
-{mobileMenuOpen && (
-  <div className="mobile-menu-dropdown">
-
-    <div className="mobile-menu-profile">
-
-      <img
-        src={
-          profile?.avatar_url ||
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            profile?.full_name ||
-(role === "worker"
-  ? "Worker"
-  : "Contractor")
-          )}`
-        }
-        alt="profile"
-        className="mobile-profile-avatar"
-      />
-
-      <div>
-        <h3>{profile?.full_name ||
-(role === "worker"
-  ? "Worker"
-  : "Contractor")}</h3>
-        <p>
-  {role === "worker"
-    ? "Worker"
-    : "Contractor"}
-</p>
-      </div>
-
-    </div>
-
-    <NavLink
-      to={
-  role === "worker"
-    ? "/worker-dashboard"
-    : "/contractor-dashboard"
-}
-      className="mobile-menu-link"
-      onClick={() => setMobileMenuOpen(false)}
-    >
-      <Home size={18}/>
-      Dashboard
-    </NavLink>
-
-    <Link
-  to="/messages"
-  className="mobile-menu-link"
-  onClick={() => setMobileMenuOpen(false)}
->
-  <MessageSquare size={18}/>
-  Messages
-</Link>
-
-    <NavLink
-      to={
-  role === "worker"
-    ? "/jobs"
-    : "/post-job"
-}
-      className="mobile-menu-link"
-      onClick={() => setMobileMenuOpen(false)}
-    >
-      <Briefcase size={18}/>
-{role === "worker"
-  ? "Jobs"
-  : "Post Job"}
-    </NavLink>
-
-    {role === "worker" && (
-  <NavLink
-    to="/saved-jobs"
-    className="mobile-menu-link"
-    onClick={() => setMobileMenuOpen(false)}
-  >
-    <BriefcaseBusiness size={18}/>
-    Saved Jobs
-  </NavLink>
-)}
-
-    <NavLink
-      to={
-  role === "worker"
-    ? "/applications"
-    : "/contractor-applications"
-}
-      className="mobile-menu-link"
-      onClick={() => setMobileMenuOpen(false)}
-    >
-      <Users size={18}/>
-
-{role === "worker"
-  ? "Applications"
-  : "Applicants"}
-    </NavLink>
-
-    <Link
-      to={
-  role === "worker"
-    ? "/worker-profile"
-    : "/contractor-profile"
-}
-      className="mobile-menu-link"
-      onClick={() => setMobileMenuOpen(false)}
-    >
-      <User size={18}/>
-      Profile
-    </Link>
-
-    <Link
-  to="/account-settings"
-  className="mobile-menu-link"
-  onClick={() => {
-    setMenuOpen(false)
-    setMobileMenuOpen(false)
-  }}
->
-  <Settings size={18}/>
-  Account Settings
-</Link>
-
-    <button
-  className="mobile-menu-link"
-  onClick={toggleTheme}
->
-  {darkMode ? <Sun size={18}/> : <Moon size={18}/>}
-  {darkMode ? "Light Mode" : "Dark Mode"}
-</button>
-
-    <button
-      className="mobile-menu-link logout"
-      onClick={handleLogout}
-    >
-      <LogOut size={18}/>
-      Logout
-    </button>
-
-  </div>
-)}
-
     </nav>
   )
 }
 
-export default AppNavbar
+export default ContractorNavbar

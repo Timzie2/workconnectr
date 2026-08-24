@@ -65,7 +65,7 @@
     0 24px 60px rgba(2,6,23,.30),
     inset 0 1px 0 rgba(255,255,255,.04);
 
-  overflow:hidden;
+  overflow:visible;
 
   position:relative;
 
@@ -151,11 +151,58 @@
 
 }
 
+.salary-row{
+  display:flex;
+  gap:16px;
+  align-items:stretch;
+  margin-bottom:16px;
+}
+
+.salary-row input{
+  flex:1;
+  margin-bottom:0;
+}
+
+.pay-type-wrapper{
+  width:220px;
+  flex-shrink:0;
+  position:relative;
+  z-index:20;
+}
+
+.category-wrapper{
+  position:relative;
+  z-index:30;
+  margin-bottom:16px;
+}
+
+.category-wrapper .custom-select-menu{
+  z-index:99999;
+}
+
+.pay-type-wrapper .custom-select-menu{
+  z-index:9999;
+}
+
 .edit-job-card input::placeholder,
 .edit-job-card textarea::placeholder{
 
   color:var(--text-secondary,#94a3b8);
 
+}
+
+.edit-job-card{
+    overflow: visible;
+}
+
+.salary-row{
+    position: relative;
+    z-index: 100;
+}
+
+.category-wrapper{
+    position: relative;
+    z-index: 1;
 }
 
 /* TEXTAREA */
@@ -321,6 +368,87 @@
   box-shadow:none;
 
 }
+
+.pay-type-select{
+
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+
+  background:
+    rgba(255,255,255,.04)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 7.5L10 12l4.5-4.5'/%3E%3C/svg%3E")
+    no-repeat right 16px center;
+
+  background-size:18px;
+
+  color:var(--text-main);
+
+  border:1px solid rgba(255,255,255,.08);
+
+  padding-right:48px;
+}
+
+body:not(.dark) .pay-type-select{
+
+  background:
+    #ffffff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230f172a' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 7.5L10 12l4.5-4.5'/%3E%3C/svg%3E")
+    no-repeat right 16px center;
+
+  background-size:18px;
+
+  color:#0f172a;
+
+  border:1px solid #e2e8f0;
+}
+
+/* ======================================
+   SALARY ROW
+====================================== */
+
+.salary-row{
+  display:flex;
+  align-items:stretch;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.salary-row input{
+  flex:1;
+  margin-bottom:0;
+}
+
+.salary-row .custom-select{
+  flex:1;
+  margin-bottom:0;
+  z-index:20;
+}
+
+/* Keep dropdown above the card */
+
+.salary-row .custom-select-menu{
+  z-index:9999;
+}
+
+/* Mobile */
+
+@media (max-width:768px){
+
+  .salary-row{
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .salary-row input,
+  .salary-row .custom-select{
+    width:100%;
+  }
+
+}
+
+
+
 
 /* =========================
    SPINNER
@@ -508,6 +636,16 @@ body:not(.dark)
 
   }
 
+  .salary-row{
+  flex-direction:column;
+  gap:16px;
+}
+
+.pay-type-select{
+  width:100%;
+  min-width:100%;
+}
+
 }
 
 /* =========================
@@ -566,6 +704,10 @@ body:not(.dark)
     border-radius:14px;
 
   }
+
+  .salary-row{
+  gap:12px;
+}
 
 }
 
@@ -628,4 +770,52 @@ body:not(.dark)
 
   }
 
+}
+
+.save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  padding: 14px 20px;
+
+  background: #22c55e;
+  color: #fff;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+.save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.save-btn svg {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.save-btn svg {
+  font-size: 18px;
+  flex-shrink: 0;
 }
